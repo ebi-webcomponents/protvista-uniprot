@@ -123,7 +123,7 @@ class ProtvistaUniprot extends HTMLElement {
     getLabelComponent(name) {
         switch (name) {
             case ('protvista-variation-filter'):
-                return html `<protvista-variation-filter></protvista-variation-filter`;
+                return html `<protvista-variation-filter></protvista-variation-filter>`;
         }
     }
 
