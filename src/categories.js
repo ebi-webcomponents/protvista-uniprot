@@ -251,6 +251,19 @@
            }]
        },
        {
+           "name": "STRUCTURE_COVERAGE",
+           "label": "PDBe 3D structure coverage",
+           "trackType": "protvista-track",
+           "adapter": "protvista-structure-adapter",
+           "url": "https://www.ebi.ac.uk/proteins/api/proteins/",
+           "tracks": [{
+               "name": "pdbe_cover",
+               "label": "PDBe coverage",
+               "trackType": "protvista-track",
+               "tooltip": "PDBe 3D structure coverage"
+           }]
+       },
+       {
            "name": "TOPOLOGY",
            "label": "Topology",
            "trackType": "protvista-track",
