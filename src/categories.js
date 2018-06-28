@@ -312,11 +312,13 @@
            "tracks": [{
                "name": "unique",
                "label": "Unique peptide",
+               "filter": "unique",
                "trackType": "protvista-track",
                "tooltip": ""
            }, {
                "name": "non_unique",
                "label": "Non-unique peptide",
+               "filter": "non_unique",
                "trackType": "protvista-track",
                "tooltip": ""
            }]

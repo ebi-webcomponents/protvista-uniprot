@@ -116,7 +116,7 @@ class ProtvistaUniprot extends HTMLElement {
                 `;
             case ('protvista-proteomics-adapter'):
                 return html `
-                <protvista-proteomics-adapter>
+                <protvista-proteomics-adapter filters="${trackTypes}">
                     <data-loader>
                         <source src="${url}${this._accession}" />
                     </data-loader>
