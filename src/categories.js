@@ -307,7 +307,7 @@
            "name": "PROTEOMICS",
            "label": "Proteomics",
            "trackType": "protvista-track",
-           "adapter": "protvista-feature-adapter",
+           "adapter": "protvista-proteomics-adapter",
            "url": "https://www.ebi.ac.uk/proteins/api/proteomics/",
            "tracks": [{
                "name": "unique",

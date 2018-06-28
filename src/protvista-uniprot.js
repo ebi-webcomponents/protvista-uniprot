@@ -114,6 +114,14 @@ class ProtvistaUniprot extends HTMLElement {
                         </data-loader>
                 </protvista-structure-adapter>
                 `;
+            case ('protvista-proteomics-adapter'):
+                return html `
+                <protvista-proteomics-adapter>
+                    <data-loader>
+                        <source src="${url}${this._accession}" />
+                    </data-loader>
+                </protvista-proteomics-adapter>
+            `;
             case 'protvista-variation-adapter':
                 return html `
                     <protvista-variation-adapter>
