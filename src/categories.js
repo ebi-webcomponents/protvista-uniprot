@@ -267,7 +267,7 @@
            "name": "TOPOLOGY",
            "label": "Topology",
            "trackType": "protvista-track",
-           "adapter": "protvista-feature-adapter",
+           "adapter": "protvista-topology-adapter",
            "url": "https://www.ebi.ac.uk/proteins/api/features/",
            "tracks": [{
                "name": "topo_dom",
@@ -287,6 +287,18 @@
                "filter": "INTRAMEM",
                "trackType": "protvista-track",
                "tooltip": "Extent of a region located in a membrane without crossing it"
+           }, {
+               "name": "topo_dom",
+               "label": "Topological domain",
+               "filter": "TOPO_DOM",
+               "trackType": "protvista-track",
+               "tooltip": "Location of non-membrane regions of membrane-spanning proteins"
+           }, {
+               "name": "topo_dom",
+               "label": "Topological domain",
+               "filter": "TOPO_DOM",
+               "trackType": "protvista-track",
+               "tooltip": "Location of non-membrane regions of membrane-spanning proteins"
            }]
        },
        {

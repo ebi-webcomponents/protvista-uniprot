@@ -101,17 +101,25 @@ class ProtvistaUniprot extends HTMLElement {
             case ('protvista-feature-adapter'):
                 return html `
                 <protvista-feature-adapter filters="${trackTypes}">
-                        <data-loader>
-                            <source src="${url}${this._accession}" />
-                        </data-loader>
+                    <data-loader>
+                        <source src="${url}${this._accession}" />
+                    </data-loader>
                 </protvista-feature-adapter>
+                `;
+            case ('protvista-topology-adapter'):
+                return html `
+                <protvista-topology-adapter filters="${trackTypes}">
+                    <data-loader>
+                        <source src="${url}${this._accession}" />
+                    </data-loader>
+                </protvista-topology-adapter>
                 `;
             case ('protvista-structure-adapter'):
                 return html `
                 <protvista-structure-adapter>
-                        <data-loader>
-                            <source src="${url}${this._accession}" />
-                        </data-loader>
+                    <data-loader>
+                        <source src="${url}${this._accession}" />
+                    </data-loader>
                 </protvista-structure-adapter>
                 `;
             case ('protvista-proteomics-adapter'):
