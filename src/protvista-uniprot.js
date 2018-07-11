@@ -5,7 +5,7 @@ import {
     html,
     render
 } from 'lit-html';
-import _isEmpty from 'lodash-es/isEmpty';
+import _each from 'lodash-es/each';
 
 import '../styles/protvista-uniprot.css';
 
@@ -64,10 +64,13 @@ class ProtvistaUniprot extends HTMLElement {
                 this.handleCategoryClick(e);
             });
         });
-        this._listenLoaders();
+        //this._listenLoaders();
+        this._listenEmptyData();
     }
 
-    _listenLoaders() {
+
+
+    _listenEmptyData() {
         this.addEventListener('load', (e) => {
             if (e.target !== this) {
                 e.stopPropagation(); //Not sure we want to stop propagation here
@@ -77,11 +80,10 @@ class ProtvistaUniprot extends HTMLElement {
                     }
                     switch (e.target.localName) {
                         case ('protvista-feature-adapter') :
+                        case ('protvista-proteomics-adapter') :
+                        case ('protvista-topology-adapter') :
+                        case ('protvista-structure-adapter') :
                             this._removeEmptyDataElements(e.detail.payload, e.target.attributes.name.nodeValue);
-                            break;
-                        case ('protvista-topology-adapter') :
-                            break;
-                        case ('protvista-topology-adapter') :
                             break;
                     }
                 } catch (error) {
@@ -136,7 +138,7 @@ class ProtvistaUniprot extends HTMLElement {
     }
 
     getCategoryTypesAsString(tracks) {
-        return tracks.map(t => t.filter).join(",");
+        return tracks.map(t => t.filter).join(",").replace(/,{2,}/g, '');
     }
 
     getAdapter(adapter, url, trackTypes, name) {
