@@ -8,6 +8,16 @@ protvista-uniprot protvista-manager {
     grid-gap: 2px 10px;
 }
 
+.delayed-container {
+    grid-column: 1 / span 2;
+}
+
+.delayed-category-grid, .delayed-tracks-grid{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-gap: 2px 10px;
+}
+
 protvista-uniprot protvista-manager protvista-navigation,
 protvista-uniprot protvista-manager protvista-sequence {
     grid-column-start: 2;

@@ -14,6 +14,7 @@ class ProtvistaUniprot extends HTMLElement {
     constructor() {
         super();
         this._accession = this.getAttribute('accession');
+        this._processTopology = true;
         // get properties here
     }
 
@@ -39,21 +40,7 @@ class ProtvistaUniprot extends HTMLElement {
             <protvista-navigation length="${this._sequenceLength}"></protvista-navigation>
             <protvista-sequence length="${this._sequenceLength}"></protvista-sequence>
             ${categories.map(category =>
-                html`
-                    <div class="category-label" data-category-toggle="${category.name}" name="pv-up-cat-${category.name}">
-                        ${category.label}
-                    </div>
-                    <div class="aggregate-track-content" data-toggle-aggregate="${category.name}" name="pv-up-cat-${category.name}">
-                        ${this.getTrack(category.trackType, category.adapter, category.url, this.getCategoryTypesAsString(category.tracks), `pv-up-cat-${category.name}`, 'non-overlapping')}
-                    </div>
-                    ${category.tracks.map(track => html`
-                        <div class="track-label" data-toggle="${category.name}" name="pv-up-track-${track.filter || category.name}">
-                            ${track.label ? track.label : this.getLabelComponent(track.labelComponent)}
-                        </div>
-                        <div class="track-content" data-toggle="${category.name}" name="pv-up-track-${track.filter || category.name}">
-                            ${this.getTrack(track.trackType, category.adapter, category.url, track.filter, `pv-up-track-${track.filter || category.name}`, 'non-overlapping')}
-                        </div>`)}
-                `
+                this._addCategoriesAndTracks(category)
             )}
             <protvista-sequence id="seq1" length="${this._sequenceLength}"></protvista-sequence>
             <uuw-litemol-component accession="${this._accession}"></uuw-litemol-component>
@@ -64,13 +51,74 @@ class ProtvistaUniprot extends HTMLElement {
                 this.handleCategoryClick(e);
             });
         });
-        //this._listenLoaders();
+        this._listenLoaders();
         this._listenEmptyData();
     }
 
+    _addCategoriesAndTracks(category) {
+        if (!category.tracks) {
+            return html`
+                <div class="delayed-container">
+                    <div class="delayed-category-grid" name="pv-up-cat-delayed-${category.name}">
+                        ${this._addCategoryLabel(category)}
+                        ${this._addCategoryContent(category, true)}
+                    </div>                    
+                    <div class="delayed-tracks-grid" name="pv-up-tracks-delayed-${category.name}">
+                    </div>
+                </div>
+            `;
+        } else {
+            return html`  
+                ${this._addCategoryLabel(category)}
+                ${this._addCategoryContent(category)}
+                ${category.tracks.map(track => html`
+                    ${this._addTrackLabel(category.name, track)}                    
+                    ${this._addTrackContent(category, track)}
+                `)}
+            `;
+        }
+    }
 
+    _addCategoryLabel(category) {
+        return html`
+            <div class="category-label" data-category-toggle="${category.name}" name="pv-up-cat-${category.name}">
+                ${category.label}
+            </div>
+        `;
+    }
 
-    _listenEmptyData() {
+    _addCategoryContent(category, adapter = false) {
+        if (adapter === true) {
+            return html`<div class="aggregate-track-content" data-toggle-aggregate="${category.name}" name="pv-up-cat-${category.name}">
+                ${this.getAdapter(category.adapter, category.url, '', category.name)}
+                </div>    
+            `;
+        } else {
+            return html`<div class="aggregate-track-content" data-toggle-aggregate="${category.name}" name="pv-up-cat-${category.name}">
+                ${this.getTrack(category.trackType, category.adapter, category.url, this.getCategoryTypesAsString(category.tracks), `pv-up-cat-${category.name}`, 'non-overlapping')}
+                </div>
+            `;
+        }
+    }
+
+    _addTrackLabel(categoryName, track, type) {
+        type = type || track.filter;
+        return html`
+            <div class="track-label" data-toggle="${categoryName}" name="pv-up-track-${type || categoryName}">
+                ${track.label ? track.label : this.getLabelComponent(track.labelComponent)}
+            </div>
+        `;
+    }
+
+    _addTrackContent(category, track) {
+        return html`
+            <div class="track-content" data-toggle="${category.name}" name="pv-up-track-${track.filter || category.name}">
+                ${this.getTrack(track.trackType, category.adapter, category.url, track.filter, `pv-up-track-${track.filter || category.name}`, 'non-overlapping')}
+            </div>
+        `;
+    }
+
+    _listenLoaders() {
         this.addEventListener('load', (e) => {
             if (e.target !== this) {
                 e.stopPropagation(); //Not sure we want to stop propagation here
@@ -78,13 +126,8 @@ class ProtvistaUniprot extends HTMLElement {
                     if (e.detail.payload.errorMessage) {
                         throw e.detail.payload.errorMessage;
                     }
-                    switch (e.target.localName) {
-                        case ('protvista-feature-adapter') :
-                        case ('protvista-proteomics-adapter') :
-                        case ('protvista-topology-adapter') :
-                        case ('protvista-structure-adapter') :
-                            this._removeEmptyDataElements(e.detail.payload, e.target.attributes.name.nodeValue);
-                            break;
+                    if (e.detail.adapterType === 'type') {
+                        this._listenDelayedData(e.detail.payload, e.detail.type);
                     }
                 } catch (error) {
                     this.dispatchEvent(new CustomEvent(
@@ -99,14 +142,76 @@ class ProtvistaUniprot extends HTMLElement {
         });
     }
 
-    _removeEmptyDataElements(data, nodeName) {
-        const parentNode = document.getElementsByTagName('protvista-manager')[0];
-        if (data && (data.length === 0)) {
-            const allByName = document.getElementsByName(nodeName);
-            while (allByName.length !== 0) {
-                let firstEl = allByName[0];
-                parentNode.removeChild(firstEl);
+    _listenDelayedData(data, category) {
+        if (this._processTopology) {
+            this._processTopology = false;
+
+            const protvistaCategory = this._addCategoryDelayedContent(data, category);
+            this._addTracksDelayedContent(data, category, protvistaCategory);
+        }
+    }
+
+    _addCategoryDelayedContent(data, category) {
+        const aggregateTrack = document.querySelector(`.aggregate-track-content[name="pv-up-cat-${category}"]`);
+        const htmlCategory = () => html `
+                <protvista-track length="${this._sequenceLength}" tooltip-event="click" layout="non-overlapping">                    
+                </protvista-track>
+            `;
+        render(htmlCategory(), aggregateTrack);
+
+        let catData = [];
+        _each(data, type => {catData = catData.concat(type.features)});
+        const protvistaCategory = aggregateTrack.getElementsByTagName('protvista-track')[0];
+        protvistaCategory.data = catData;
+        return protvistaCategory;
+    }
+
+    _addTracksDelayedContent(data, category, protvistaCategory) {
+        const delayedGrid = document.querySelector(`.delayed-tracks-grid[name="pv-up-tracks-delayed-${category}"]`);
+        //without _displayend and _displaystart it does not work, why not???
+        const htmlTracks = () => html `
+            ${data.map(track => html`
+                ${this._addTrackLabel(category, track, track.type)}
+                <div class="track-content" data-toggle="${category}" name="pv-up-track-${track.type}">
+                    <protvista-track length="${this._sequenceLength}" tooltip-event="click" layout="non-overlapping" 
+                        displayend="${protvistaCategory._displayend}" displaystart="${protvistaCategory._displaystart}">                    
+                    </protvista-track>
+                </div>`)}
+        `;
+        render(htmlTracks(), delayedGrid);
+
+        const protvistaTracks = delayedGrid.getElementsByTagName('protvista-track');
+        _each(data, (type, index) => {
+            protvistaTracks[index].data = type.features;
+            protvistaTracks[index].initZoom();
+        });
+    }
+
+    _listenEmptyData() {
+        this.addEventListener('empty', (e) => {
+            if (e.target !== this) {
+                e.stopPropagation(); //Not sure we want to stop propagation here
+                try {
+                    this._removeEmptyDataElements(e.target.attributes.name.nodeValue);
+                } catch (error) {
+                    this.dispatchEvent(new CustomEvent(
+                        'error', {
+                            detail: error,
+                            bubbles: true,
+                            cancelable: true
+                        }
+                    ));
+                }
             }
+        });
+    }
+
+    _removeEmptyDataElements(nodeName) {
+        const parentNode = document.getElementsByTagName('protvista-manager')[0];
+        const allByName = document.getElementsByName(nodeName);
+        while (allByName.length !== 0) {
+            let firstEl = allByName[0];
+            parentNode.removeChild(firstEl);
         }
     }
 
@@ -154,7 +259,7 @@ class ProtvistaUniprot extends HTMLElement {
                 `;
             case ('protvista-topology-adapter'):
                 return html `
-                <protvista-topology-adapter filters="${trackTypes}" name="${name}">
+                <protvista-topology-adapter name="${name}">
                     <data-loader>
                         <source src="${url}${this._accession}" />
                     </data-loader>
@@ -185,7 +290,7 @@ class ProtvistaUniprot extends HTMLElement {
                     </protvista-variation-adapter>
                 `;
             default:
-                console.log("No Matching ProtvistaAdapter Found.");
+                console.log(`No Matching ProtvistaAdapter Found : ${adapter}.`);
                 break;
         }
     }
