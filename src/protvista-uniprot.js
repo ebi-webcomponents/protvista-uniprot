@@ -49,7 +49,7 @@ class ProtvistaUniprot extends HTMLElement {
   _render() {
     const mainHtml = () => html`
       <protvista-manager
-        attributes="length displaystart displayend highlights activefilters filters"
+        attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="uuw-litemol-component"
       >
         <protvista-navigation
