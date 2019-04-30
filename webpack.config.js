@@ -18,11 +18,7 @@ const config = {
     extensions: [".js"]
   },
   externals: {
-    "uniprot-entry-data-adapter": "UniProtEntryDataAdapter",
-    "protvista-uniprot-entry-adapter": "ProtvistaUniprotEntryAdapter",
-    d3: "d3",
-    "protvista-zoomable": "ProtvistaZoomable",
-    "protvista-track": "ProtvistaTrack"
+    d3: "d3"
   },
   plugins: [new CleanWebpackPlugin([path.join(PACKAGE_ROOT_PATH, "dist")])],
   module: {
@@ -40,7 +36,11 @@ const config = {
           loader: "babel-loader",
           options: {
             babelrc: false,
-            include: ["src", "../../node_modules/lit-html"],
+            include: [
+              "src",
+              "./node_modules/lit-element",
+              "./node_modules/lit-html"
+            ],
             presets: [
               [
                 "@babel/preset-env",

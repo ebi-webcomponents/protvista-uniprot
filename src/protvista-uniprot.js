@@ -16,6 +16,24 @@ class ProtvistaUniprot extends HTMLElement {
       // We need to get the length of the protein before rendering it
       this._render();
     });
+    this.addEventListener("change", e => {
+      if (e.detail.eventtype === "click") {
+        this.updateTooltip(e, true);
+      }
+    });
+    document.addEventListener("click", this._resetTooltip);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener("click", this._resetTooltip);
+  }
+
+  _resetTooltip(e) {
+    if (!e.target.closest(".feature")) {
+      const tooltip = this.querySelector("protvista-tooltip");
+      tooltip.visible = false;
+      tooltip.render();
+    }
   }
 
   async loadEntry(accession) {
@@ -31,7 +49,7 @@ class ProtvistaUniprot extends HTMLElement {
   _render() {
     const mainHtml = () => html`
       <protvista-manager
-        attributes="length displaystart displayend highlightstart highlightend activefilters filters"
+        attributes="length displaystart displayend highlights activefilters filters"
         additionalsubscribers="uuw-litemol-component"
       >
         <protvista-navigation
@@ -89,6 +107,7 @@ class ProtvistaUniprot extends HTMLElement {
         <uuw-litemol-component
           accession="${this._accession}"
         ></uuw-litemol-component>
+        <protvista-tooltip />
       </protvista-manager>
     `;
     render(mainHtml(), this);
@@ -97,6 +116,20 @@ class ProtvistaUniprot extends HTMLElement {
         this.handleCategoryClick(e);
       });
     });
+  }
+
+  updateTooltip(e) {
+    const d = e.detail.feature;
+    if (!d.feature || !d.feature.tooltipContent) {
+      return;
+    }
+    const tooltip = this.querySelector("protvista-tooltip");
+    tooltip.left = e.detail.coords[0] + 2;
+    tooltip.top = e.detail.coords[1] + 3;
+    tooltip.title = `${d.feature.type} ${d.start}-${d.end}`;
+    tooltip.content = d.feature.tooltipContent;
+    tooltip.visible = true;
+    tooltip.render();
   }
 
   handleCategoryClick(e) {
@@ -187,29 +220,19 @@ class ProtvistaUniprot extends HTMLElement {
     switch (trackType) {
       case "protvista-track":
         return html`
-          <protvista-track
-            length="${this._sequence.length}"
-            tooltip-event="click"
-            layout="${layout}"
-          >
+          <protvista-track length="${this._sequence.length}" layout="${layout}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-track>
         `;
       case "protvista-variation":
         return html`
-          <protvista-variation
-            length="${this._sequence.length}"
-            tooltip-event="click"
-          >
+          <protvista-variation length="${this._sequence.length}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation>
         `;
       case "protvista-variation-graph":
         return html`
-          <protvista-variation-graph
-            length="${this._sequence.length}"
-            tooltip-event="click"
-          >
+          <protvista-variation-graph length="${this._sequence.length}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation-graph>
         `;

@@ -1005,10 +1005,10 @@
     "@webassemblyjs/wast-parser" "1.7.11"
     "@xtuc/long" "4.2.1"
 
-"@webcomponents/webcomponentsjs@^2.1.3":
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.8.tgz#3769d4cac6f3eaf6ed3704e25522b748353edbdd"
-  integrity sha512-ffLNjJ7LVceAkjtDr26t4wQ7EvRfPQ+Jqzs0dgKOwrcgFLJYAMHfJecjYAK0A4ePJPeF60wmddAl1BAtWMLgdw==
+"@webcomponents/webcomponentsjs@^2.2.10":
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.10.tgz#6f6bee0277833ae98d7e5b46f1e0fdb48cd5ff44"
+  integrity sha512-5dzhUhP+h0qMiK0IWb7VNb0OGBoXO3AuI6Qi8t9PoKT50s5L1jv0xnwnLq+cFgPuTB8FLTNP8xIDmyoOsKBy9Q==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -5843,10 +5843,10 @@ protvista-structure-adapter@^2.0.0:
   dependencies:
     lodash-es "^4.17.11"
 
-protvista-tooltip@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-2.0.0.tgz#1c5b411c868b2cc259b1a802aa2ae35329a3c3ee"
-  integrity sha512-+CppO0EvL2L9b6CbqOh/EG+HGF00WX+8I8HvXcFB1wkZcPaT0/kkZhbeDhfvCSu6HZfGNjgZbINXxx0ZvEaJKw==
+protvista-tooltip@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-2.0.4.tgz#b4d06c2ef5d883032b4bebf9b30a0d439db076c0"
+  integrity sha512-oqPqkbasWz9Ig+eLSvuoRoksfCYmukdqyNn/BTjb1JoF7n952OJ6l6SLCMRePqaqa2h1+BQx0HNw0Rzq7XThhA==
   dependencies:
     lodash-es "^4.17.11"
 
@@ -5857,6 +5857,14 @@ protvista-track@^2.0.3:
   dependencies:
     lodash-es "^4.17.11"
     protvista-zoomable "^2.0.3"
+
+protvista-track@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-2.0.5.tgz#105606f0dadcd82eba3a1d7e0668f1aea038deaf"
+  integrity sha512-y/k7hfkTqLfU34eeMDEpoA1iGvQzX8FIS3Lu6+6/V14GbOsi9afQLztpD/tn5+8dPH+iClxh2LPM8fljdZNY+Q==
+  dependencies:
+    lodash-es "^4.17.11"
+    protvista-zoomable "^2.0.4"
 
 protvista-uniprot-entry-adapter@^2.0.0:
   version "2.0.0"
@@ -5870,6 +5878,11 @@ protvista-utils@^2.0.3:
   resolved "https://registry.yarnpkg.com/protvista-utils/-/protvista-utils-2.0.3.tgz#2dc677da0e44918797240ad460c25f96bb1d1187"
   integrity sha512-0wuK2+AqvEAkqdytfltN1SQ6FU65/0JuvBSpQO5eaP0ZhehTtzTjOq1lfstyvnjAuQfwAla8fJ7IVFHypva7Fg==
 
+protvista-utils@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/protvista-utils/-/protvista-utils-2.0.4.tgz#4fd0455a8dfb27cccd3e1600d61e3b4808c20814"
+  integrity sha512-xOYyx53/XLGINhRtn5pcSgpTNUmo/m80hJuRfELJacEI/IFxrnRaFTdTztk2iwVRmhmP4Fm7rirzykPeG22DxQ==
+
 protvista-variation-adapter@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/protvista-variation-adapter/-/protvista-variation-adapter-2.0.0.tgz#1d4042bfe6a3a21397852044992c08dd0504ef9a"
@@ -5878,12 +5891,12 @@ protvista-variation-adapter@^2.0.0:
     lodash-es "^4.17.11"
     protvista-uniprot-entry-adapter "^2.0.0"
 
-protvista-variation-graph@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.0.3.tgz#364a68711b56b138cf70da3d6e8e004faf6a5cc4"
-  integrity sha512-Ktxoxaa/NqshQUrTXX8szbIz3j85oCtEh+i8R2dnyH+WciQ0bQrq6S3AvkIqw/2jDHMUFJgqy7E/qjSFaMYlfQ==
+protvista-variation-graph@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.0.5.tgz#dca5a1999b104bdf4898109ca275a36da19bd84d"
+  integrity sha512-O7yi6QnRQJ4rKONTEOGttqM70Bv6gqwgqdYVNkMcv3J7f4a9dBgwP4GlM+nK7hVllWAUZE1sFf6EDuCRMTNcLg==
   dependencies:
-    protvista-track "^2.0.3"
+    protvista-track "^2.0.5"
 
 protvista-variation@^2.0.3:
   version "2.0.3"
@@ -5900,6 +5913,15 @@ protvista-zoomable@^2.0.3:
   dependencies:
     lodash-es "^4.17.11"
     protvista-utils "^2.0.3"
+    resize-observer-polyfill "^1.5.0"
+
+protvista-zoomable@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/protvista-zoomable/-/protvista-zoomable-2.0.4.tgz#56dfaf4e2a2dbc2cfde2aed65de5358bf460615d"
+  integrity sha512-tejzt24UiIjlyfgxpXbUYUwelYbFTKZ7n4TaHY7JFwZhAZ+jK9yAVi0BVctVaw0Vj8ZhXURPxRNeaf1hSwABEg==
+  dependencies:
+    lodash-es "^4.17.11"
+    protvista-utils "^2.0.4"
     resize-observer-polyfill "^1.5.0"
 
 prr@~1.0.1:
