@@ -1,31 +1,110 @@
 import { categories } from "./categories";
-import { html, render } from "lit-html";
+import { LitElement, html, css } from "lit-element";
 
-import "../styles/protvista-uniprot.css";
+class ProtvistaUniprot extends LitElement {
+  static get properties() {
+    return {
+      accession: { type: String },
+      sequence: { type: String },
+      data: { type: Array }
+    };
+  }
 
-class ProtvistaUniprot extends HTMLElement {
-  constructor() {
-    super();
-    this._accession = this.getAttribute("accession");
-    // get properties here
+  static get styles() {
+    return css`
+      :host {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      protvista-manager {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        grid-gap: 2px 10px;
+      }
+
+      protvista-navigation,
+      protvista-sequence {
+        grid-column-start: 2;
+      }
+
+      uuw-litemol-component {
+        grid-column: span 2;
+      }
+
+      .category-label,
+      .track-label {
+        padding: 0.5em;
+      }
+
+      .category-label {
+        background-color: #b2f5ff;
+        cursor: pointer;
+      }
+
+      .category-label::before {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #333;
+        margin-right: 5px;
+        -webkit-transition: all 0.1s;
+        /* Safari */
+        transition: all 0.1s;
+      }
+
+      .category-label.open::before {
+        content: " ";
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #333;
+        margin-right: 5px;
+      }
+
+      .track-label {
+        background-color: #d9faff;
+        padding-left: 1em;
+      }
+
+      protvista-track {
+        border-top: 1px solid #d9faff;
+      }
+
+      .aggregate-track-content {
+        opacity: 1;
+        -webkit-transition: opacity 0.1s;
+        /* Safari */
+        transition: opacity 0.1s;
+      }
+
+      .track-label,
+      .track-content {
+        display: none;
+      }
+    `;
   }
 
   connectedCallback() {
-    this.loadEntry(this._accession).then(entryData => {
-      this._sequence = entryData.sequence.sequence;
+    super.connectedCallback();
+    this.loadEntry(this.accession).then(entryData => {
+      this.sequence = entryData.sequence.sequence;
       // We need to get the length of the protein before rendering it
-      this._render();
     });
     this.addEventListener("change", e => {
       if (e.detail.eventtype === "click") {
         this.updateTooltip(e, true);
       }
     });
-    document.addEventListener("click", this._resetTooltip);
+    // document.addEventListener("click", this._resetTooltip);
   }
 
   disconnectedCallback() {
-    document.removeEventListener("click", this._resetTooltip);
+    // document.removeEventListener("click", this._resetTooltip);
   }
 
   _resetTooltip(e) {
@@ -46,18 +125,21 @@ class ProtvistaUniprot extends HTMLElement {
     }
   }
 
-  _render() {
-    const mainHtml = () => html`
+  render() {
+    if (!this.sequence) {
+      return null;
+    }
+    return html`
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="uuw-litemol-component"
       >
         <protvista-navigation
-          length="${this._sequence.length}"
+          length="${this.sequence.length}"
         ></protvista-navigation>
         <protvista-sequence
-          length="${this._sequence.length}"
-          sequence="${this._sequence}"
+          length="${this.sequence.length}"
+          sequence="${this.sequence}"
         ></protvista-sequence>
         ${categories.map(
           category =>
@@ -65,6 +147,7 @@ class ProtvistaUniprot extends HTMLElement {
               <div
                 class="category-label"
                 data-category-toggle="${category.name}"
+                @click="${this.handleCategoryClick}"
               >
                 ${category.label}
               </div>
@@ -101,21 +184,15 @@ class ProtvistaUniprot extends HTMLElement {
             `
         )}
         <protvista-sequence
-          length="${this._sequence.length}"
-          sequence="${this._sequence}"
+          length="${this.sequence.length}"
+          sequence="${this.sequence}"
         ></protvista-sequence>
         <uuw-litemol-component
-          accession="${this._accession}"
+          accession="${this.accession}"
         ></uuw-litemol-component>
         <protvista-tooltip />
       </protvista-manager>
     `;
-    render(mainHtml(), this);
-    this.querySelectorAll(".category-label").forEach(cat => {
-      cat.addEventListener("click", e => {
-        this.handleCategoryClick(e);
-      });
-    });
   }
 
   updateTooltip(e) {
@@ -139,10 +216,12 @@ class ProtvistaUniprot extends HTMLElement {
     } else {
       e.target.classList.remove("open");
     }
-    this.toggleOpacity(this.querySelector(`[data-toggle-aggregate=${toggle}]`));
-    this.querySelectorAll(`[data-toggle=${toggle}]`).forEach(track =>
-      this.toggleVisibility(track)
+    this.toggleOpacity(
+      this.shadowRoot.querySelector(`[data-toggle-aggregate=${toggle}]`)
     );
+    this.shadowRoot
+      .querySelectorAll(`[data-toggle=${toggle}]`)
+      .forEach(track => this.toggleVisibility(track));
   }
 
   toggleOpacity(elt) {
@@ -172,7 +251,7 @@ class ProtvistaUniprot extends HTMLElement {
         return html`
           <protvista-feature-adapter filters="${trackTypes}">
             <data-loader>
-              <source src="${url}${this._accession}" />
+              <source src="${url}${this.accession}" />
             </data-loader>
           </protvista-feature-adapter>
         `;
@@ -180,7 +259,7 @@ class ProtvistaUniprot extends HTMLElement {
         return html`
           <protvista-structure-adapter>
             <data-loader>
-              <source src="${url}${this._accession}" />
+              <source src="${url}${this.accession}" />
             </data-loader>
           </protvista-structure-adapter>
         `;
@@ -188,7 +267,7 @@ class ProtvistaUniprot extends HTMLElement {
         return html`
           <protvista-proteomics-adapter filters="${trackTypes}">
             <data-loader>
-              <source src="${url}${this._accession}" />
+              <source src="${url}${this.accession}" />
             </data-loader>
           </protvista-proteomics-adapter>
         `;
@@ -196,7 +275,7 @@ class ProtvistaUniprot extends HTMLElement {
         return html`
           <protvista-variation-adapter>
             <data-loader>
-              <source src="${url}${this._accession}" />
+              <source src="${url}${this.accession}" />
             </data-loader>
           </protvista-variation-adapter>
         `;
@@ -220,19 +299,19 @@ class ProtvistaUniprot extends HTMLElement {
     switch (trackType) {
       case "protvista-track":
         return html`
-          <protvista-track length="${this._sequence.length}" layout="${layout}">
+          <protvista-track length="${this.sequence.length}" layout="${layout}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-track>
         `;
       case "protvista-variation":
         return html`
-          <protvista-variation length="${this._sequence.length}">
+          <protvista-variation length="${this.sequence.length}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation>
         `;
       case "protvista-variation-graph":
         return html`
-          <protvista-variation-graph length="${this._sequence.length}">
+          <protvista-variation-graph length="${this.sequence.length}">
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation-graph>
         `;
