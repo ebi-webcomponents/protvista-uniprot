@@ -2,11 +2,17 @@ import { categories } from "./categories";
 import { LitElement, html, css } from "lit-element";
 
 class ProtvistaUniprot extends LitElement {
+  constructor() {
+    super();
+    this.openCategories = [];
+  }
+
   static get properties() {
     return {
       accession: { type: String },
       sequence: { type: String },
-      data: { type: Array }
+      data: { type: Array },
+      openCategories: { type: Array }
     };
   }
 
@@ -39,6 +45,11 @@ class ProtvistaUniprot extends LitElement {
       .category-label {
         background-color: #b2f5ff;
         cursor: pointer;
+      }
+
+      .track-label,
+      .track-content {
+        display: none;
       }
 
       .category-label::before {
@@ -74,18 +85,6 @@ class ProtvistaUniprot extends LitElement {
       protvista-track {
         border-top: 1px solid #d9faff;
       }
-
-      .aggregate-track-content {
-        opacity: 1;
-        -webkit-transition: opacity 0.1s;
-        /* Safari */
-        transition: opacity 0.1s;
-      }
-
-      .track-label,
-      .track-content {
-        display: none;
-      }
     `;
   }
 
@@ -95,11 +94,11 @@ class ProtvistaUniprot extends LitElement {
       this.sequence = entryData.sequence.sequence;
       // We need to get the length of the protein before rendering it
     });
-    this.addEventListener("change", e => {
-      if (e.detail.eventtype === "click") {
-        this.updateTooltip(e, true);
-      }
-    });
+    // this.addEventListener("change", e => {
+    //   if (e.detail.eventtype === "click") {
+    //     this.updateTooltip(e, true);
+    //   }
+    // });
     // document.addEventListener("click", this._resetTooltip);
   }
 
@@ -151,9 +150,12 @@ class ProtvistaUniprot extends LitElement {
               >
                 ${category.label}
               </div>
+
               <div
                 class="aggregate-track-content"
-                data-toggle-aggregate="${category.name}"
+                .style="${this.openCategories.includes(category.name)
+                  ? "opacity:0"
+                  : "opacity:1"}"
               >
                 ${this.getTrack(
                   category.trackType,
@@ -163,14 +165,24 @@ class ProtvistaUniprot extends LitElement {
                   "non-overlapping"
                 )}
               </div>
+
               ${category.tracks.map(
                 track => html`
-                  <div class="track-label" data-toggle="${category.name}">
+                  <div
+                    class="track-label"
+                    data-toggle="${category.name}"
+                    .style="${this.openCategories.includes(category.name) &&
+                      "display:block"}"
+                  >
                     ${track.label
                       ? track.label
                       : this.getLabelComponent(track.labelComponent)}
                   </div>
-                  <div class="track-content" data-toggle="${category.name}">
+                  <div
+                    class="track-content"
+                    .style="${this.openCategories.includes(category.name) &&
+                      "display:block"}"
+                  >
                     ${this.getTrack(
                       track.trackType,
                       category.adapter,
@@ -213,30 +225,10 @@ class ProtvistaUniprot extends LitElement {
     const toggle = e.target.getAttribute("data-category-toggle");
     if (!e.target.classList.contains("open")) {
       e.target.classList.add("open");
+      this.openCategories = [...this.openCategories, toggle];
     } else {
       e.target.classList.remove("open");
-    }
-    this.toggleOpacity(
-      this.shadowRoot.querySelector(`[data-toggle-aggregate=${toggle}]`)
-    );
-    this.shadowRoot
-      .querySelectorAll(`[data-toggle=${toggle}]`)
-      .forEach(track => this.toggleVisibility(track));
-  }
-
-  toggleOpacity(elt) {
-    if (elt.style.opacity === "" || parseInt(elt.style.opacity) === 1) {
-      elt.style.opacity = 0;
-    } else {
-      elt.style.opacity = 1;
-    }
-  }
-
-  toggleVisibility(elt) {
-    if (elt.style.display === "" || elt.style.display === "none") {
-      elt.style.display = "block";
-    } else {
-      elt.style.display = "none";
+      this.openCategories = [...this.openCategories].filter(d => d !== toggle);
     }
   }
 
