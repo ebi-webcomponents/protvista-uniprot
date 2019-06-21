@@ -94,23 +94,32 @@ class ProtvistaUniprot extends LitElement {
       this.sequence = entryData.sequence.sequence;
       // We need to get the length of the protein before rendering it
     });
-    // this.addEventListener("change", e => {
-    //   if (e.detail.eventtype === "click") {
-    //     this.updateTooltip(e, true);
-    //   }
-    // });
-    // document.addEventListener("click", this._resetTooltip);
+    this.shadowRoot.addEventListener("change", e => {
+      if (e.detail.eventtype === "click") {
+        this.updateTooltip(e, true);
+      }
+    });
+    this.shadowRoot.addEventListener("click", e => {
+      if (
+        !e.target.closest(".feature") &&
+        !e.target.closest("protvista-tooltip")
+      ) {
+        const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
+        tooltip.visible = false;
+      }
+    });
+    this._resetTooltip = this._resetTooltip.bind(this);
+    document.addEventListener("click", this._resetTooltip);
   }
 
   disconnectedCallback() {
-    // document.removeEventListener("click", this._resetTooltip);
+    document.removeEventListener("click", this._resetTooltip);
   }
 
   _resetTooltip(e) {
-    if (!e.target.closest(".feature")) {
-      const tooltip = this.querySelector("protvista-tooltip");
+    if (!e.target.closest("protvista-uniprot")) {
+      const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
       tooltip.visible = false;
-      tooltip.render();
     }
   }
 
@@ -212,13 +221,12 @@ class ProtvistaUniprot extends LitElement {
     if (!d.feature || !d.feature.tooltipContent) {
       return;
     }
-    const tooltip = this.querySelector("protvista-tooltip");
+    const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
     tooltip.left = e.detail.coords[0] + 2;
     tooltip.top = e.detail.coords[1] + 3;
     tooltip.title = `${d.feature.type} ${d.start}-${d.end}`;
-    tooltip.content = d.feature.tooltipContent;
+    tooltip.innerHTML = d.feature.tooltipContent;
     tooltip.visible = true;
-    tooltip.render();
   }
 
   handleCategoryClick(e) {
