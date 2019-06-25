@@ -5,6 +5,7 @@ class ProtvistaUniprot extends LitElement {
   constructor() {
     super();
     this.openCategories = [];
+    this.emptyTracks = [];
   }
 
   static get properties() {
@@ -12,7 +13,8 @@ class ProtvistaUniprot extends LitElement {
       accession: { type: String },
       sequence: { type: String },
       data: { type: Array },
-      openCategories: { type: Array }
+      openCategories: { type: Array },
+      emptyTracks: { type: Array }
     };
   }
 
@@ -108,7 +110,18 @@ class ProtvistaUniprot extends LitElement {
         tooltip.visible = false;
       }
     });
-    this._resetTooltip = this._resetTooltip.bind(this);
+    this.shadowRoot.addEventListener("load", e => {
+      // Hide empty tracks
+      if (e.detail.payload.length <= 0) {
+        const hideElement = e.path.find(
+          element =>
+            element.classList && element.classList.contains("track-content")
+        );
+        if (hideElement) {
+          this.emptyTracks = [...this.emptyTracks, hideElement.dataset.id];
+        }
+      }
+    });
     document.addEventListener("click", this._resetTooltip);
   }
 
@@ -138,6 +151,13 @@ class ProtvistaUniprot extends LitElement {
       return null;
     }
     return html`
+      <protvista-feature-adapter>
+        <data-loader>
+          <source
+          src=https://www.ebi.ac.uk/proteins/api/features/${this.accession} />
+        </data-loader>
+      </protvista-feature-adapter>
+
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="uuw-litemol-component"
@@ -161,6 +181,7 @@ class ProtvistaUniprot extends LitElement {
               </div>
 
               <div
+                id="${category.name}"
                 class="aggregate-track-content"
                 .style="${this.openCategories.includes(category.name)
                   ? "opacity:0"
@@ -180,17 +201,23 @@ class ProtvistaUniprot extends LitElement {
                   <div
                     class="track-label"
                     data-toggle="${category.name}"
+                    data-id="${track.name}"
                     .style="${this.openCategories.includes(category.name) &&
-                      "display:block"}"
+                    !this.emptyTracks.includes(`${track.name}`)
+                      ? "display:block"
+                      : "display:none"}"
                   >
                     ${track.label
                       ? track.label
                       : this.getLabelComponent(track.labelComponent)}
                   </div>
                   <div
+                    data-id="${track.name}"
                     class="track-content"
                     .style="${this.openCategories.includes(category.name) &&
-                      "display:block"}"
+                    !this.emptyTracks.includes(`${track.name}`)
+                      ? "display:block"
+                      : "display:none"}"
                   >
                     ${this.getTrack(
                       track.trackType,
