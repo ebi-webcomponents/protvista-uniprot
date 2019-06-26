@@ -271,7 +271,7 @@ class ProtvistaUniprot extends LitElement {
     return tracks.map(t => t.filter).join(",");
   }
 
-  getAdapter(adapter, url, trackTypes) {
+  getAdapter(adapter, url, trackTypes = null) {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (adapter) {
       case "protvista-feature-adapter":
