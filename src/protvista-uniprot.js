@@ -130,7 +130,7 @@ class ProtvistaUniprot extends LitElement {
   }
 
   _resetTooltip(e) {
-    if (!e.target.closest("protvista-uniprot")) {
+    if (this.shadowRoot && !e.target.closest("protvista-uniprot")) {
       const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
       tooltip.visible = false;
     }
@@ -245,14 +245,14 @@ class ProtvistaUniprot extends LitElement {
 
   updateTooltip(e) {
     const d = e.detail.feature;
-    if (!d.feature || !d.feature.tooltipContent) {
+    if (!d.tooltipContent) {
       return;
     }
     const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
     tooltip.left = e.detail.coords[0] + 2;
     tooltip.top = e.detail.coords[1] + 3;
-    tooltip.title = `${d.feature.type} ${d.start}-${d.end}`;
-    tooltip.innerHTML = d.feature.tooltipContent;
+    tooltip.title = `${d.type} ${d.start}-${d.end}`;
+    tooltip.innerHTML = d.tooltipContent;
     tooltip.visible = true;
   }
 
