@@ -1,5 +1,5 @@
-import { categories } from "./categories";
 import { LitElement, html, css } from "lit-element";
+import { categories } from "./categories";
 
 class ProtvistaUniprot extends LitElement {
   constructor() {
@@ -151,13 +151,6 @@ class ProtvistaUniprot extends LitElement {
       return null;
     }
     return html`
-      <protvista-feature-adapter>
-        <data-loader>
-          <source
-          src=https://www.ebi.ac.uk/proteins/api/features/${this.accession} />
-        </data-loader>
-      </protvista-feature-adapter>
-
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="uuw-litemol-component"
@@ -271,7 +264,7 @@ class ProtvistaUniprot extends LitElement {
     return tracks.map(t => t.filter).join(",");
   }
 
-  getAdapter(adapter, url, trackTypes = null) {
+  getAdapter(adapter, url, trackTypes = "") {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (adapter) {
       case "protvista-feature-adapter":
