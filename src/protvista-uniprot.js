@@ -113,10 +113,12 @@ class ProtvistaUniprot extends LitElement {
     this.shadowRoot.addEventListener("load", e => {
       // Hide empty tracks
       if (e.detail.payload.length <= 0) {
-        const hideElement = e.path.find(
-          element =>
-            element.classList && element.classList.contains("track-content")
-        );
+        const hideElement = e
+          .composedPath()
+          .find(
+            element =>
+              element.classList && element.classList.contains("track-content")
+          );
         if (hideElement) {
           this.emptyTracks = [...this.emptyTracks, hideElement.dataset.id];
         }
@@ -148,7 +150,7 @@ class ProtvistaUniprot extends LitElement {
 
   render() {
     if (!this.sequence) {
-      return null;
+      return html``;
     }
     return html`
       <protvista-manager
