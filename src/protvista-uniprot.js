@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit-element";
-import { categories } from "./categories";
+import defaultConfig from "./config.json";
 
 class ProtvistaUniprot extends LitElement {
   constructor() {
@@ -14,7 +14,8 @@ class ProtvistaUniprot extends LitElement {
       sequence: { type: String },
       data: { type: Array },
       openCategories: { type: Array },
-      emptyTracks: { type: Array }
+      emptyTracks: { type: Array },
+      config: { type: Array }
     };
   }
 
@@ -35,7 +36,7 @@ class ProtvistaUniprot extends LitElement {
         grid-column-start: 2;
       }
 
-      uuw-litemol-component {
+      protvista-structure {
         grid-column: span 2;
       }
 
@@ -92,6 +93,9 @@ class ProtvistaUniprot extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    if (!this.config) {
+      this.config = defaultConfig;
+    }
     this.loadEntry(this.accession).then(entryData => {
       this.sequence = entryData.sequence.sequence;
       // We need to get the length of the protein before rendering it
@@ -149,13 +153,13 @@ class ProtvistaUniprot extends LitElement {
   }
 
   render() {
-    if (!this.sequence) {
+    if (!this.sequence || !this.config) {
       return html``;
     }
     return html`
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
-        additionalsubscribers="uuw-litemol-component"
+        additionalsubscribers="protvista-structure"
       >
         <protvista-navigation
           length="${this.sequence.length}"
@@ -164,7 +168,7 @@ class ProtvistaUniprot extends LitElement {
           length="${this.sequence.length}"
           sequence="${this.sequence}"
         ></protvista-sequence>
-        ${categories.map(
+        ${this.config.categories.map(
           category =>
             html`
               <div
@@ -230,9 +234,10 @@ class ProtvistaUniprot extends LitElement {
           length="${this.sequence.length}"
           sequence="${this.sequence}"
         ></protvista-sequence>
-        <uuw-litemol-component
+        <protvista-structure
           accession="${this.accession}"
-        ></uuw-litemol-component>
+        ></protvista-structure>
+        <protvista-datatable />
         <protvista-tooltip />
       </protvista-manager>
     `;

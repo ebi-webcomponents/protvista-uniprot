@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development -w",
-    "link-all": "yarn link protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-uniprot-entry-adapter protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable",
+    "link-all": "yarn link protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-uniprot-entry-adapter protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure",
     "start": "concurrently \"yarn watch\" \"browser-sync start --server --index public/index.html --files src/**/*.*\""
   },
   "main": "dist/protvista-uniprot.js",
@@ -19,12 +19,15 @@
   "dependencies": {
     "data-loader": "^2.0.0",
     "lit-element": "2.2.0",
+    "litemol": "^2.4.2",
+    "protvista-datatable": "^2.1.12",
     "protvista-feature-adapter": "2.1.7",
     "protvista-filter": "2.1.2",
     "protvista-manager": "2.0.4",
     "protvista-navigation": "2.1.0",
     "protvista-proteomics-adapter": "^2.1.6",
     "protvista-sequence": "2.1.6",
+    "protvista-structure": "^2.1.11",
     "protvista-structure-adapter": "2.1.6",
     "protvista-tooltip": "2.1.0",
     "protvista-track": "2.1.6",
