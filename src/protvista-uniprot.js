@@ -50,11 +50,6 @@ class ProtvistaUniprot extends LitElement {
         cursor: pointer;
       }
 
-      .track-label,
-      .track-content {
-        display: none;
-      }
-
       .category-label::before {
         content: " ";
         display: inline-block;
@@ -152,6 +147,12 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
+  updated() {
+    if (this.shadowRoot.querySelector("protvista-manager")) {
+      this.shadowRoot.querySelector("protvista-manager").applyAttributes();
+    }
+  }
+
   render() {
     if (!this.sequence || !this.config) {
       return html``;
@@ -195,39 +196,29 @@ class ProtvistaUniprot extends LitElement {
                 )}
               </div>
 
-              ${category.tracks.map(
-                track => html`
-                  <div
-                    class="track-label"
-                    data-toggle="${category.name}"
-                    data-id="${track.name}"
-                    .style="${this.openCategories.includes(category.name) &&
-                    !this.emptyTracks.includes(`${track.name}`)
-                      ? "display:block"
-                      : "display:none"}"
-                  >
-                    ${track.label
-                      ? track.label
-                      : this.getLabelComponent(track.labelComponent)}
-                  </div>
-                  <div
-                    data-id="${track.name}"
-                    class="track-content"
-                    .style="${this.openCategories.includes(category.name) &&
-                    !this.emptyTracks.includes(`${track.name}`)
-                      ? "display:block"
-                      : "display:none"}"
-                  >
-                    ${this.getTrack(
-                      track.trackType,
-                      category.adapter,
-                      category.url,
-                      track.filter,
-                      "non-overlapping"
-                    )}
-                  </div>
-                `
-              )}
+              ${category.tracks.map(track => {
+                if (
+                  this.openCategories.includes(category.name) &&
+                  !this.emptyTracks.includes(track.name)
+                ) {
+                  return html`
+                    <div class="track-label">
+                      ${track.label
+                        ? track.label
+                        : this.getLabelComponent(track.labelComponent)}
+                    </div>
+                    <div class="track-content" data-id="${track.name}">
+                      ${this.getTrack(
+                        track.trackType,
+                        category.adapter,
+                        category.url,
+                        track.filter,
+                        "non-overlapping"
+                      )}
+                    </div>
+                  `;
+                }
+              })}
             `
         )}
         <protvista-sequence
