@@ -4,7 +4,7 @@
       "name": "DOMAINS_AND_SITES",
       "label": "Domains & sites",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -97,7 +97,7 @@
       "name": "MOLECULE_PROCESSING",
       "label": "Molecule processing",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -148,7 +148,7 @@
       "name": "PTM",
       "label": "PTM",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -192,7 +192,7 @@
       "name": "SEQUENCE_INFORMATION",
       "label": "Sequence information",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -243,7 +243,7 @@
       "name": "STRUCTURAL",
       "label": "Structural features",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -295,7 +295,7 @@
       "name": "TOPOLOGY",
       "label": "Topology",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -325,7 +325,7 @@
       "name": "MUTAGENESIS",
       "label": "Mutagenesis",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/features/",
       "tracks": [
         {
@@ -364,7 +364,7 @@
       "name": "ANTIGEN",
       "label": "Antigenic sequences",
       "trackType": "protvista-track",
-      "adapter": "protvista-feature-adapter",
+      "adapter": "protvista-uniprot-entry-adapter",
       "url": "https://www.ebi.ac.uk/proteins/api/antigen/",
       "tracks": [
         {
