@@ -83,6 +83,10 @@ class ProtvistaUniprot extends LitElement {
       protvista-track {
         border-top: 1px solid #d9faff;
       }
+
+      .feature {
+        cursor: pointer;
+      }
     `;
   }
 
@@ -228,7 +232,6 @@ class ProtvistaUniprot extends LitElement {
         <protvista-structure
           accession="${this.accession}"
         ></protvista-structure>
-        <protvista-datatable />
         <protvista-tooltip />
       </protvista-manager>
     `;
