@@ -152,9 +152,9 @@ class ProtvistaUniprot extends LitElement {
   }
 
   updated() {
-    if (this.shadowRoot.querySelector("protvista-manager")) {
-      this.shadowRoot.querySelector("protvista-manager").applyAttributes();
-    }
+    // if (this.shadowRoot.querySelector("protvista-manager")) {
+    //   this.shadowRoot.querySelector("protvista-manager").applyAttributes();
+    // }
   }
 
   render() {
@@ -268,13 +268,13 @@ class ProtvistaUniprot extends LitElement {
   getAdapter(adapter, url, trackTypes = "") {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (adapter) {
-      case "protvista-uniprot-entry-adapter":
+      case "protvista-feature-adapter":
         return html`
-          <protvista-uniprot-entry-adapter filters="${trackTypes}">
+          <protvista-feature-adapter filters="${trackTypes}">
             <data-loader>
               <source src="${url}${this.accession}" />
             </data-loader>
-          </protvista-uniprot-entry-adapter>
+          </protvista-feature-adapter>
         `;
       case "protvista-structure-adapter":
         return html`
