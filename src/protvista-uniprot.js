@@ -25,23 +25,22 @@ class ProtvistaUniprot extends LitElement {
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      protvista-manager {
-        display: grid;
-        grid-template-columns: 200px 1fr;
-        grid-gap: 2px 10px;
+      .track-content {
+        width: 80vw;
       }
 
-      protvista-navigation,
-      protvista-sequence {
-        grid-column-start: 2;
-      }
-
-      protvista-structure {
-        grid-column: span 2;
+      .nav-container,
+      .category,
+      .category__track {
+        display: flex;
+        margin-bottom: 0.1rem;
       }
 
       .category-label,
-      .track-label {
+      .track-label,
+      .action-buttons,
+      .credits {
+        width: 20vw;
         padding: 0.5em;
       }
 
@@ -61,6 +60,7 @@ class ProtvistaUniprot extends LitElement {
         margin-right: 5px;
         -webkit-transition: all 0.1s;
         /* Safari */
+        -o-transition: all 0.1s;
         transition: all 0.1s;
       }
 
@@ -77,7 +77,6 @@ class ProtvistaUniprot extends LitElement {
 
       .track-label {
         background-color: #d9faff;
-        padding-left: 1em;
       }
 
       protvista-track {
@@ -166,38 +165,45 @@ class ProtvistaUniprot extends LitElement {
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="protvista-structure"
       >
-        <protvista-navigation
-          length="${this.sequence.length}"
-        ></protvista-navigation>
-        <protvista-sequence
-          length="${this.sequence.length}"
-          sequence="${this.sequence}"
-        ></protvista-sequence>
+        <div class="nav-container">
+          <div class="action-buttons"></div>
+          <div class="track-content">
+            <protvista-navigation
+              length="${this.sequence.length}"
+            ></protvista-navigation>
+            <protvista-sequence
+              length="${this.sequence.length}"
+              sequence="${this.sequence}"
+            ></protvista-sequence>
+          </div>
+        </div>
         ${this.config.categories.map(
           category =>
             html`
-              <div
-                class="category-label"
-                data-category-toggle="${category.name}"
-                @click="${this.handleCategoryClick}"
-              >
-                ${category.label}
-              </div>
+              <div class="category">
+                <div
+                  class="category-label"
+                  data-category-toggle="${category.name}"
+                  @click="${this.handleCategoryClick}"
+                >
+                  ${category.label}
+                </div>
 
-              <div
-                id="${category.name}"
-                class="aggregate-track-content"
-                .style="${this.openCategories.includes(category.name)
-                  ? "opacity:0"
-                  : "opacity:1"}"
-              >
-                ${this.getTrack(
-                  category.trackType,
-                  category.adapter,
-                  category.url,
-                  this.getCategoryTypesAsString(category.tracks),
-                  "non-overlapping"
-                )}
+                <div
+                  id="${category.name}"
+                  class="aggregate-track-content track-content"
+                  .style="${this.openCategories.includes(category.name)
+                    ? "opacity:0"
+                    : "opacity:1"}"
+                >
+                  ${this.getTrack(
+                    category.trackType,
+                    category.adapter,
+                    category.url,
+                    this.getCategoryTypesAsString(category.tracks),
+                    "non-overlapping"
+                  )}
+                </div>
               </div>
 
               ${category.tracks.map(track => {
@@ -206,29 +212,36 @@ class ProtvistaUniprot extends LitElement {
                   !this.emptyTracks.includes(track.name)
                 ) {
                   return html`
-                    <div class="track-label">
-                      ${track.label
-                        ? track.label
-                        : this.getLabelComponent(track.labelComponent)}
-                    </div>
-                    <div class="track-content" data-id="${track.name}">
-                      ${this.getTrack(
-                        track.trackType,
-                        category.adapter,
-                        category.url,
-                        track.filter,
-                        "non-overlapping"
-                      )}
+                    <div class="category__track">
+                      <div class="track-label">
+                        ${track.label
+                          ? track.label
+                          : this.getLabelComponent(track.labelComponent)}
+                      </div>
+                      <div class="track-content" data-id="${track.name}">
+                        ${this.getTrack(
+                          track.trackType,
+                          category.adapter,
+                          category.url,
+                          track.filter,
+                          "non-overlapping"
+                        )}
+                      </div>
                     </div>
                   `;
                 }
               })}
             `
         )}
-        <protvista-sequence
-          length="${this.sequence.length}"
-          sequence="${this.sequence}"
-        ></protvista-sequence>
+        <div class="nav-container">
+          <div class="credits"></div>
+          <div class="track-content">
+            <protvista-sequence
+              length="${this.sequence.length}"
+              sequence="${this.sequence}"
+            ></protvista-sequence>
+          </div>
+        </div>
         <protvista-structure
           accession="${this.accession}"
         ></protvista-structure>

@@ -9,8 +9,8 @@
   "scripts": {
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development -w",
-    "link-all": "yarn link protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure",
-    "add-all": "yarn add protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure",
+    "link-all": "yarn link protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
+    "add-all": "yarn add protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
     "start": "concurrently \"yarn watch\" \"browser-sync start --ss 'public' --server --files src/**/*.*\""
   },
   "main": "dist/protvista-uniprot.js",
@@ -43,6 +43,7 @@
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.3.1",
     "@babel/runtime": "^7.3.1",
     "@webcomponents/webcomponentsjs": "^2.2.10",
