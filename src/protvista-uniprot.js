@@ -6,6 +6,8 @@ class ProtvistaUniprot extends LitElement {
     super();
     this.openCategories = [];
     this.emptyTracks = [];
+    this.notooltip = false;
+    this.nostructure = false;
   }
 
   static get properties() {
@@ -15,7 +17,9 @@ class ProtvistaUniprot extends LitElement {
       data: { type: Array },
       openCategories: { type: Array },
       emptyTracks: { type: Array },
-      config: { type: Array }
+      config: { type: Array },
+      notooltip: { type: Boolean },
+      nostructure: { type: Boolean }
     };
   }
 
@@ -98,20 +102,23 @@ class ProtvistaUniprot extends LitElement {
       this.sequence = entryData.sequence.sequence;
       // We need to get the length of the protein before rendering it
     });
-    this.shadowRoot.addEventListener("change", e => {
-      if (e.detail.eventtype === "click") {
-        this.updateTooltip(e, true);
-      }
-    });
-    this.shadowRoot.addEventListener("click", e => {
-      if (
-        !e.target.closest(".feature") &&
-        !e.target.closest("protvista-tooltip")
-      ) {
-        const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
-        tooltip.visible = false;
-      }
-    });
+    if (!this.notooltip) {
+      this.shadowRoot.addEventListener("change", e => {
+        if (e.detail.eventtype === "click") {
+          this.updateTooltip(e, true);
+        }
+      });
+      this.shadowRoot.addEventListener("click", e => {
+        if (
+          !e.target.closest(".feature") &&
+          !e.target.closest("protvista-tooltip")
+        ) {
+          const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
+          tooltip.visible = false;
+        }
+      });
+      document.addEventListener("click", this._resetTooltip);
+    }
     this.shadowRoot.addEventListener("load", e => {
       // Hide empty tracks
       if (e.detail.payload.length <= 0) {
@@ -126,11 +133,12 @@ class ProtvistaUniprot extends LitElement {
         }
       }
     });
-    document.addEventListener("click", this._resetTooltip);
   }
 
   disconnectedCallback() {
-    document.removeEventListener("click", this._resetTooltip);
+    if (!this.notooltip) {
+      document.removeEventListener("click", this._resetTooltip);
+    }
   }
 
   _resetTooltip(e) {
@@ -242,9 +250,13 @@ class ProtvistaUniprot extends LitElement {
             ></protvista-sequence>
           </div>
         </div>
-        <protvista-structure
-          accession="${this.accession}"
-        ></protvista-structure>
+        ${!this.nostructure
+          ? html`
+              <protvista-structure
+                accession="${this.accession}"
+              ></protvista-structure>
+            `
+          : ""}
         <protvista-tooltip />
       </protvista-manager>
     `;
