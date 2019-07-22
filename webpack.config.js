@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const PACKAGE_ROOT_PATH = process.cwd();
 
 const config = {
-  entry: ["./src/index.js"],
+  entry: ["@babel/polyfill", "./src/index.js"],
   output: {
     path: path.resolve(PACKAGE_ROOT_PATH, "dist"),
     library: "ProtvistaUniprot",
@@ -28,11 +28,7 @@ const config = {
           loader: "babel-loader",
           options: {
             babelrc: false,
-            include: [
-              "src",
-              "./node_modules/lit-element",
-              "./node_modules/lit-html"
-            ],
+            include: ["src", "./node_modules/lit-element", "./node_modules/lit-html"],
             presets: [
               [
                 "@babel/preset-env",

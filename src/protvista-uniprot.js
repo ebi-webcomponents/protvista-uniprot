@@ -1,5 +1,22 @@
 import { LitElement, html, css } from "lit-element";
 import defaultConfig from "./config.json";
+import ProtvistaUtils from "protvista-utils";
+import ProtvistaNavigation from "protvista-navigation";
+import ProtvistaZoomable from "protvista-zoomable";
+import ProtvistaTooltip from "protvista-tooltip";
+import ProtvistaTrack from "protvista-track";
+import ProtvistaSequence from "protvista-sequence";
+import ProtvistaVariation from "protvista-variation";
+import ProtvistaVariationGraph from "protvista-variation-graph";
+import DataLoader from "data-loader";
+import ProtvistaFeatureAdapter from "protvista-feature-adapter";
+import ProtvistaProteomicsAdapter from "protvista-proteomics-adapter";
+import ProtvistaStructureAdapter from "protvista-structure-adapter";
+import ProtvistaVariationAdapter from "protvista-variation-adapter";
+import ProtvistaFilter from "protvista-filter";
+import ProtvistaManager from "protvista-manager";
+import ProtvistaStructure from "protvista-structure";
+import { loadComponent } from "./loadComponents.js";
 
 class ProtvistaUniprot extends LitElement {
   constructor() {
@@ -93,8 +110,26 @@ class ProtvistaUniprot extends LitElement {
     `;
   }
 
+  registerWebComponents() {
+    loadComponent("protvista-navigation", ProtvistaNavigation);
+    loadComponent("protvista-tooltip", ProtvistaTooltip);
+    loadComponent("protvista-track", ProtvistaTrack);
+    loadComponent("protvista-sequence", ProtvistaSequence);
+    loadComponent("protvista-variation", ProtvistaVariation);
+    loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
+    loadComponent("data-loader", DataLoader);
+    loadComponent("protvista-feature-adapter", ProtvistaFeatureAdapter);
+    loadComponent("protvista-proteomics-adapter", ProtvistaProteomicsAdapter);
+    loadComponent("protvista-structure-adapter", ProtvistaStructureAdapter);
+    loadComponent("protvista-variation-adapter", ProtvistaVariationAdapter);
+    loadComponent("protvista-filter", ProtvistaFilter);
+    loadComponent("protvista-manager", ProtvistaManager);
+    loadComponent("protvista-structure", ProtvistaStructure);
+  }
+
   connectedCallback() {
     super.connectedCallback();
+    this.registerWebComponents();
     if (!this.config) {
       this.config = defaultConfig;
     }
