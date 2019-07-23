@@ -1,8 +1,6 @@
 import { LitElement, html, css } from "lit-element";
 import defaultConfig from "./config.json";
-import ProtvistaUtils from "protvista-utils";
 import ProtvistaNavigation from "protvista-navigation";
-import ProtvistaZoomable from "protvista-zoomable";
 import ProtvistaTooltip from "protvista-tooltip";
 import ProtvistaTrack from "protvista-track";
 import ProtvistaSequence from "protvista-sequence";
@@ -13,7 +11,7 @@ import ProtvistaFeatureAdapter from "protvista-feature-adapter";
 import ProtvistaProteomicsAdapter from "protvista-proteomics-adapter";
 import ProtvistaStructureAdapter from "protvista-structure-adapter";
 import ProtvistaVariationAdapter from "protvista-variation-adapter";
-import ProtvistaFilter from "protvista-filter";
+import ProtvistaFilter, { ProtvistaCheckbox } from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
 import ProtvistaStructure from "protvista-structure";
 import { loadComponent } from "./loadComponents.js";
@@ -122,6 +120,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-proteomics-adapter", ProtvistaProteomicsAdapter);
     loadComponent("protvista-structure-adapter", ProtvistaStructureAdapter);
     loadComponent("protvista-variation-adapter", ProtvistaVariationAdapter);
+    loadComponent("protvista-checkbox", ProtvistaCheckbox);
     loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-manager", ProtvistaManager);
     loadComponent("protvista-structure", ProtvistaStructure);
