@@ -151,17 +151,28 @@ class ProtvistaUniprot extends LitElement {
       });
       document.addEventListener("click", this._resetTooltip);
     }
+
+    this.addEventListener("error", e => {
+      // Hide empty tracks
+      const hideElement = e.composedPath().find(element => {
+        return element.classList && element.classList.contains("track-content");
+      });
+      if (hideElement && hideElement.dataset.id) {
+        this.querySelector(`#${hideElement.dataset.id}`).style.display = "none";
+      }
+    });
+
     this.addEventListener("load", e => {
       // Hide empty tracks
       if (e.detail.payload.length <= 0) {
-        const hideElement = e
-          .composedPath()
-          .find(
-            element =>
-              element.classList && element.classList.contains("track-content")
+        const hideElement = e.composedPath().find(element => {
+          return (
+            element.classList && element.classList.contains("track-content")
           );
-        if (hideElement) {
-          this.emptyTracks = [...this.emptyTracks, hideElement.dataset.id];
+        });
+        if (hideElement && hideElement.dataset.id) {
+          this.querySelector(`#${hideElement.dataset.id}`).style.display =
+            "none";
         }
       }
     });
@@ -190,8 +201,17 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
+  /**
+   * LiteMol doesn't work well with the Shadow DOM, therefore
+   * we need to use the light DOM.
+   * */
+
   createRenderRoot() {
     return this;
+  }
+
+  categoryTracksAreEmpty(tracks) {
+    return tracks.every(track => this.emptyTracks.includes(track.name));
   }
 
   render() {
@@ -216,10 +236,10 @@ class ProtvistaUniprot extends LitElement {
             ></protvista-sequence>
           </div>
         </div>
-        ${this.config.categories.map(
-          category =>
-            html`
-              <div class="category">
+        ${this.config.categories.map(category => {
+          if (!this.categoryTracksAreEmpty(category.tracks)) {
+            return html`
+              <div class="category" id="category_${category.name}">
                 <div
                   class="category-label"
                   data-category-toggle="${category.name}"
@@ -229,7 +249,7 @@ class ProtvistaUniprot extends LitElement {
                 </div>
 
                 <div
-                  id="${category.name}"
+                  data-id="category_${category.name}"
                   class="aggregate-track-content track-content"
                   .style="${this.openCategories.includes(category.name)
                     ? "opacity:0"
@@ -246,18 +266,15 @@ class ProtvistaUniprot extends LitElement {
               </div>
 
               ${category.tracks.map(track => {
-                if (
-                  this.openCategories.includes(category.name) &&
-                  !this.emptyTracks.includes(track.name)
-                ) {
+                if (this.openCategories.includes(category.name)) {
                   return html`
-                    <div class="category__track">
+                    <div class="category__track" id="track_${track.name}">
                       <div class="track-label">
                         ${track.label
                           ? track.label
                           : this.getLabelComponent(track.labelComponent)}
                       </div>
-                      <div class="track-content" data-id="${track.name}">
+                      <div class="track-content" data-id="track_${track.name}">
                         ${this.getTrack(
                           track.trackType,
                           category.adapter,
@@ -270,8 +287,9 @@ class ProtvistaUniprot extends LitElement {
                   `;
                 }
               })}
-            `
-        )}
+            `;
+          }
+        })}
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
