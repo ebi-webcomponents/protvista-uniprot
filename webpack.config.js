@@ -8,6 +8,8 @@ const config = {
   entry: ["./src/index.js"],
   output: {
     path: path.resolve(PACKAGE_ROOT_PATH, "dist"),
+    publicPath: "dist/",
+    chunkFilename: "[name].js",
     library: "ProtvistaUniprot",
     filename: "protvista-uniprot.js"
   },
@@ -17,7 +19,9 @@ const config = {
     extensions: [".js"]
   },
   externals: {
-    d3: "d3"
+    d3: "d3",
+    litemol: "LiteMol"
+
   },
   plugins: [new CleanWebpackPlugin([path.join(PACKAGE_ROOT_PATH, "dist")])],
   module: {
