@@ -21,7 +21,6 @@ const config = {
   externals: {
     d3: "d3",
     litemol: "LiteMol"
-
   },
   plugins: [new CleanWebpackPlugin([path.join(PACKAGE_ROOT_PATH, "dist")])],
   module: {

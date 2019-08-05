@@ -38,73 +38,71 @@ class ProtvistaUniprot extends LitElement {
     };
   }
 
-  static get styles() {
-    return css`
-      :host {
-        font-family: Arial, Helvetica, sans-serif;
-      }
+  get cssStyle() {
+    return html`
+      <style>
+        .track-content {
+          width: 80vw;
+        }
 
-      .track-content {
-        width: 80vw;
-      }
+        .nav-container,
+        .category,
+        .category__track {
+          display: flex;
+          margin-bottom: 0.1rem;
+        }
 
-      .nav-container,
-      .category,
-      .category__track {
-        display: flex;
-        margin-bottom: 0.1rem;
-      }
+        .category-label,
+        .track-label,
+        .action-buttons,
+        .credits {
+          width: 20vw;
+          padding: 0.5em;
+        }
 
-      .category-label,
-      .track-label,
-      .action-buttons,
-      .credits {
-        width: 20vw;
-        padding: 0.5em;
-      }
+        .category-label {
+          background-color: #b2f5ff;
+          cursor: pointer;
+        }
 
-      .category-label {
-        background-color: #b2f5ff;
-        cursor: pointer;
-      }
+        .category-label::before {
+          content: " ";
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          border-left: 5px solid #333;
+          margin-right: 5px;
+          -webkit-transition: all 0.1s;
+          /* Safari */
+          -o-transition: all 0.1s;
+          transition: all 0.1s;
+        }
 
-      .category-label::before {
-        content: " ";
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid transparent;
-        border-left: 5px solid #333;
-        margin-right: 5px;
-        -webkit-transition: all 0.1s;
-        /* Safari */
-        -o-transition: all 0.1s;
-        transition: all 0.1s;
-      }
+        .category-label.open::before {
+          content: " ";
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #333;
+          margin-right: 5px;
+        }
 
-      .category-label.open::before {
-        content: " ";
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid #333;
-        margin-right: 5px;
-      }
+        .track-label {
+          background-color: #d9faff;
+        }
 
-      .track-label {
-        background-color: #d9faff;
-      }
+        protvista-track {
+          border-top: 1px solid #d9faff;
+        }
 
-      protvista-track {
-        border-top: 1px solid #d9faff;
-      }
-
-      .feature {
-        cursor: pointer;
-      }
+        .feature {
+          cursor: pointer;
+        }
+      </style>
     `;
   }
 
@@ -137,23 +135,23 @@ class ProtvistaUniprot extends LitElement {
       // We need to get the length of the protein before rendering it
     });
     if (!this.notooltip) {
-      this.shadowRoot.addEventListener("change", e => {
+      this.addEventListener("change", e => {
         if (e.detail.eventtype === "click") {
           this.updateTooltip(e, true);
         }
       });
-      this.shadowRoot.addEventListener("click", e => {
+      this.addEventListener("click", e => {
         if (
           !e.target.closest(".feature") &&
           !e.target.closest("protvista-tooltip")
         ) {
-          const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
+          const tooltip = this.querySelector("protvista-tooltip");
           tooltip.visible = false;
         }
       });
       document.addEventListener("click", this._resetTooltip);
     }
-    this.shadowRoot.addEventListener("load", e => {
+    this.addEventListener("load", e => {
       // Hide empty tracks
       if (e.detail.payload.length <= 0) {
         const hideElement = e
@@ -176,8 +174,8 @@ class ProtvistaUniprot extends LitElement {
   }
 
   _resetTooltip(e) {
-    if (this.shadowRoot && !e.target.closest("protvista-uniprot")) {
-      const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
+    if (this && !e.target.closest("protvista-uniprot")) {
+      const tooltip = this.querySelector("protvista-tooltip");
       tooltip.visible = false;
     }
   }
@@ -192,10 +190,8 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
-  updated() {
-    // if (this.shadowRoot.querySelector("protvista-manager")) {
-    //   this.shadowRoot.querySelector("protvista-manager").applyAttributes();
-    // }
+  createRenderRoot() {
+    return this;
   }
 
   render() {
@@ -203,6 +199,7 @@ class ProtvistaUniprot extends LitElement {
       return html``;
     }
     return html`
+      ${this.cssStyle}
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="protvista-structure"
@@ -301,7 +298,7 @@ class ProtvistaUniprot extends LitElement {
     if (!d.tooltipContent) {
       return;
     }
-    const tooltip = this.shadowRoot.querySelector("protvista-tooltip");
+    const tooltip = this.querySelector("protvista-tooltip");
     tooltip.left = e.detail.coords[0] + 2;
     tooltip.top = e.detail.coords[1] + 3;
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
