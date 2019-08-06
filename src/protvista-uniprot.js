@@ -269,7 +269,7 @@ class ProtvistaUniprot extends LitElement {
                 if (this.openCategories.includes(category.name)) {
                   return html`
                     <div class="category__track" id="track_${track.name}">
-                      <div class="track-label">
+                      <div class="track-label" title="${track.tooltip}">
                         ${track.label
                           ? track.label
                           : this.getLabelComponent(track.labelComponent)}
