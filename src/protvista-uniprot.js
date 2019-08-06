@@ -23,6 +23,7 @@ class ProtvistaUniprot extends LitElement {
     this.emptyTracks = [];
     this.notooltip = false;
     this.nostructure = false;
+    this.hasData = false;
   }
 
   static get properties() {
@@ -154,28 +155,34 @@ class ProtvistaUniprot extends LitElement {
 
     this.addEventListener("error", e => {
       // Hide empty tracks
-      const hideElement = e.composedPath().find(element => {
-        return element.classList && element.classList.contains("track-content");
-      });
-      if (hideElement && hideElement.dataset.id) {
-        this.querySelector(`#${hideElement.dataset.id}`).style.display = "none";
-      }
+      this.handleTrackHidding(e);
     });
 
     this.addEventListener("load", e => {
       // Hide empty tracks
       if (e.detail.payload.length <= 0) {
-        const hideElement = e.composedPath().find(element => {
-          return (
-            element.classList && element.classList.contains("track-content")
-          );
-        });
-        if (hideElement && hideElement.dataset.id) {
-          this.querySelector(`#${hideElement.dataset.id}`).style.display =
-            "none";
-        }
+        this.handleTrackHidding(e);
+      } else if (!this.hasData) {
+        this.dispatchEvent(
+          new CustomEvent("protvista-event", {
+            detail: {
+              hasData: true
+            },
+            bubbles: true
+          })
+        );
+        this.hasData = true;
       }
     });
+  }
+
+  handleTrackHidding(e) {
+    const hideElement = e.composedPath().find(element => {
+      return element.classList && element.classList.contains("track-content");
+    });
+    if (hideElement && hideElement.dataset.id) {
+      this.querySelector(`#${hideElement.dataset.id}`).style.display = "none";
+    }
   }
 
   disconnectedCallback() {
