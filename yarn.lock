@@ -5602,10 +5602,10 @@ protvista-structure@^2.1.18:
     lodash-es "^4.17.11"
     whatwg-fetch "^3.0.0"
 
-protvista-tooltip@^2.1.19:
-  version "2.1.19"
-  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-2.1.19.tgz#1df61b0121bed82dd090758f3c6d670d76da138d"
-  integrity sha512-zuNU8CAr27R9RK539cr1ex39+9GyJHm3N/gPiB1QJpxFHPOxmIOIDKdzYFBHFeIixKhLYOgHaz/GvlPVBmm1Ug==
+protvista-tooltip@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-2.2.3.tgz#01ee2a53a86a6a026024913f316cd6151f96fc79"
+  integrity sha512-6Kx7Ay/4zk0LAhy75gC1qCnvG4Ie//YmCr0pCmiG5RSx/iwuHD9dhf1vlUadOchjKQEKUp6tgWmxmyfoy5OnSQ==
   dependencies:
     lit-element "^2.2.0"
     lodash-es "^4.17.11"

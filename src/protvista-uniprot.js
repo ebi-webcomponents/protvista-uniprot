@@ -137,7 +137,9 @@ class ProtvistaUniprot extends LitElement {
     });
     if (!this.notooltip) {
       this.addEventListener("change", e => {
-        if (e.detail.eventtype === "click") {
+        if (!e.detail.eventtype) {
+          this._resetTooltip();
+        } else if (e.detail.eventtype === "click") {
           this.updateTooltip(e, true);
         }
       });
@@ -147,7 +149,7 @@ class ProtvistaUniprot extends LitElement {
           !e.target.closest("protvista-tooltip")
         ) {
           const tooltip = this.querySelector("protvista-tooltip");
-          tooltip.visible = false;
+          tooltip.style.setProperty("display", "none");
         }
       });
       document.addEventListener("click", this._resetTooltip);
@@ -192,9 +194,9 @@ class ProtvistaUniprot extends LitElement {
   }
 
   _resetTooltip(e) {
-    if (this && !e.target.closest("protvista-uniprot")) {
+    if (this && (!e || !e.target.closest("protvista-uniprot"))) {
       const tooltip = this.querySelector("protvista-tooltip");
-      tooltip.visible = false;
+      tooltip.style.setProperty("display", "none");
     }
   }
 
@@ -324,11 +326,11 @@ class ProtvistaUniprot extends LitElement {
       return;
     }
     const tooltip = this.querySelector("protvista-tooltip");
-    tooltip.left = e.detail.coords[0] + 2;
-    tooltip.top = e.detail.coords[1] + 3;
+    tooltip.style.setProperty("left", `${e.detail.coords[0] + 2}px`);
+    tooltip.style.setProperty("top", `${e.detail.coords[1] + 3}px`);
+    tooltip.style.setProperty("display", "block");
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
-    tooltip.visible = true;
   }
 
   handleCategoryClick(e) {
