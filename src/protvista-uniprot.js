@@ -61,6 +61,11 @@ class ProtvistaUniprot extends LitElement {
           padding: 0.5em;
         }
 
+        .action-buttons {
+          display: flex;
+          justify-content: flex-end;
+        }
+
         .category-label {
           background-color: #b2f5ff;
           cursor: pointer;
@@ -234,7 +239,12 @@ class ProtvistaUniprot extends LitElement {
         additionalsubscribers="protvista-structure"
       >
         <div class="nav-container">
-          <div class="action-buttons"></div>
+          <div class="action-buttons">
+            <download-panel
+              accession="${this.accession}"
+              config="${JSON.stringify(this.config.download)}"
+            />
+          </div>
           <div class="track-content">
             <protvista-navigation
               length="${this.sequence.length}"

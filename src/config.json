@@ -390,5 +390,23 @@
         }
       ]
     }
+  ],
+  "download": [
+    {
+      "type": "features",
+      "url": "https://www.ebi.ac.uk/proteins/api/features/"
+    },
+    {
+      "type": "variants",
+      "url": "https://www.ebi.ac.uk/proteins/api/variation/"
+    },
+    {
+      "type": "antigens",
+      "url": "https://www.ebi.ac.uk/proteins/api/antigen/"
+    },
+    {
+      "type": "proteomics",
+      "url": "https://www.ebi.ac.uk/proteins/api/proteomics/"
+    }
   ]
 }
