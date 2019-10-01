@@ -64,6 +64,7 @@ class ProtvistaUniprot extends LitElement {
         .action-buttons {
           display: flex;
           justify-content: flex-end;
+          align-items: flex-end;
         }
 
         .category-label {
