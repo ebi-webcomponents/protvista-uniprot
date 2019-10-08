@@ -253,6 +253,8 @@ class ProtvistaUniprot extends LitElement {
             <protvista-sequence
               length="${this.sequence.length}"
               sequence="${this.sequence}"
+              displaystart="1"
+              displayend="${this.sequence.length}"
             ></protvista-sequence>
           </div>
         </div>
@@ -316,6 +318,8 @@ class ProtvistaUniprot extends LitElement {
             <protvista-sequence
               length="${this.sequence.length}"
               sequence="${this.sequence}"
+              displaystart="1"
+              displayend="${this.sequence.length}"
             ></protvista-sequence>
           </div>
         </div>
@@ -414,19 +418,32 @@ class ProtvistaUniprot extends LitElement {
     switch (trackType) {
       case "protvista-track":
         return html`
-          <protvista-track length="${this.sequence.length}" layout="${layout}">
+          <protvista-track
+            length="${this.sequence.length}"
+            layout="${layout}"
+            displaystart="1"
+            displayend="${this.sequence.length}"
+          >
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-track>
         `;
       case "protvista-variation":
         return html`
-          <protvista-variation length="${this.sequence.length}">
+          <protvista-variation
+            length="${this.sequence.length}"
+            displaystart="1"
+            displayend="${this.sequence.length}"
+          >
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation>
         `;
       case "protvista-variation-graph":
         return html`
-          <protvista-variation-graph length="${this.sequence.length}">
+          <protvista-variation-graph
+            length="${this.sequence.length}"
+            displaystart="1"
+            displayend="${this.sequence.length}"
+          >
             ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation-graph>
         `;
