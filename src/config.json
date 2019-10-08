@@ -80,7 +80,7 @@
         {
           "name": "binding",
           "label": "Binding site",
-          "filter": "BINDIND",
+          "filter": "BINDING",
           "trackType": "protvista-track",
           "tooltip": "Binding site for any chemical group (co-enzyme, prosthetic group, etc.)"
         },
