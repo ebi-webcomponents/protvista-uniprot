@@ -5721,10 +5721,10 @@ protvista-variation-adapter@^2.2.10:
     lodash-es "^4.17.11"
     protvista-uniprot-entry-adapter "^2.1.12"
 
-protvista-variation-graph@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.2.4.tgz#883667cf869e5f5d399ccc2073239f45e438cc2a"
-  integrity sha512-XjD6GkJ6dYhckg2079cDQofHhxOfZwr2syC7VIaFl/bczWHHRRfW+Agk3lEBDq2zJMMrQ61ZRBufHBbEESkfmw==
+protvista-variation-graph@^2.2.11:
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.2.11.tgz#7d6fbeb9e1845c54f6364fef76a6c041424c471c"
+  integrity sha512-ojz28QzZgc1PMAEgVLsRq+/v5Zk7VONi3/NR0weOuO9H43vbfWGIvCb/UaxYwkCREjYYS7Aqs4u4UfmYzvQDvg==
   dependencies:
     protvista-track "^2.2.4"
 

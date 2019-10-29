@@ -42,6 +42,9 @@ class ProtvistaUniprot extends LitElement {
   get cssStyle() {
     return html`
       <style>
+        protvista-tooltip a {
+          text-decoration: underline;
+        }
         .track-content {
           width: 80vw;
         }
