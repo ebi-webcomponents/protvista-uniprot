@@ -5629,10 +5629,10 @@ protvista-datatable@^2.1.13:
     lit-element "^2.1.0"
     uuid "^3.3.2"
 
-protvista-feature-adapter@^2.2.10:
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-2.2.10.tgz#61501ca58b0fcd494230a8c8d4025fad90b7c580"
-  integrity sha512-xGHxYXZL44+Ii4I/YqfTr+D1xSqU0imjkbCPPpTxAC9C/IertH6bgG7UeRAyZxS7h6A65t4al5KlfZvLVU+MqQ==
+protvista-feature-adapter@^2.2.14:
+  version "2.2.14"
+  resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-2.2.14.tgz#7eb36d76e1e102c14f5978d25a22145d5d026c2c"
+  integrity sha512-eA3XB62uri2yzRf5oQ76oImFy/ZiVCyxoNKQ9r6tAx/FWpfM0VEzRKbdwmdz/upFkgpYVUhSV6Xu2z7nTL1IoQ==
 
 protvista-filter@^2.2.0:
   version "2.2.0"
