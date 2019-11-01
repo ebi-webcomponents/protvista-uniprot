@@ -285,7 +285,9 @@ class ProtvistaUniprot extends LitElement {
                     category.adapter,
                     category.url,
                     this.getCategoryTypesAsString(category.tracks),
-                    "non-overlapping"
+                    "non-overlapping",
+                    category.color,
+                    category.shape
                   )}
                 </div>
               </div>
@@ -305,7 +307,9 @@ class ProtvistaUniprot extends LitElement {
                           category.adapter,
                           category.url,
                           track.filter,
-                          "non-overlapping"
+                          "non-overlapping",
+                          track.color ? track.color : category.color,
+                          track.shape ? track.shape : category.shape
                         )}
                       </div>
                     </div>
@@ -416,7 +420,15 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
-  getTrack(trackType, adapter, url, trackTypes, layout = "") {
+  getTrack(
+    trackType,
+    adapter,
+    url,
+    trackTypes,
+    layout = "",
+    color = "",
+    shape = ""
+  ) {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (trackType) {
       case "protvista-track":
@@ -424,6 +436,8 @@ class ProtvistaUniprot extends LitElement {
           <protvista-track
             length="${this.sequence.length}"
             layout="${layout}"
+            color="${color}"
+            shape="${shape}"
             displaystart="1"
             displayend="${this.sequence.length}"
           >
