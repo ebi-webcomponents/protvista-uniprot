@@ -1,7 +1,7 @@
-## Reference to existing issue
+### Reference to existing issue
 
-## Description of changes
+### Description of changes
 
-## Testing/Styleguide
- - [] Tests pass
- - [] Linters pass
+### Testing/Styleguide
+ - [ ] Tests pass
+ - [ ] Linters pass
