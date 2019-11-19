@@ -24,6 +24,7 @@ class ProtvistaUniprot extends LitElement {
     this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
+    this.data ={}
   }
 
   static get properties() {
@@ -133,9 +134,42 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-manager", ProtvistaManager);
     loadComponent("protvista-structure", ProtvistaStructure);
   }
-
+  _addLoaderListeners() {
+    this.addEventListener("load", e => {
+      if (!e.detail.payload || !Array.isArray(e.detail.payload)) return;
+      const id = e.target.getAttribute('data-name');
+      this.data[id]= e.detail.payload;
+      const currentCategory = this.config.categories.filter(({name})=>name===id);
+      if (currentCategory.length){
+        for (const track of currentCategory[0].tracks){
+          this.data[`${id}-${track.name}`]= e.detail.payload.filter(({type})=>type===track.filter);
+        }
+      }
+      this.requestUpdate();
+    })
+  }
+  _loadData(){
+    Object.entries(this.data).forEach(
+      ([id, data]) => {
+        const element = document.getElementById(`track-${id}`);
+        if (element) element.data = data;
+        const currentCategory = this.config.categories.filter(({name})=>name===id);
+        if (currentCategory.length){
+          for (const track of currentCategory[0].tracks){
+            const elementTrack = document.getElementById(`track-${id}-${track.name}`);
+            if (elementTrack) elementTrack.data = this.data[`${id}-${track.name}`];
+          }
+        }
+      }
+    );
+  }
+  updated(changedProperties) {
+    super.updated(changedProperties);
+    this._loadData();
+  }
   connectedCallback() {
     super.connectedCallback();
+    this._addLoaderListeners();
     this.registerWebComponents();
     if (!this.config) {
       this.config = defaultConfig;
@@ -238,6 +272,10 @@ class ProtvistaUniprot extends LitElement {
     }
     return html`
       ${this.cssStyle}
+      ${this.config.categories.map(
+        ({name, adapter, url, tracks}) => this.getAdapter(adapter, url, this.getCategoryTypesAsString(tracks), name)
+      )}
+      
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="protvista-structure"
@@ -280,21 +318,24 @@ class ProtvistaUniprot extends LitElement {
                     ? "opacity:0"
                     : "opacity:1"}"
                 >
-                  ${this.getTrack(
+                  ${this.data[category.name] && this.getTrack(
                     category.trackType,
                     category.adapter,
                     category.url,
                     this.getCategoryTypesAsString(category.tracks),
                     "non-overlapping",
                     category.color,
-                    category.shape
+                    category.shape,
+                    category.name,
                   )}
                 </div>
               </div>
 
+              <!-- Expanded Categories -->
               ${category.tracks.map(track => {
                 if (this.openCategories.includes(category.name)) {
-                  return html`
+                  const trackData = this.data[`${category.name}-${track.name}`];
+                  return (trackData && trackData.length) ? html`
                     <div class="category__track" id="track_${track.name}">
                       <div class="track-label" title="${track.tooltip}">
                         ${track.label
@@ -302,18 +343,19 @@ class ProtvistaUniprot extends LitElement {
                           : this.getLabelComponent(track.labelComponent)}
                       </div>
                       <div class="track-content" data-id="track_${track.name}">
-                        ${this.getTrack(
+                        ${ this.getTrack(
                           track.trackType,
                           category.adapter,
                           category.url,
                           track.filter,
                           "non-overlapping",
                           track.color ? track.color : category.color,
-                          track.shape ? track.shape : category.shape
+                          track.shape ? track.shape : category.shape,
+                          `${category.name}-${track.name}`,
                         )}
                       </div>
                     </div>
-                  `;
+                  `:'';
                 }
               })}
             `;
@@ -370,12 +412,21 @@ class ProtvistaUniprot extends LitElement {
     return tracks.map(t => t.filter).join(",");
   }
 
-  getAdapter(adapter, url, trackTypes = "") {
+  getAdapter(adapter, url, trackTypes = "", name="") {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
+
+  //   return html`
+  //   <${adapter} ${trackTypes && `filters="${trackTypes}"`}>
+  //     <data-loader>
+  //       <source src="${url}${this.accession}" />
+  //     </data-loader>
+  //   </${adapter}>
+  // `;
+
     switch (adapter) {
       case "protvista-feature-adapter":
         return html`
-          <protvista-feature-adapter filters="${trackTypes}">
+          <protvista-feature-adapter filters="${trackTypes}" data-name="${name}">
             <data-loader>
               <source src="${url}${this.accession}" />
             </data-loader>
@@ -383,7 +434,7 @@ class ProtvistaUniprot extends LitElement {
         `;
       case "protvista-structure-adapter":
         return html`
-          <protvista-structure-adapter>
+          <protvista-structure-adapter data-name="${name}">
             <data-loader>
               <source src="${url}${this.accession}" />
             </data-loader>
@@ -391,7 +442,7 @@ class ProtvistaUniprot extends LitElement {
         `;
       case "protvista-proteomics-adapter":
         return html`
-          <protvista-proteomics-adapter filters="${trackTypes}">
+          <protvista-proteomics-adapter filters="${trackTypes}" data-name="${name}">
             <data-loader>
               <source src="${url}${this.accession}" />
             </data-loader>
@@ -399,7 +450,7 @@ class ProtvistaUniprot extends LitElement {
         `;
       case "protvista-variation-adapter":
         return html`
-          <protvista-variation-adapter>
+          <protvista-variation-adapter data-name="${name}">
             <data-loader>
               <source src="${url}${this.accession}" />
             </data-loader>
@@ -427,7 +478,8 @@ class ProtvistaUniprot extends LitElement {
     trackTypes,
     layout = "",
     color = "",
-    shape = ""
+    shape = "",
+    id = ""
   ) {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (trackType) {
@@ -440,8 +492,9 @@ class ProtvistaUniprot extends LitElement {
             shape="${shape}"
             displaystart="1"
             displayend="${this.sequence.length}"
+            id="track-${id}"
           >
-            ${this.getAdapter(adapter, url, trackTypes)}
+            ${''/*this.getAdapter(adapter, url, trackTypes)*/}
           </protvista-track>
         `;
       case "protvista-variation":
