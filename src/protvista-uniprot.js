@@ -147,8 +147,8 @@ class ProtvistaUniprot extends LitElement {
             this.data[`${id}-${track.name}`] = e.detail.payload.filter(
               ({ type }) => type === track.filter
             );
-          } else if (track.name === "variation") {
-            this.data[`${id}-${track.name}`] = e.detail.payload.variants;
+            // } else if (track.name === "variation") {
+            //   this.data[`${id}-${track.name}`] = e.detail.payload.variants;
           } else {
             this.data[`${id}-${track.name}`] = e.detail.payload;
           }
@@ -169,8 +169,7 @@ class ProtvistaUniprot extends LitElement {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
           );
-          if (elementTrack){
-            console.log(`${id}-${track.name}`,this.data[`${id}-${track.name}`])
+          if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
         }
@@ -298,70 +297,74 @@ class ProtvistaUniprot extends LitElement {
           </div>
         </div>
         ${this.config.categories.map(
-          category => this.data[category.name] && html`
-            <div class="category" id="category_${category.name}">
-              <div
-                class="category-label"
-                data-category-toggle="${category.name}"
-                @click="${this.handleCategoryClick}"
-              >
-                ${category.label}
+          category =>
+            this.data[category.name] &&
+            html`
+              <div class="category" id="category_${category.name}">
+                <div
+                  class="category-label"
+                  data-category-toggle="${category.name}"
+                  @click="${this.handleCategoryClick}"
+                >
+                  ${category.label}
+                </div>
+
+                <div
+                  data-id="category_${category.name}"
+                  class="aggregate-track-content track-content"
+                  .style="${this.openCategories.includes(category.name)
+                    ? "opacity:0"
+                    : "opacity:1"}"
+                >
+                  ${this.data[category.name] &&
+                    this.getTrack(
+                      category.trackType,
+                      category.adapter,
+                      category.url,
+                      this.getCategoryTypesAsString(category.tracks),
+                      "non-overlapping",
+                      category.color,
+                      category.shape,
+                      category.name
+                    )}
+                </div>
               </div>
 
-              <div
-                data-id="category_${category.name}"
-                class="aggregate-track-content track-content"
-                .style="${this.openCategories.includes(category.name)
-                  ? "opacity:0"
-                  : "opacity:1"}"
-              >
-                ${this.data[category.name] &&
-                  this.getTrack(
-                    category.trackType,
-                    category.adapter,
-                    category.url,
-                    this.getCategoryTypesAsString(category.tracks),
-                    "non-overlapping",
-                    category.color,
-                    category.shape,
-                    category.name
-                  )}
-              </div>
-            </div>
-
-            <!-- Expanded Categories -->
-            ${category.tracks.map(track => {
-              if (this.openCategories.includes(category.name)) {
-                const trackData = this.data[`${category.name}-${track.name}`];
-                return trackData && trackData.length
-                  ? html`
-                      <div class="category__track" id="track_${track.name}">
-                        <div class="track-label" title="${track.tooltip}">
-                          ${track.label
-                            ? track.label
-                            : this.getLabelComponent(track.labelComponent)}
+              <!-- Expanded Categories -->
+              ${category.tracks.map(track => {
+                if (this.openCategories.includes(category.name)) {
+                  const trackData = this.data[`${category.name}-${track.name}`];
+                  return trackData &&
+                    ((Array.isArray(trackData) && trackData.length) ||
+                      Object.keys(trackData).length)
+                    ? html`
+                        <div class="category__track" id="track_${track.name}">
+                          <div class="track-label" title="${track.tooltip}">
+                            ${track.label
+                              ? track.label
+                              : this.getLabelComponent(track.labelComponent)}
+                          </div>
+                          <div
+                            class="track-content"
+                            data-id="track_${track.name}"
+                          >
+                            ${this.getTrack(
+                              track.trackType,
+                              category.adapter,
+                              category.url,
+                              track.filter,
+                              "non-overlapping",
+                              track.color ? track.color : category.color,
+                              track.shape ? track.shape : category.shape,
+                              `${category.name}-${track.name}`
+                            )}
+                          </div>
                         </div>
-                        <div
-                          class="track-content"
-                          data-id="track_${track.name}"
-                        >
-                          ${this.getTrack(
-                            track.trackType,
-                            category.adapter,
-                            category.url,
-                            track.filter,
-                            "non-overlapping",
-                            track.color ? track.color : category.color,
-                            track.shape ? track.shape : category.shape,
-                            `${category.name}-${track.name}`
-                          )}
-                        </div>
-                      </div>
-                    `
-                  : "";
-              }
-            })}
-          `
+                      `
+                    : "";
+                }
+              })}
+            `
         )}
         <div class="nav-container">
           <div class="credits"></div>
@@ -471,12 +474,12 @@ class ProtvistaUniprot extends LitElement {
   }
 
   getLabelComponent(name) {
-    // switch (name) {
-    //   case "protvista-filter":
-    //     return html`
-    //       <protvista-filter style="minWidth: 20%"></protvista-filter>
-    //     `;
-    // }
+    switch (name) {
+      case "protvista-filter":
+        return html`
+          <protvista-filter style="minWidth: 20%"></protvista-filter>
+        `;
+    }
   }
 
   getTrack(
