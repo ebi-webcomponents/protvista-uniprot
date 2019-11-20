@@ -20,7 +20,6 @@ class ProtvistaUniprot extends LitElement {
   constructor() {
     super();
     this.openCategories = [];
-    this.emptyTracks = [];
     this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
@@ -33,7 +32,6 @@ class ProtvistaUniprot extends LitElement {
       sequence: { type: String },
       data: { type: Array },
       openCategories: { type: Array },
-      emptyTracks: { type: Array },
       config: { type: Array },
       notooltip: { type: Boolean },
       nostructure: { type: Boolean }
@@ -171,8 +169,10 @@ class ProtvistaUniprot extends LitElement {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
           );
-          if (elementTrack)
+          if (elementTrack){
+            console.log(`${id}-${track.name}`,this.data[`${id}-${track.name}`])
             elementTrack.data = this.data[`${id}-${track.name}`];
+          }
         }
       }
     });
@@ -212,16 +212,8 @@ class ProtvistaUniprot extends LitElement {
       document.addEventListener("click", this._resetTooltip);
     }
 
-    this.addEventListener("error", e => {
-      // Hide empty tracks
-      this.handleTrackHidding(e);
-    });
-
     this.addEventListener("load", e => {
-      // Hide empty tracks
-      if (e.detail.payload.length <= 0) {
-        this.handleTrackHidding(e);
-      } else if (!this.hasData) {
+      if (!this.hasData) {
         this.dispatchEvent(
           new CustomEvent("protvista-event", {
             detail: {
@@ -233,15 +225,6 @@ class ProtvistaUniprot extends LitElement {
         this.hasData = true;
       }
     });
-  }
-
-  handleTrackHidding(e) {
-    const hideElement = e.composedPath().find(element => {
-      return element.classList && element.classList.contains("track-content");
-    });
-    if (hideElement && hideElement.dataset.id) {
-      this.querySelector(`#${hideElement.dataset.id}`).style.display = "none";
-    }
   }
 
   disconnectedCallback() {
@@ -274,10 +257,6 @@ class ProtvistaUniprot extends LitElement {
 
   createRenderRoot() {
     return this;
-  }
-
-  categoryTracksAreEmpty(tracks) {
-    return tracks.every(track => this.emptyTracks.includes(track.name));
   }
 
   render() {
@@ -318,74 +297,72 @@ class ProtvistaUniprot extends LitElement {
             ></protvista-sequence>
           </div>
         </div>
-        ${this.config.categories.map(category => {
-          if (!this.categoryTracksAreEmpty(category.tracks)) {
-            return html`
-              <div class="category" id="category_${category.name}">
-                <div
-                  class="category-label"
-                  data-category-toggle="${category.name}"
-                  @click="${this.handleCategoryClick}"
-                >
-                  ${category.label}
-                </div>
-
-                <div
-                  data-id="category_${category.name}"
-                  class="aggregate-track-content track-content"
-                  .style="${this.openCategories.includes(category.name)
-                    ? "opacity:0"
-                    : "opacity:1"}"
-                >
-                  ${this.data[category.name] &&
-                    this.getTrack(
-                      category.trackType,
-                      category.adapter,
-                      category.url,
-                      this.getCategoryTypesAsString(category.tracks),
-                      "non-overlapping",
-                      category.color,
-                      category.shape,
-                      category.name
-                    )}
-                </div>
+        ${this.config.categories.map(
+          category => this.data[category.name] && html`
+            <div class="category" id="category_${category.name}">
+              <div
+                class="category-label"
+                data-category-toggle="${category.name}"
+                @click="${this.handleCategoryClick}"
+              >
+                ${category.label}
               </div>
 
-              <!-- Expanded Categories -->
-              ${category.tracks.map(track => {
-                if (this.openCategories.includes(category.name)) {
-                  const trackData = this.data[`${category.name}-${track.name}`];
-                  return trackData && trackData.length
-                    ? html`
-                        <div class="category__track" id="track_${track.name}">
-                          <div class="track-label" title="${track.tooltip}">
-                            ${track.label
-                              ? track.label
-                              : this.getLabelComponent(track.labelComponent)}
-                          </div>
-                          <div
-                            class="track-content"
-                            data-id="track_${track.name}"
-                          >
-                            ${this.getTrack(
-                              track.trackType,
-                              category.adapter,
-                              category.url,
-                              track.filter,
-                              "non-overlapping",
-                              track.color ? track.color : category.color,
-                              track.shape ? track.shape : category.shape,
-                              `${category.name}-${track.name}`
-                            )}
-                          </div>
+              <div
+                data-id="category_${category.name}"
+                class="aggregate-track-content track-content"
+                .style="${this.openCategories.includes(category.name)
+                  ? "opacity:0"
+                  : "opacity:1"}"
+              >
+                ${this.data[category.name] &&
+                  this.getTrack(
+                    category.trackType,
+                    category.adapter,
+                    category.url,
+                    this.getCategoryTypesAsString(category.tracks),
+                    "non-overlapping",
+                    category.color,
+                    category.shape,
+                    category.name
+                  )}
+              </div>
+            </div>
+
+            <!-- Expanded Categories -->
+            ${category.tracks.map(track => {
+              if (this.openCategories.includes(category.name)) {
+                const trackData = this.data[`${category.name}-${track.name}`];
+                return trackData && trackData.length
+                  ? html`
+                      <div class="category__track" id="track_${track.name}">
+                        <div class="track-label" title="${track.tooltip}">
+                          ${track.label
+                            ? track.label
+                            : this.getLabelComponent(track.labelComponent)}
                         </div>
-                      `
-                    : "";
-                }
-              })}
-            `;
-          }
-        })}
+                        <div
+                          class="track-content"
+                          data-id="track_${track.name}"
+                        >
+                          ${this.getTrack(
+                            track.trackType,
+                            category.adapter,
+                            category.url,
+                            track.filter,
+                            "non-overlapping",
+                            track.color ? track.color : category.color,
+                            track.shape ? track.shape : category.shape,
+                            `${category.name}-${track.name}`
+                          )}
+                        </div>
+                      </div>
+                    `
+                  : "";
+              }
+            })}
+          `
+        )}
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
@@ -494,12 +471,12 @@ class ProtvistaUniprot extends LitElement {
   }
 
   getLabelComponent(name) {
-    switch (name) {
-      case "protvista-filter":
-        return html`
-          <protvista-filter style="minWidth: 20%"></protvista-filter>
-        `;
-    }
+    // switch (name) {
+    //   case "protvista-filter":
+    //     return html`
+    //       <protvista-filter style="minWidth: 20%"></protvista-filter>
+    //     `;
+    // }
   }
 
   getTrack(
@@ -525,7 +502,6 @@ class ProtvistaUniprot extends LitElement {
             displayend="${this.sequence.length}"
             id="track-${id}"
           >
-            ${"" /*this.getAdapter(adapter, url, trackTypes)*/}
           </protvista-track>
         `;
       case "protvista-variation":
@@ -534,8 +510,8 @@ class ProtvistaUniprot extends LitElement {
             length="${this.sequence.length}"
             displaystart="1"
             displayend="${this.sequence.length}"
+            id="track-${id}"
           >
-            ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation>
         `;
       case "protvista-variation-graph":
@@ -544,8 +520,8 @@ class ProtvistaUniprot extends LitElement {
             length="${this.sequence.length}"
             displaystart="1"
             displayend="${this.sequence.length}"
+            id="track-${id}"
           >
-            ${this.getAdapter(adapter, url, trackTypes)}
           </protvista-variation-graph>
         `;
       default:
