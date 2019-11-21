@@ -11,10 +11,11 @@ import { transformData as transformDataFeatureAdapter } from "protvista-feature-
 import { transformData as transformDataProteomicsAdapter } from "protvista-proteomics-adapter";
 import { transformData as transformDataStructureAdapter } from "protvista-structure-adapter";
 import { transformData as transformDataVariationAdapter } from "protvista-variation-adapter";
-import ProtvistaFilter, { ProtvistaCheckbox } from "protvista-filter";
+import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
 import ProtvistaStructure from "protvista-structure";
 import { loadComponent } from "./loadComponents.js";
+import filterConfig, { colorConfig } from "./filterConfig";
 
 const adapters = {
   "protvista-feature-adapter": transformDataFeatureAdapter,
@@ -128,7 +129,6 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-sequence", ProtvistaSequence);
     loadComponent("protvista-variation", ProtvistaVariation);
     loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
-    loadComponent("protvista-checkbox", ProtvistaCheckbox);
     loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-manager", ProtvistaManager);
     loadComponent("protvista-structure", ProtvistaStructure);
@@ -173,6 +173,14 @@ class ProtvistaUniprot extends LitElement {
   updated(changedProperties) {
     super.updated(changedProperties);
     this._loadDataInComponents();
+    const filterComponent = this.querySelector("protvista-filter");
+    if (filterComponent && filterComponent.filters !== filterConfig) {
+      filterComponent.filters = filterConfig;
+    }
+    const variationComponent = this.querySelector("protvista-variation");
+    if (variationComponent && variationComponent.colorConfig !== colorConfig) {
+      variationComponent.colorConfig = colorConfig;
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -324,9 +332,11 @@ class ProtvistaUniprot extends LitElement {
                     ? html`
                         <div class="category__track" id="track_${track.name}">
                           <div class="track-label" title="${track.tooltip}">
-                            ${track.label
-                              ? track.label
-                              : this.getLabelComponent(track.labelComponent)}
+                            ${track.filterComponent
+                              ? this.getFilterComponent(
+                                  `${category.name}-${track.name}`
+                                )
+                              : track.label}
                           </div>
                           <div
                             class="track-content"
@@ -398,22 +408,16 @@ class ProtvistaUniprot extends LitElement {
     return tracks.map(t => t.filter).join(",");
   }
 
-  getLabelComponent(name) {
-    switch (name) {
-      case "protvista-filter":
-        return html`
-          <protvista-filter style="minWidth: 20%"></protvista-filter>
-        `;
-    }
+  getFilterComponent(forId) {
+    return html`
+      <protvista-filter
+        style="minWidth: 20%"
+        for="track-${forId}"
+      ></protvista-filter>
+    `;
   }
 
-  getTrack(
-    trackType,
-    layout = "",
-    color = "",
-    shape = "",
-    id = ""
-  ) {
+  getTrack(trackType, layout = "", color = "", shape = "", id = "") {
     // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
     switch (trackType) {
       case "protvista-track":
