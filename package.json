@@ -9,7 +9,7 @@
   "scripts": {
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development -w",
-    "link-all": "yarn link protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
+    "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
     "add-all": "yarn add protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
     "start": "concurrently \"yarn watch\" \"browser-sync start --index 'public/index.html' --server  --files src/**/*.* \""
   },
@@ -26,6 +26,7 @@
     "protvista-datatable": "^2.1.13",
     "protvista-feature-adapter": "^2.2.14",
     "protvista-filter": "^2.2.0",
+    "protvista-interpro-track": "^2.2.4",
     "protvista-manager": "^2.1.13",
     "protvista-navigation": "^2.2.5",
     "protvista-proteomics-adapter": "^2.2.6",

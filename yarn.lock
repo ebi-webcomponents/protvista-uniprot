@@ -5643,6 +5643,14 @@ protvista-filter@^2.2.0:
     lit-html "^1.1.1"
     lodash-es "^4.17.11"
 
+protvista-interpro-track@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/protvista-interpro-track/-/protvista-interpro-track-2.2.4.tgz#252bfa3f2a68f7204c72d3a6a0d98ffae89a385e"
+  integrity sha512-JJ8j8lFI8/rc+Pky6fzVBIDdYI8DA+JT2aiqYzMHHtW0dA0ZMDP+GzkQ1DvxYucba2W8jemJ1sgpvIKD/3V7hQ==
+  dependencies:
+    lodash-es "^4.17.11"
+    protvista-track "^2.2.4"
+
 protvista-manager@^2.1.13:
   version "2.1.13"
   resolved "https://registry.yarnpkg.com/protvista-manager/-/protvista-manager-2.1.13.tgz#38d0d61f0849ac94091562b9f74fa3df1c1818db"
