@@ -189,11 +189,13 @@ class ProtvistaUniprot extends LitElement {
     super.updated(changedProperties);
     this._loadDataInComponents();
     // Add variation filter
-    if (this.querySelector("#variation-filter")) {
-      this.querySelector("#variation-filter").filters = variantFilterConfig;
+    const variationFilter = this.querySelector("#variation-filter");
+    if (variationFilter && variationFilter.filters !== variantFilterConfig) {
+      variationFilter.filters = variantFilterConfig;
     }
-    if (this.querySelector("protvista-variation")) {
-      this.querySelector("protvista-variation").colorConfig = colorConfig;
+    const variationTrack = this.querySelector("protvista-variation");
+    if (variationTrack && variationTrack.colorConfig !== colorConfig) {
+      variationTrack.colorConfig = colorConfig;
     }
   }
   connectedCallback() {
