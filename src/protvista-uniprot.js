@@ -34,6 +34,7 @@ class ProtvistaUniprot extends LitElement {
     this.nostructure = false;
     this.hasData = false;
     this.data = {};
+    this.displayCoordinates = null;
   }
 
   static get properties() {
@@ -207,18 +208,29 @@ class ProtvistaUniprot extends LitElement {
 
     this.loadEntry(this.accession).then(entryData => {
       this.sequence = entryData.sequence.sequence;
+      this.displayCoordinates = { start: 1, end: this.sequence.length };
       // We need to get the length of the protein before rendering it
     });
     this._loadData();
 
-    if (!this.notooltip) {
-      this.addEventListener("change", e => {
+    this.addEventListener("change", e => {
+      if (e.detail.displaystart) {
+        this.displayCoordinates.start = e.detail.displaystart;
+      }
+      if (e.detail.displayend) {
+        this.displayCoordinates.end = e.detail.displayend;
+      }
+
+      if (!this.notooltip) {
         if (!e.detail.eventtype) {
           this._resetTooltip();
         } else if (e.detail.eventtype === "click") {
           this.updateTooltip(e, true);
         }
-      });
+      }
+    });
+
+    if (!this.notooltip) {
       this.addEventListener("click", e => {
         if (
           !e.target.closest(".feature") &&
@@ -302,8 +314,8 @@ class ProtvistaUniprot extends LitElement {
             <protvista-sequence
               length="${this.sequence.length}"
               sequence="${this.sequence}"
-              displaystart="1"
-              displayend="${this.sequence.length}"
+              displaystart=${this.displayCoordinates.start}
+              displayend="${this.displayCoordinates.end}"
             ></protvista-sequence>
           </div>
         </div>
@@ -410,8 +422,8 @@ class ProtvistaUniprot extends LitElement {
             <protvista-sequence
               length="${this.sequence.length}"
               sequence="${this.sequence}"
-              displaystart="1"
-              displayend="${this.sequence.length}"
+              displaystart=${this.displayCoordinates.start}
+              displayend="${this.displayCoordinates.end}"
             ></protvista-sequence>
           </div>
         </div>
@@ -478,8 +490,8 @@ class ProtvistaUniprot extends LitElement {
             layout="${layout}"
             color="${color}"
             shape="${shape}"
-            displaystart="1"
-            displayend="${this.sequence.length}"
+            displaystart=${this.displayCoordinates.start}
+            displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
           </protvista-track>
@@ -490,8 +502,8 @@ class ProtvistaUniprot extends LitElement {
             length="${this.sequence.length}"
             color="${color}"
             shape="${shape}"
-            displaystart="1"
-            displayend="${this.sequence.length}"
+            displaystart=${this.displayCoordinates.start}
+            displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
           </protvista-interpro-track>
@@ -500,8 +512,8 @@ class ProtvistaUniprot extends LitElement {
         return html`
           <protvista-variation
             length="${this.sequence.length}"
-            displaystart="1"
-            displayend="${this.sequence.length}"
+            displaystart=${this.displayCoordinates.start}
+            displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
           </protvista-variation>
@@ -510,8 +522,8 @@ class ProtvistaUniprot extends LitElement {
         return html`
           <protvista-variation-graph
             length="${this.sequence.length}"
-            displaystart="1"
-            displayend="${this.sequence.length}"
+            displaystart=${this.displayCoordinates.start}
+            displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
           </protvista-variation-graph>
