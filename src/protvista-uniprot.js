@@ -17,6 +17,7 @@ import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
 import ProtvistaStructure from "protvista-structure";
 import { loadComponent } from "./loadComponents.js";
+import variantFilterConfig, { colorConfig } from "./variantFilterConfig";
 
 const adapters = {
   "protvista-feature-adapter": transformDataFeatureAdapter,
@@ -132,7 +133,6 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-sequence", ProtvistaSequence);
     loadComponent("protvista-variation", ProtvistaVariation);
     loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
-    // loadComponent("protvista-checkbox", ProtvistaCheckbox);
     loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-manager", ProtvistaManager);
     loadComponent("protvista-structure", ProtvistaStructure);
@@ -188,6 +188,13 @@ class ProtvistaUniprot extends LitElement {
   updated(changedProperties) {
     super.updated(changedProperties);
     this._loadDataInComponents();
+    // Add variation filter
+    if (this.querySelector("#variation-filter")) {
+      this.querySelector("#variation-filter").filters = variantFilterConfig;
+    }
+    if (this.querySelector("protvista-variation")) {
+      this.querySelector("protvista-variation").colorConfig = colorConfig;
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -450,7 +457,11 @@ class ProtvistaUniprot extends LitElement {
     switch (name) {
       case "protvista-filter":
         return html`
-          <protvista-filter style="minWidth: 20%"></protvista-filter>
+          <protvista-filter
+            style="minWidth: 20%"
+            id="variation-filter"
+            for="track-VARIATION-variation"
+          ></protvista-filter>
         `;
     }
   }
