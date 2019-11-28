@@ -54,7 +54,7 @@ const filterConfig = [
       text: "Filter Consequence"
     },
     options: {
-      labels: ["Predicted deleterious", "Predicted benign"],
+      labels: ["Predicted deleterious ", "Predicted benign"],
       colors: [scaleColors.deleteriousColor, scaleColors.benignColor]
     },
     filterData: variants =>
