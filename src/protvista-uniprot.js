@@ -144,29 +144,28 @@ class ProtvistaUniprot extends LitElement {
         url.indexOf("{}") >= 0
           ? url.replace("{}", this.accession)
           : `${url}${this.accession}`;
-      load(urlWithProtein)
-        .then(({ payload }) => {
-          const data = adapter ? adapters[adapter](payload) : payload;
-          this.data[name] =
-            adapter === "protvista-feature-adapter"
-              ? data.filter(({ category }) => !category || category === name)
-              : data;
-          if (tracks) {
-            for (const track of tracks) {
-              this.data[`${name}-${track.name}`] =
-                Array.isArray(data) && track.filter
-                  ? data.filter(({ type }) => type === track.filter)
-                  : data;
-            }
-          } else if (Array.isArray(data)) {
-            // if tracks are not defined we create a track per item in the result
-            for (const item of data) {
-              this.data[`${name}-${item.accession}`] = [item];
-            }
+      load(urlWithProtein).then(({ payload }) => {
+        if (!payload) return;
+        const data = adapter ? adapters[adapter](payload) : payload;
+        this.data[name] =
+          adapter === "protvista-feature-adapter"
+            ? data.filter(({ category }) => !category || category === name)
+            : data;
+        if (tracks) {
+          for (const track of tracks) {
+            this.data[`${name}-${track.name}`] =
+              Array.isArray(data) && track.filter
+                ? data.filter(({ type }) => type === track.filter)
+                : data;
           }
-          this.requestUpdate();
-        })
-        .catch(() => {} /*no data, hopefully*/);
+        } else if (Array.isArray(data)) {
+          // if tracks are not defined we create a track per item in the result
+          for (const item of data) {
+            this.data[`${name}-${item.accession}`] = [item];
+          }
+        }
+        this.requestUpdate();
+      });
     });
   }
   _loadDataInComponents() {
