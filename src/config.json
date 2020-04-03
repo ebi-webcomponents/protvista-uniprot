@@ -456,7 +456,7 @@
       "tracks": [
         {
           "name": "variation",
-          "labelComponent": "protvista-filter",
+          "filterComponent": "protvista-filter",
           "trackType": "protvista-variation",
           "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
         }

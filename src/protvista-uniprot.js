@@ -17,7 +17,7 @@ import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
 import ProtvistaStructure from "protvista-structure";
 import { loadComponent } from "./loadComponents.js";
-import variantFilterConfig, { colorConfig } from "./variantFilterConfig";
+import filterConfig, { colorConfig } from "./filterConfig";
 
 const adapters = {
   "protvista-feature-adapter": transformDataFeatureAdapter,
@@ -138,6 +138,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-manager", ProtvistaManager);
     loadComponent("protvista-structure", ProtvistaStructure);
   }
+
   _loadData() {
     this.config.categories.forEach(({ name, url, adapter, tracks }) => {
       const urlWithProtein =
@@ -168,6 +169,7 @@ class ProtvistaUniprot extends LitElement {
       });
     });
   }
+
   _loadDataInComponents() {
     Object.entries(this.data).forEach(([id, data]) => {
       const element = document.getElementById(`track-${id}`);
@@ -187,19 +189,20 @@ class ProtvistaUniprot extends LitElement {
       }
     });
   }
+
   updated(changedProperties) {
     super.updated(changedProperties);
     this._loadDataInComponents();
-    // Add variation filter
-    const variationFilter = this.querySelector("#variation-filter");
-    if (variationFilter && variationFilter.filters !== variantFilterConfig) {
-      variationFilter.filters = variantFilterConfig;
+    const filterComponent = this.querySelector("protvista-filter");
+    if (filterComponent && filterComponent.filters !== filterConfig) {
+      filterComponent.filters = filterConfig;
     }
-    const variationTrack = this.querySelector("protvista-variation");
-    if (variationTrack && variationTrack.colorConfig !== colorConfig) {
-      variationTrack.colorConfig = colorConfig;
+    const variationComponent = this.querySelector("protvista-variation");
+    if (variationComponent && variationComponent.colorConfig !== colorConfig) {
+      variationComponent.colorConfig = colorConfig;
     }
   }
+
   connectedCallback() {
     super.connectedCallback();
     this.registerWebComponents();
@@ -364,19 +367,21 @@ class ProtvistaUniprot extends LitElement {
                       ? html`
                           <div class="category__track" id="track_${track.name}">
                             <div class="track-label" title="${track.tooltip}">
-                              ${track.label
-                                ? track.label
-                                : this.getLabelComponent(track.labelComponent)}
+                              ${track.filterComponent
+                                ? this.getFilterComponent(
+                                    `${category.name}-${track.name}`
+                                  )
+                                : track.label}
                             </div>
                             <div
                               class="track-content"
                               data-id="track_${track.name}"
                             >
                               ${this.getTrack(
-                                track.trackType,
+                                category.trackType,
                                 "non-overlapping",
-                                track.color ? track.color : category.color,
-                                track.shape ? track.shape : category.shape,
+                                category.color,
+                                category.shape,
                                 `${category.name}-${track.name}`
                               )}
                             </div>
@@ -385,7 +390,6 @@ class ProtvistaUniprot extends LitElement {
                       : "";
                   }
                 })}
-              <!-- Multiple tracks -->
               ${!category.tracks
                 ? this.data[category.name].map(item => {
                     if (this.openCategories.includes(category.name)) {
@@ -468,17 +472,13 @@ class ProtvistaUniprot extends LitElement {
     return tracks.map(t => t.filter).join(",");
   }
 
-  getLabelComponent(name) {
-    switch (name) {
-      case "protvista-filter":
-        return html`
-          <protvista-filter
-            style="minWidth: 20%"
-            id="variation-filter"
-            for="track-VARIATION-variation"
-          ></protvista-filter>
-        `;
-    }
+  getFilterComponent(forId) {
+    return html`
+      <protvista-filter
+        style="minWidth: 20%"
+        for="track-${forId}"
+      ></protvista-filter>
+    `;
   }
 
   getTrack(trackType, layout = "", color = "", shape = "", id = "") {
