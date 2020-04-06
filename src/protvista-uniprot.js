@@ -15,7 +15,7 @@ import { transformData as transformDataVariationAdapter } from "protvista-variat
 import { transformData as transformDataInterproAdapter } from "protvista-interpro-adapter";
 import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
-import ProtvistaStructure from "protvista-structure";
+import ProtvistaUniprotStructure from "./protvista-uniprot-structure";
 import { loadComponent } from "./loadComponents.js";
 import filterConfig, { colorConfig } from "./filterConfig";
 
@@ -136,7 +136,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
     loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-manager", ProtvistaManager);
-    loadComponent("protvista-structure", ProtvistaStructure);
+    loadComponent("protvista-uniprot-structure", ProtvistaUniprotStructure);
   }
 
   _loadData() {
@@ -324,9 +324,9 @@ class ProtvistaUniprot extends LitElement {
           </div>
         </div>
         ${this.config.categories.map(
-          category =>
-            this.data[category.name] &&
-            html`
+      category =>
+        this.data[category.name] &&
+        html`
               <div class="category" id="category_${category.name}">
                 <div
                   class="category-label"
@@ -340,61 +340,61 @@ class ProtvistaUniprot extends LitElement {
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content"
                   .style="${this.openCategories.includes(category.name)
-                    ? "opacity:0"
-                    : "opacity:1"}"
+            ? "opacity:0"
+            : "opacity:1"}"
                 >
                   ${this.data[category.name] &&
-                    this.getTrack(
-                      category.trackType,
-                      "non-overlapping",
-                      category.color,
-                      category.shape,
-                      category.name
-                    )}
+          this.getTrack(
+            category.trackType,
+            "non-overlapping",
+            category.color,
+            category.shape,
+            category.name
+          )}
                 </div>
               </div>
 
               <!-- Expanded Categories -->
               ${category.tracks &&
-                category.tracks.map(track => {
-                  if (this.openCategories.includes(category.name)) {
-                    const trackData = this.data[
-                      `${category.name}-${track.name}`
-                    ];
-                    return trackData &&
-                      ((Array.isArray(trackData) && trackData.length) ||
-                        Object.keys(trackData).length)
-                      ? html`
+          category.tracks.map(track => {
+            if (this.openCategories.includes(category.name)) {
+              const trackData = this.data[
+                `${category.name}-${track.name}`
+              ];
+              return trackData &&
+                ((Array.isArray(trackData) && trackData.length) ||
+                  Object.keys(trackData).length)
+                ? html`
                           <div class="category__track" id="track_${track.name}">
                             <div class="track-label" title="${track.tooltip}">
                               ${track.filterComponent
-                                ? this.getFilterComponent(
-                                    `${category.name}-${track.name}`
-                                  )
-                                : track.label}
+                    ? this.getFilterComponent(
+                      `${category.name}-${track.name}`
+                    )
+                    : track.label}
                             </div>
                             <div
                               class="track-content"
                               data-id="track_${track.name}"
                             >
                               ${this.getTrack(
-                                category.trackType,
-                                "non-overlapping",
-                                category.color,
-                                category.shape,
-                                `${category.name}-${track.name}`
-                              )}
+                      category.trackType,
+                      "non-overlapping",
+                      category.color,
+                      category.shape,
+                      `${category.name}-${track.name}`
+                    )}
                             </div>
                           </div>
                         `
-                      : "";
-                  }
-                })}
+                : "";
+            }
+          })}
               ${!category.tracks
-                ? this.data[category.name].map(item => {
-                    if (this.openCategories.includes(category.name)) {
-                      if (!item || !item.accession) return "";
-                      return html`
+            ? this.data[category.name].map(item => {
+              if (this.openCategories.includes(category.name)) {
+                if (!item || !item.accession) return "";
+                return html`
                         <div
                           class="category__track"
                           id="track_${item.accession}"
@@ -407,20 +407,20 @@ class ProtvistaUniprot extends LitElement {
                             data-id="track_${item.accession}"
                           >
                             ${this.getTrack(
-                              category.trackType,
-                              "non-overlapping",
-                              category.color,
-                              category.shape,
-                              `${category.name}-${item.accession}`
-                            )}
+                  category.trackType,
+                  "non-overlapping",
+                  category.color,
+                  category.shape,
+                  `${category.name}-${item.accession}`
+                )}
                           </div>
                         </div>
                       `;
-                    }
-                  })
-                : ""}
+              }
+            })
+            : ""}
             `
-        )}
+    )}
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
@@ -433,12 +433,12 @@ class ProtvistaUniprot extends LitElement {
           </div>
         </div>
         ${!this.nostructure
-          ? html`
-              <protvista-structure
+        ? html`
+              <protvista-uniprot-structure
                 accession="${this.accession}"
-              ></protvista-structure>
+              ></protvista-uniprot-structure>
             `
-          : ""}
+        : ""}
         <protvista-tooltip />
       </protvista-manager>
     `;
