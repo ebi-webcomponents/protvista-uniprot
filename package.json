@@ -11,7 +11,7 @@
     "watch": "webpack --mode=development -w",
     "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
     "add-all": "yarn add protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
-    "start": "concurrently \"yarn watch\" \"browser-sync start --index 'public/index.html' --server  --files src/**/*.* \""
+    "start": "concurrently \"yarn watch\" \"browser-sync start --index 'public/index.html' --server  --files dist/**/*.* \""
   },
   "main": "dist/protvista-uniprot.js",
   "module": "src/protvista-uniprot.js",
@@ -19,9 +19,9 @@
   "author": "Xavier Watkins &lt;xwatkins@ebi.ac.uk&gt;",
   "license": "MIT",
   "dependencies": {
-    "data-loader": "^2.0.0",
+    "data-loader": "^2.4.2",
     "file-saver": "^2.0.2",
-    "lit-element": "2.2.0",
+    "lit-element": "^2.2.0",
     "litemol": "^2.4.2",
     "protvista-datatable": "^2.1.13",
     "protvista-feature-adapter": "^2.3.3",
