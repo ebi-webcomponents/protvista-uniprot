@@ -93,7 +93,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const { payload } = await load(url);
     if (payload) {
       this.data = processData(payload);
-      const protvistaDatatableElt = this.shadowRoot.querySelector(
+      const protvistaDatatableElt = this.querySelector(
         "protvista-datatable"
       );
       // Select the first element in the table
@@ -106,9 +106,15 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   onTableRowClick({ id }) {
-    console.log(this.pdbId);
     this.pdbId = id;
-    console.log(this.pdbId);
+  }
+
+  /**
+   * LiteMol doesn't work well with the Shadow DOM, therefore
+   * we need to use the light DOM.
+   * */
+  createRenderRoot() {
+    return this;
   }
 
   render() {

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element";
+import { LitElement, html } from "lit-element";
 import defaultConfig from "./config.json";
 import ProtvistaNavigation from "protvista-navigation";
 import ProtvistaTooltip from "protvista-tooltip";
@@ -281,7 +281,7 @@ class ProtvistaUniprot extends LitElement {
         await fetch(`https://www.ebi.ac.uk/proteins/api/proteins/${accession}`)
       ).json();
     } catch (e) {
-      console.log(`Couldn't load UniProt entry`, e);
+      console.error(`Couldn't load UniProt entry`, e);
     }
   }
 
@@ -289,7 +289,6 @@ class ProtvistaUniprot extends LitElement {
    * LiteMol doesn't work well with the Shadow DOM, therefore
    * we need to use the light DOM.
    * */
-
   createRenderRoot() {
     return this;
   }
@@ -482,7 +481,8 @@ class ProtvistaUniprot extends LitElement {
   }
 
   getTrack(trackType, layout = "", color = "", shape = "", id = "") {
-    // TODO Allow injection of static content into templates https://github.com/Polymer/lit-html/issues/78
+    // lit-html doesn't allow to have dynamic tag names, hence the switch/case
+    // with repeated code
     switch (trackType) {
       case "protvista-track":
         return html`
@@ -491,7 +491,7 @@ class ProtvistaUniprot extends LitElement {
             layout="${layout}"
             color="${color}"
             shape="${shape}"
-            displaystart=${this.displayCoordinates.start}
+            displaystart="${this.displayCoordinates.start}"
             displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
@@ -503,7 +503,7 @@ class ProtvistaUniprot extends LitElement {
             length="${this.sequence.length}"
             color="${color}"
             shape="${shape}"
-            displaystart=${this.displayCoordinates.start}
+            displaystart="${this.displayCoordinates.start}"
             displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
@@ -513,7 +513,7 @@ class ProtvistaUniprot extends LitElement {
         return html`
           <protvista-variation
             length="${this.sequence.length}"
-            displaystart=${this.displayCoordinates.start}
+            displaystart="${this.displayCoordinates.start}"
             displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
@@ -523,14 +523,14 @@ class ProtvistaUniprot extends LitElement {
         return html`
           <protvista-variation-graph
             length="${this.sequence.length}"
-            displaystart=${this.displayCoordinates.start}
+            displaystart="${this.displayCoordinates.start}"
             displayend="${this.displayCoordinates.end}"
             id="track-${id}"
           >
           </protvista-variation-graph>
         `;
       default:
-        console.log("No Matching ProtvistaTrack Found.");
+        console.warn("No Matching ProtvistaTrack Found.");
         break;
     }
   }
