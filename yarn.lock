@@ -5725,9 +5725,9 @@ protvista-variation-adapter@^2.3.3:
     uuid "^3.3.3"
 
 protvista-variation-graph@^2.2.11:
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.3.5.tgz#f8d9e79d4ae01897d496b9090658f1c1e84029f2"
-  integrity sha512-wMonpu39whSwMXEox1ZJXFVF8IkSAzxf/IfJ2cGOVbflaNsGotLW2ucZ7QBpko7PzkKd5+XnJS7IFPx3IT49bA==
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.5.2.tgz#b770d20079c048eec455a9a5afbb931b8fd047e4"
+  integrity sha512-RZ3U/huXM3AiFHe288AzTzdj7NjA4fs0EGb60YVzfbM43xoR22u0/ennFCsIQUTfRYTdRioN5elXs+8hmOGrdg==
   dependencies:
     protvista-track "^2.3.5"
 
