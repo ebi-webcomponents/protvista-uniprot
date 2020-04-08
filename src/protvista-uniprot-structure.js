@@ -64,9 +64,9 @@ const getColumnConfig = () => ({
     label: "Links",
     resolver: ({ id }) =>
       html`
-      ${PDBLinks.map((pdbLink) => {
-        return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
-      }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
+        ${PDBLinks.map((pdbLink) => {
+          return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
+        }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
       `,
   },
 });
@@ -121,11 +121,11 @@ class ProtvistaUniprotStructure extends LitElement {
     return html`
       <div>
         ${this.pdbId
-        ? html`<protvista-structure
+          ? html`<protvista-structure
               pdb-id=${this.pdbId}
               accession=${this.accession}
             ></protvista-structure>`
-        : html``}
+          : html``}
         <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
       </div>
     `;
