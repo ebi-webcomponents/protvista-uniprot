@@ -91,18 +91,17 @@ class ProtvistaUniprotStructure extends LitElement {
     super.connectedCallback();
     const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const { payload } = await load(url);
-    if (payload) {
-      this.data = processData(payload);
-      const protvistaDatatableElt = this.querySelector(
-        "protvista-datatable"
-      );
-      // Select the first element in the table
-      this.pdbId = this.data[0].id;
-      protvistaDatatableElt.columns = getColumnConfig();
-      protvistaDatatableElt.data = this.data;
-      protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
-      protvistaDatatableElt.selectedid = this.pdbId;
-    }
+    if (!payload) return;
+    const data = processData(payload);
+    if (!data || !data.length) return;
+    this.data = data;
+    const protvistaDatatableElt = this.querySelector("protvista-datatable");
+    // Select the first element in the table
+    this.pdbId = this.data[0].id;
+    protvistaDatatableElt.columns = getColumnConfig();
+    protvistaDatatableElt.data = this.data;
+    protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
+    protvistaDatatableElt.selectedid = this.pdbId;
   }
 
   onTableRowClick({ id }) {
