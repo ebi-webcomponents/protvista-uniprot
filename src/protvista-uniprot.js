@@ -24,8 +24,9 @@ const adapters = {
   "protvista-interpro-adapter": transformDataInterproAdapter,
   "protvista-proteomics-adapter": transformDataProteomicsAdapter,
   "protvista-structure-adapter": transformDataStructureAdapter,
-  "protvista-variation-adapter": transformDataVariationAdapter
+  "protvista-variation-adapter": transformDataVariationAdapter,
 };
+
 class ProtvistaUniprot extends LitElement {
   constructor() {
     super();
@@ -45,7 +46,7 @@ class ProtvistaUniprot extends LitElement {
       openCategories: { type: Array },
       config: { type: Array },
       notooltip: { type: Boolean },
-      nostructure: { type: Boolean }
+      nostructure: { type: Boolean },
     };
   }
 
@@ -145,28 +146,35 @@ class ProtvistaUniprot extends LitElement {
         url.indexOf("{}") >= 0
           ? url.replace("{}", this.accession)
           : `${url}${this.accession}`;
-      load(urlWithProtein).then(({ payload }) => {
-        if (!payload) return;
-        const data = adapter ? adapters[adapter](payload) : payload;
-        this.data[name] =
-          adapter === "protvista-feature-adapter"
-            ? data.filter(({ category }) => !category || category === name)
-            : data;
-        if (tracks) {
-          for (const track of tracks) {
-            this.data[`${name}-${track.name}`] =
-              Array.isArray(data) && track.filter
-                ? data.filter(({ type }) => type === track.filter)
+      // TODO: remove this conditional setTimeout when InterPro API more stable
+      // NOTE: this is just to ensure the InterPro fetches are enqueued last
+      setTimeout(
+        () => {
+          load(urlWithProtein).then(({ payload }) => {
+            if (!payload) return;
+            const data = adapter ? adapters[adapter](payload) : payload;
+            this.data[name] =
+              adapter === "protvista-feature-adapter"
+                ? data.filter(({ category }) => !category || category === name)
                 : data;
-          }
-        } else if (Array.isArray(data)) {
-          // if tracks are not defined we create a track per item in the result
-          for (const item of data) {
-            this.data[`${name}-${item.accession}`] = [item];
-          }
-        }
-        this.requestUpdate();
-      });
+            if (tracks) {
+              for (const track of tracks) {
+                this.data[`${name}-${track.name}`] =
+                  Array.isArray(data) && track.filter
+                    ? data.filter(({ type }) => type === track.filter)
+                    : data;
+              }
+            } else if (Array.isArray(data)) {
+              // if tracks are not defined we create a track per item in the result
+              for (const item of data) {
+                this.data[`${name}-${item.accession}`] = [item];
+              }
+            }
+            this.requestUpdate();
+          });
+        },
+        /interpro/.test(urlWithProtein) ? 200 : 0
+      );
     });
   }
 
@@ -210,14 +218,14 @@ class ProtvistaUniprot extends LitElement {
       this.config = defaultConfig;
     }
 
-    this.loadEntry(this.accession).then(entryData => {
+    this.loadEntry(this.accession).then((entryData) => {
       this.sequence = entryData.sequence.sequence;
       this.displayCoordinates = { start: 1, end: this.sequence.length };
       // We need to get the length of the protein before rendering it
     });
     this._loadData();
 
-    this.addEventListener("change", e => {
+    this.addEventListener("change", (e) => {
       if (e.detail.displaystart) {
         this.displayCoordinates.start = e.detail.displaystart;
       }
@@ -235,7 +243,7 @@ class ProtvistaUniprot extends LitElement {
     });
 
     if (!this.notooltip) {
-      this.addEventListener("click", e => {
+      this.addEventListener("click", (e) => {
         if (
           !e.target.closest(".feature") &&
           !e.target.closest("protvista-tooltip")
@@ -247,14 +255,14 @@ class ProtvistaUniprot extends LitElement {
       document.addEventListener("click", this._resetTooltip);
     }
 
-    this.addEventListener("load", e => {
+    this.addEventListener("load", (e) => {
       if (!this.hasData) {
         this.dispatchEvent(
           new CustomEvent("protvista-event", {
             detail: {
-              hasData: true
+              hasData: true,
             },
-            bubbles: true
+            bubbles: true,
           })
         );
         this.hasData = true;
@@ -323,9 +331,9 @@ class ProtvistaUniprot extends LitElement {
           </div>
         </div>
         ${this.config.categories.map(
-      category =>
-        this.data[category.name] &&
-        html`
+          (category) =>
+            this.data[category.name] &&
+            html`
               <div class="category" id="category_${category.name}">
                 <div
                   class="category-label"
@@ -339,61 +347,59 @@ class ProtvistaUniprot extends LitElement {
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content"
                   .style="${this.openCategories.includes(category.name)
-            ? "opacity:0"
-            : "opacity:1"}"
+                    ? "opacity:0"
+                    : "opacity:1"}"
                 >
                   ${this.data[category.name] &&
-          this.getTrack(
-            category.trackType,
-            "non-overlapping",
-            category.color,
-            category.shape,
-            category.name
-          )}
+                  this.getTrack(
+                    category.trackType,
+                    "non-overlapping",
+                    category.color,
+                    category.shape,
+                    category.name
+                  )}
                 </div>
               </div>
 
               <!-- Expanded Categories -->
               ${category.tracks &&
-          category.tracks.map(track => {
-            if (this.openCategories.includes(category.name)) {
-              const trackData = this.data[
-                `${category.name}-${track.name}`
-              ];
-              return trackData &&
-                ((Array.isArray(trackData) && trackData.length) ||
-                  Object.keys(trackData).length)
-                ? html`
-                          <div class="category__track" id="track_${track.name}">
-                            <div class="track-label" title="${track.tooltip}">
-                              ${track.filterComponent
-                    ? this.getFilterComponent(
-                      `${category.name}-${track.name}`
-                    )
-                    : track.label}
-                            </div>
-                            <div
-                              class="track-content"
-                              data-id="track_${track.name}"
-                            >
-                              ${this.getTrack(
-                      category.trackType,
-                      "non-overlapping",
-                      category.color,
-                      category.shape,
-                      `${category.name}-${track.name}`
-                    )}
-                            </div>
+              category.tracks.map((track) => {
+                if (this.openCategories.includes(category.name)) {
+                  const trackData = this.data[`${category.name}-${track.name}`];
+                  return trackData &&
+                    ((Array.isArray(trackData) && trackData.length) ||
+                      Object.keys(trackData).length)
+                    ? html`
+                        <div class="category__track" id="track_${track.name}">
+                          <div class="track-label" title="${track.tooltip}">
+                            ${track.filterComponent
+                              ? this.getFilterComponent(
+                                  `${category.name}-${track.name}`
+                                )
+                              : track.label}
                           </div>
-                        `
-                : "";
-            }
-          })}
+                          <div
+                            class="track-content"
+                            data-id="track_${track.name}"
+                          >
+                            ${this.getTrack(
+                              track.trackType,
+                              "non-overlapping",
+                              track.color || category.color,
+                              track.shape || category.shape,
+                              `${category.name}-${track.name}`
+                            )}
+                          </div>
+                        </div>
+                      `
+                    : "";
+                }
+              })}
               ${!category.tracks
-            ? this.data[category.name].map(item => {
-              if (this.openCategories.includes(category.name)) {
-                if (!item || !item.accession) return "";
-                return html`
+                ? this.data[category.name].map((item) => {
+                    if (this.openCategories.includes(category.name)) {
+                      if (!item || !item.accession) return "";
+                      return html`
                         <div
                           class="category__track"
                           id="track_${item.accession}"
@@ -406,20 +412,20 @@ class ProtvistaUniprot extends LitElement {
                             data-id="track_${item.accession}"
                           >
                             ${this.getTrack(
-                  category.trackType,
-                  "non-overlapping",
-                  category.color,
-                  category.shape,
-                  `${category.name}-${item.accession}`
-                )}
+                              category.trackType,
+                              "non-overlapping",
+                              category.color,
+                              category.shape,
+                              `${category.name}-${item.accession}`
+                            )}
                           </div>
                         </div>
                       `;
-              }
-            })
-            : ""}
+                    }
+                  })
+                : ""}
             `
-    )}
+        )}
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
@@ -432,12 +438,12 @@ class ProtvistaUniprot extends LitElement {
           </div>
         </div>
         ${!this.nostructure
-        ? html`
+          ? html`
               <protvista-uniprot-structure
                 accession="${this.accession}"
               ></protvista-uniprot-structure>
             `
-        : ""}
+          : ""}
         <protvista-tooltip />
       </protvista-manager>
     `;
@@ -463,12 +469,14 @@ class ProtvistaUniprot extends LitElement {
       this.openCategories = [...this.openCategories, toggle];
     } else {
       e.target.classList.remove("open");
-      this.openCategories = [...this.openCategories].filter(d => d !== toggle);
+      this.openCategories = [...this.openCategories].filter(
+        (d) => d !== toggle
+      );
     }
   }
 
   getCategoryTypesAsString(tracks) {
-    return tracks.map(t => t.filter).join(",");
+    return tracks.map((t) => t.filter).join(",");
   }
 
   getFilterComponent(forId) {
