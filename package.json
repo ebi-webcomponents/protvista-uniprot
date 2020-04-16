@@ -38,7 +38,7 @@
     "protvista-track": "^2.2.4",
     "protvista-variation": "^2.2.4",
     "protvista-variation-adapter": "^2.3.3",
-    "protvista-variation-graph": "^2.2.11",
+    "protvista-variation-graph": "^2.6.0",
     "protvista-zoomable": "^2.2.0",
     "url-join": "^4.0.1"
   },

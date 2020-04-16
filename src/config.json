@@ -455,6 +455,10 @@
       "url": "https://www.ebi.ac.uk/proteins/api/variation/",
       "tracks": [
         {
+          "name": "variation_graph",
+          "trackType": "protvista-variation-graph"
+        },
+        {
           "name": "variation",
           "filterComponent": "protvista-filter",
           "trackType": "protvista-variation",
