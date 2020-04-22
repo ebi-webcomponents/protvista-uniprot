@@ -89,6 +89,7 @@ class ProtvistaUniprotStructure extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
+    if (!this.accession) return;
     const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const { payload } = await load(url);
     if (!payload) return;

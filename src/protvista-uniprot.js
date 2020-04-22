@@ -1,5 +1,6 @@
 import { LitElement, html } from "lit-element";
-import defaultConfig from "./config.json";
+import { sleep, frame } from "timing-functions";
+// components
 import ProtvistaNavigation from "protvista-navigation";
 import ProtvistaTooltip from "protvista-tooltip";
 import ProtvistaTrack from "protvista-track";
@@ -7,17 +8,27 @@ import ProtvistaInterproTrack from "protvista-interpro-track";
 import ProtvistaSequence from "protvista-sequence";
 import ProtvistaVariation from "protvista-variation";
 import ProtvistaVariationGraph from "protvista-variation-graph";
-import { load } from "data-loader";
-import { transformData as transformDataFeatureAdapter } from "protvista-feature-adapter";
-import { transformData as transformDataProteomicsAdapter } from "protvista-proteomics-adapter";
-import { transformData as transformDataStructureAdapter } from "protvista-structure-adapter";
-import { transformData as transformDataVariationAdapter } from "protvista-variation-adapter";
-import { transformData as transformDataInterproAdapter } from "protvista-interpro-adapter";
 import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
+
+import { load } from "data-loader";
+// adapters
+import { transformData as _transformDataFeatureAdapter } from "protvista-feature-adapter";
+import { transformData as _transformDataProteomicsAdapter } from "protvista-proteomics-adapter";
+import { transformData as _transformDataStructureAdapter } from "protvista-structure-adapter";
+import { transformData as _transformDataVariationAdapter } from "protvista-variation-adapter";
+import { transformData as _transformDataInterproAdapter } from "protvista-interpro-adapter";
+
+import defaultConfig from "./config.json";
 import ProtvistaUniprotStructure from "./protvista-uniprot-structure";
 import { loadComponent } from "./loadComponents.js";
 import filterConfig, { colorConfig } from "./filterConfig";
+
+export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
+export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
+export const transformDataStructureAdapter = _transformDataStructureAdapter;
+export const transformDataVariationAdapter = _transformDataVariationAdapter;
+export const transformDataInterproAdapter = _transformDataInterproAdapter;
 
 const adapters = {
   "protvista-feature-adapter": transformDataFeatureAdapter,
@@ -40,13 +51,14 @@ class ProtvistaUniprot extends LitElement {
 
   static get properties() {
     return {
-      accession: { type: String },
+      suspend: { type: Boolean, reflect: true },
+      accession: { type: String, reflect: true },
       sequence: { type: String },
-      data: { type: Array },
+      data: { type: Object },
       openCategories: { type: Array },
-      config: { type: Array },
-      notooltip: { type: Boolean },
-      nostructure: { type: Boolean },
+      config: { type: Object },
+      notooltip: { type: Boolean, reflect: true },
+      nostructure: { type: Boolean, reflect: true },
     };
   }
 
@@ -141,16 +153,17 @@ class ProtvistaUniprot extends LitElement {
   }
 
   _loadData() {
-    this.config.categories.forEach(({ name, url, adapter, tracks }) => {
-      const urlWithProtein =
-        url.indexOf("{}") >= 0
-          ? url.replace("{}", this.accession)
-          : `${url}${this.accession}`;
-      // TODO: remove this conditional setTimeout when InterPro API more stable
-      // NOTE: this is just to ensure the InterPro fetches are enqueued last
-      setTimeout(
-        () => {
-          load(urlWithProtein).then(({ payload }) => {
+    const tasks = this.config.categories.map(
+      ({ name, url, adapter, tracks }) => {
+        const urlWithProtein =
+          url.indexOf("{}") >= 0
+            ? url.replace("{}", this.accession)
+            : `${url}${this.accession}`;
+        // TODO: remove this conditional setTimeout when InterPro API more stable
+        // NOTE: this is just to ensure the InterPro fetches are enqueued last
+        return sleep(/interpro/.test(urlWithProtein) ? 100 : 0)
+          .then(() => load(urlWithProtein))
+          .then(({ payload }) => {
             if (!payload) return;
             const data = adapter ? adapters[adapter](payload) : payload;
             this.data[name] =
@@ -172,16 +185,17 @@ class ProtvistaUniprot extends LitElement {
             }
             this.requestUpdate();
           });
-        },
-        /interpro/.test(urlWithProtein) ? 200 : 0
-      );
-    });
+      }
+    );
+    return Promise.all(tasks);
   }
 
-  _loadDataInComponents() {
+  async _loadDataInComponents() {
+    await frame();
     Object.entries(this.data).forEach(([id, data]) => {
       const element = document.getElementById(`track-${id}`);
-      if (element) element.data = data;
+      // set data if it hasn't changed
+      if (element && element.data !== data) element.data = data;
       const currentCategory = this.config.categories.filter(
         ({ name }) => name === id
       );
@@ -200,30 +214,44 @@ class ProtvistaUniprot extends LitElement {
 
   updated(changedProperties) {
     super.updated(changedProperties);
-    this._loadDataInComponents();
+
     const filterComponent = this.querySelector("protvista-filter");
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
+
     const variationComponent = this.querySelector("protvista-variation");
     if (variationComponent && variationComponent.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
+
+    if (changedProperties.has("suspend")) {
+      if (this.suspend) return;
+      this._init();
+    }
+
+    this._loadDataInComponents();
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.registerWebComponents();
+  _init() {
     if (!this.config) {
       this.config = defaultConfig;
     }
 
+    if (!this.accession) return;
     this.loadEntry(this.accession).then((entryData) => {
       this.sequence = entryData.sequence.sequence;
       this.displayCoordinates = { start: 1, end: this.sequence.length };
       // We need to get the length of the protein before rendering it
     });
     this._loadData();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.registerWebComponents();
+
+    if (!this.suspend) this._init();
 
     this.addEventListener("change", (e) => {
       if (e.detail.displaystart) {
@@ -279,7 +307,7 @@ class ProtvistaUniprot extends LitElement {
   _resetTooltip(e) {
     if (this && (!e || !e.target.closest("protvista-uniprot"))) {
       const tooltip = this.querySelector("protvista-tooltip");
-      tooltip.style.setProperty("display", "none");
+      if (tooltip) tooltip.style.setProperty("display", "none");
     }
   }
 
@@ -302,7 +330,7 @@ class ProtvistaUniprot extends LitElement {
   }
 
   render() {
-    if (!this.sequence || !this.config) {
+    if (!this.sequence || !this.config || this.suspend) {
       return html``;
     }
     return html`
@@ -440,7 +468,7 @@ class ProtvistaUniprot extends LitElement {
         ${!this.nostructure
           ? html`
               <protvista-uniprot-structure
-                accession="${this.accession}"
+                accession="${this.accession || ""}"
               ></protvista-uniprot-structure>
             `
           : ""}
@@ -449,17 +477,28 @@ class ProtvistaUniprot extends LitElement {
     `;
   }
 
-  updateTooltip(e) {
+  async updateTooltip(e) {
     const d = e.detail.feature;
-    if (!d.tooltipContent) {
-      return;
-    }
+
+    if (!d.tooltipContent) return;
+
     const tooltip = this.querySelector("protvista-tooltip");
-    tooltip.style.setProperty("left", `${e.detail.coords[0] + 2}px`);
-    tooltip.style.setProperty("top", `${e.detail.coords[1] + 3}px`);
-    tooltip.style.setProperty("display", "block");
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
+    tooltip.style.setProperty("display", "block");
+
+    await frame();
+
+    const docRect = document.documentElement.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    const [x, y] = e.detail.coords;
+
+    tooltip.style.setProperty(
+      "left",
+      `${Math.min(x + 2, docRect.width - tooltipRect.width)}px`
+    );
+    tooltip.style.setProperty("top", `${y + 3}px`);
   }
 
   handleCategoryClick(e) {
