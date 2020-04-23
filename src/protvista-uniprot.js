@@ -277,7 +277,7 @@ class ProtvistaUniprot extends LitElement {
           !e.target.closest("protvista-tooltip")
         ) {
           const tooltip = this.querySelector("protvista-tooltip");
-          tooltip.style.setProperty("display", "none");
+          tooltip.visible = false;
         }
       });
       document.addEventListener("click", this._resetTooltip);
@@ -307,7 +307,7 @@ class ProtvistaUniprot extends LitElement {
   _resetTooltip(e) {
     if (this && (!e || !e.target.closest("protvista-uniprot"))) {
       const tooltip = this.querySelector("protvista-tooltip");
-      if (tooltip) tooltip.style.setProperty("display", "none");
+      if (tooltip) tooltip.visible = false;
     }
   }
 
@@ -485,20 +485,12 @@ class ProtvistaUniprot extends LitElement {
     const tooltip = this.querySelector("protvista-tooltip");
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
-    tooltip.style.setProperty("display", "block");
-
-    await frame();
-
-    const docRect = document.documentElement.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
+    tooltip.visible = true;
 
     const [x, y] = e.detail.coords;
 
-    tooltip.style.setProperty(
-      "left",
-      `${Math.min(x + 2, docRect.width - tooltipRect.width)}px`
-    );
-    tooltip.style.setProperty("top", `${y + 3}px`);
+    tooltip.x = x;
+    tooltip.y = y;
   }
 
   handleCategoryClick(e) {
