@@ -23,7 +23,7 @@
     "file-saver": "^2.0.2",
     "lit-element": "^2.2.0",
     "litemol": "^2.4.2",
-    "protvista-datatable": "^2.7.0",
+    "protvista-datatable": "^2.8.2",
     "protvista-feature-adapter": "^2.3.3",
     "protvista-filter": "^2.7.0",
     "protvista-interpro-adapter": "^2.7.4",

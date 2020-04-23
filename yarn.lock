@@ -4662,7 +4662,7 @@ lit-element@^2.2.0:
   dependencies:
     lit-html "^1.1.1"
 
-lit-html@^1.1.1:
+lit-html@^1.1.1, lit-html@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.2.1.tgz#1fb933dc1e2ddc095f60b8086277d4fcd9d62cc8"
   integrity sha512-GSJHHXMGLZDzTRq59IUfL9FCdAlGfqNp/dEa7k7aBaaWD+JKaCjsAk9KYm2V12ItonVaYx2dprN66Zdm1AuBTQ==
@@ -5610,12 +5610,13 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-protvista-datatable@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-2.7.0.tgz#83497660235961466593d5a81af60e2d162a8d64"
-  integrity sha512-VQD3FYAVTh1pE6d2wNWFpHVsKZBXKCv02eYMLhv/0Mx17Bt0LWbUuxMQkyE7dSBoMwboH5q6eeJQXiEnAEYW4A==
+protvista-datatable@^2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-2.8.2.tgz#b06ded0f8c8c70f6f3a1ec265ab1026a8df3c586"
+  integrity sha512-7NOfSErs/Y1OqtcMxGEEKGvKMzuPG+x1djG+BA9MXhSjvZV5N79Ks7JRcd1Ht5R1xknPiaGoGLNA4/JyyNo7AQ==
   dependencies:
     lit-element "^2.2.0"
+    lit-html "^1.2.1"
     uuid "^3.3.3"
 
 protvista-feature-adapter@^2.3.3:
