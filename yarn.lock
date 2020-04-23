@@ -5633,10 +5633,10 @@ protvista-filter@^2.7.0:
     lit-element "^2.2.0"
     lodash-es "^4.17.11"
 
-protvista-interpro-adapter@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-2.7.2.tgz#351aacbcfcb54b99dc0eb84847770c49cb4a4012"
-  integrity sha512-FHOC1wbzIoCw7rBLFBQZfVb9SGkiUUGmbHreVUCQVbk0fP6wJYGXyuNsr3Q2gyuHvdpv0SNI8P7br/a3jc0GdA==
+protvista-interpro-adapter@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-2.7.4.tgz#6cdf0afb819b89fb1bc86a4ced41a2608f030cb0"
+  integrity sha512-u3Zaq/p1xwxTZz++EfairoEuG0pqJjNKs3+MEe6T14VLHGacDgnTdgB/NLgSpCBZv74/GncFJXNSpAEWd45lNQ==
 
 protvista-interpro-track@^2.6.1:
   version "2.6.1"
