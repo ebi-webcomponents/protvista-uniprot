@@ -5724,10 +5724,10 @@ protvista-variation-adapter@^2.3.3:
     protvista-feature-adapter "^2.3.3"
     uuid "^3.3.3"
 
-protvista-variation-graph@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.6.1.tgz#0c085bddf878d922b15eff7e83572c1db3cccaf5"
-  integrity sha512-8eIvtFa2rvP176mzzLgV/hlxppXZbceb8Eb1XXLiXI48Ql7eUkJjkUcQJGZlqepWVZ+iZFO59bQoCKpdDXn27g==
+protvista-variation-graph@^2.9.3:
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-2.9.3.tgz#fd94bd9a5db7115196567ccf92a2ea4b9ef47aca"
+  integrity sha512-Atq+as462xPAFl615JRvdu0LibhxRHeuypyE8GKXbzGslhj6RBjohCZXXNi8L39XrFaZC5v+j3mXcxYWOmAPXw==
   dependencies:
     protvista-track "^2.6.1"
 
