@@ -1,25 +1,30 @@
+import { scaleLinear } from "d3-scale";
+
 const scaleColors = {
   UPDiseaseColor: "#990000",
   UPNonDiseaseColor: "#99cc00",
-  predictedColor: "#4c8acd",
-  othersColor: "#009e73",
+  deleteriousColor: "#002594",
+  benignColor: "#8FE3FF",
+  othersColor: "#009e73"
 };
 
 const consequences = {
-  uncertain: [/uncertain/i, /conflicting/i, /unclassified/i, /risk factor/i],
+  likelyDisease: [/disease/i, /pathogenic\b/i, /risk factor/i],
+  likelyBenign: [/benign/i],
+  uncertain: [/uncertain/i, /conflicting/i, /unclassified/i]
 };
 
 const significanceMatches = (clinicalSignificance, values) =>
-  values.some((rx) => rx.test(clinicalSignificance));
+  values.some(rx => rx.test(clinicalSignificance));
 
 const getFilteredVariants = (variants, callbackFilter) =>
-  variants.map((variant) => {
-    const matchingVariants = variant.variants.filter((variantPos) =>
+  variants.map(variant => {
+    const matchingVariants = variant.variants.filter(variantPos =>
       callbackFilter(variantPos)
     );
     return {
       ...variant,
-      variants: [...matchingVariants],
+      variants: [...matchingVariants]
     };
   });
 
@@ -28,156 +33,177 @@ const filterConfig = [
     name: "disease",
     type: {
       name: "consequence",
-      text: "Filter Consequence",
+      text: "Filter Consequence"
     },
     options: {
       labels: ["Likely disease"],
-      colors: [scaleColors.UPDiseaseColor],
+      colors: [scaleColors.UPDiseaseColor]
     },
-    filterData: (variants) =>
-      getFilteredVariants(variants, (variantPos) =>
-        variantPos.association?.some((association) => association.disease)
-      ),
+    filterData: variants =>
+      getFilteredVariants(variants, variantPos =>
+        significanceMatches(
+          variantPos.clinicalSignificances,
+          consequences.likelyDisease
+        )
+      )
   },
   {
     name: "predicted",
     type: {
       name: "consequence",
-      text: "Filter Consequence",
+      text: "Filter Consequence"
     },
     options: {
-      labels: ["Predicted consequence"],
-      colors: [scaleColors.predictedColor],
+      labels: ["Predicted deleterious", "Predicted benign"],
+      colors: [scaleColors.deleteriousColor, scaleColors.benignColor]
     },
-    filterData: (variants) =>
-      getFilteredVariants(variants, (variantPos) => variantPos.hasPredictions),
+    filterData: variants =>
+      getFilteredVariants(
+        variants,
+        variantPos =>
+          typeof variantPos.polyphenScore !== "undefined" ||
+          typeof variantPos.siftScore !== "undefined"
+      )
   },
   {
     name: "nonDisease",
     type: {
       name: "consequence",
-      text: "Filter Consequence",
+      text: "Filter Consequence"
     },
     options: {
       labels: ["Likely benign"],
-      colors: [scaleColors.UPNonDiseaseColor],
+      colors: [scaleColors.UPNonDiseaseColor]
     },
-    filterData: (variants) =>
-      getFilteredVariants(variants, (variantPos) =>
-        variantPos.association?.some(
-          (association) => association.disease === false
+    filterData: variants =>
+      getFilteredVariants(variants, variantPos =>
+        significanceMatches(
+          variantPos.clinicalSignificances,
+          consequences.likelyBenign
         )
-      ),
+      )
   },
   {
     name: "uncertain",
     type: {
       name: "consequence",
-      text: "Filter Consequence",
+      text: "Filter Consequence"
     },
     options: {
       labels: ["Uncertain"],
-      colors: [scaleColors.othersColor],
+      colors: [scaleColors.othersColor]
     },
-    filterData: (variants) =>
+    filterData: variants =>
       getFilteredVariants(
         variants,
-        (variantPos) =>
+        variantPos =>
           (typeof variantPos.clinicalSignificances === "undefined" &&
-            !variantPos.hasPredictions) ||
+            typeof variantPos.polyphenScore === "undefined" &&
+            typeof variantPos.siftScore === "undefined") ||
           significanceMatches(
             variantPos.clinicalSignificances,
             consequences.uncertain
           )
-      ),
+      )
   },
   {
     name: "UniProt",
     type: {
       name: "provenance",
-      text: "Filter Provenance",
+      text: "Filter Provenance"
     },
     options: {
       labels: ["UniProt reviewed"],
-      colors: ["#9f9f9f"],
+      colors: ["#9f9f9f"]
     },
-    filterData: (variants) =>
+    filterData: variants =>
       getFilteredVariants(
         variants,
-        (variantPos) =>
+        variantPos =>
           variantPos.xrefNames &&
           (variantPos.xrefNames.includes("uniprot") ||
             variantPos.xrefNames.includes("UniProt"))
-      ),
+      )
   },
   {
     name: "ClinVar",
     type: {
       name: "provenance",
-      text: "Filter Provenance",
+      text: "Filter Provenance"
     },
     options: {
       labels: ["ClinVar reviewed"],
-      colors: ["#9f9f9f"],
+      colors: ["#9f9f9f"]
     },
-    filterData: (variants) =>
+    filterData: variants =>
       getFilteredVariants(
         variants,
-        (variantPos) =>
+        variantPos =>
           variantPos.xrefNames &&
           (variantPos.xrefNames.includes("ClinVar") ||
             variantPos.xrefNames.includes("clinvar"))
-      ),
+      )
   },
   {
     name: "LSS",
     type: {
       name: "provenance",
-      text: "Filter Provenance",
+      text: "Filter Provenance"
     },
     options: {
       labels: ["Large scale studies"],
-      colors: ["#9f9f9f"],
+      colors: ["#9f9f9f"]
     },
-    filterData: (variants) =>
+    filterData: variants =>
       getFilteredVariants(
         variants,
-        (variantPos) =>
+        variantPos =>
           variantPos.sourceType === "large_scale_study" ||
           variantPos.sourceType === "mixed"
-      ),
-  },
+      )
+  }
 ];
 
-export const colorConfig = (variant) => {
+const predictionScale = scaleLinear()
+  .domain([0, 1])
+  .range([scaleColors.deleteriousColor, scaleColors.benignColor]);
+
+const getPredictionColor = (polyphenScore, siftScore) => {
+  return predictionScale(
+    (siftScore || 0 + (1 - polyphenScore ? polyphenScore : 1)) /
+      (polyphenScore && siftScore ? 2 : 1)
+  );
+};
+
+export const colorConfig = variant => {
   const variantWrapper = [{ variants: [variant] }];
   if (
     filterConfig
-      .find((filter) => filter.name === "disease")
+      .find(filter => filter.name === "disease")
       .filterData(variantWrapper)[0].variants.length > 0
   ) {
     return scaleColors.UPDiseaseColor;
   }
   if (
     filterConfig
-      .find((filter) => filter.name === "nonDisease")
+      .find(filter => filter.name === "nonDisease")
       .filterData(variantWrapper)[0].variants.length > 0
   ) {
     return scaleColors.UPNonDiseaseColor;
   }
   if (
     filterConfig
-      .find((filter) => filter.name === "uncertain")
+      .find(filter => filter.name === "uncertain")
       .filterData(variantWrapper)[0].variants.length > 0
   ) {
     return scaleColors.othersColor;
   }
   if (
     filterConfig
-      .find((filter) => filter.name === "predicted")
+      .find(filter => filter.name === "predicted")
       .filterData(variantWrapper)[0].variants.length > 0
   ) {
-    return scaleColors.predictedColor;
+    return getPredictionColor(variant.polyphenScore, variant.siftScore);
   }
   return scaleColors.othersColor;
 };
