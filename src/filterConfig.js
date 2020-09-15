@@ -12,7 +12,7 @@ const consequences = {
 const significanceMatches = (clinicalSignificance, values) =>
   values.some((rx) => rx.test(clinicalSignificance));
 
-const getFilteredVariants = (variants, callbackFilter) =>
+export const getFilteredVariants = (variants, callbackFilter) =>
   variants.map((variant) => {
     const matchingVariants = variant.variants.filter((variantPos) =>
       callbackFilter(variantPos)

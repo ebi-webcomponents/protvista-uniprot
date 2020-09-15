@@ -22,13 +22,15 @@ import { transformData as _transformDataInterproAdapter } from "protvista-interp
 import defaultConfig from "./config.json";
 import ProtvistaUniprotStructure from "./protvista-uniprot-structure";
 import { loadComponent } from "./loadComponents.js";
-import filterConfig, { colorConfig } from "./filterConfig";
+import _filterConfig, { colorConfig as _colorConfig } from "./filterConfig";
 
 export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
+export const filterConfig = _filterConfig;
+export const colorConfig = _colorConfig;
 
 const adapters = {
   "protvista-feature-adapter": transformDataFeatureAdapter,
