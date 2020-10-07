@@ -1,15 +1,11 @@
 {
-    "presets": [
-        [
-            "env", {
-                "targets": {
-                    "ie": 11
-                },
-                "modules": false
-            }
-        ]
-    ],
-    "plugins": [
-        "external-helpers"
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "useBuiltIns": "usage",
+        "targets": { "node": "8" }
+      }
     ]
+  ]
 }
