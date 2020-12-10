@@ -10,6 +10,7 @@ import ProtvistaVariation from "protvista-variation";
 import ProtvistaVariationGraph from "protvista-variation-graph";
 import ProtvistaFilter from "protvista-filter";
 import ProtvistaManager from "protvista-manager";
+import ProtvistaVCFAdapter from "protvista-vcf-adapter";
 
 import { load } from "data-loader";
 // adapters
@@ -151,6 +152,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
     loadComponent("protvista-filter", ProtvistaFilter);
     loadComponent("protvista-manager", ProtvistaManager);
+    loadComponent("protvista-vcf-adapter", ProtvistaVCFAdapter);
     loadComponent("protvista-uniprot-structure", ProtvistaUniprotStructure);
   }
 
@@ -174,10 +176,14 @@ class ProtvistaUniprot extends LitElement {
                 : data;
             if (tracks) {
               for (const track of tracks) {
-                this.data[`${name}-${track.name}`] =
+                const trackID = `${name}-${track.name}`;
+                this.data[trackID] =
                   Array.isArray(data) && track.filter
                     ? data.filter(({ type }) => type === track.filter)
                     : data;
+                if (track.withVCFAdapter) {
+                  this.vcfTrackID = trackID;
+                }
               }
             } else if (Array.isArray(data)) {
               // if tracks are not defined we create a track per item in the result
@@ -286,6 +292,21 @@ class ProtvistaUniprot extends LitElement {
     }
 
     this.addEventListener("load", (e) => {
+      if (e.detail.type === ProtvistaVCFAdapter.is) {
+        const vcfVariants = e.detail.payload.variants;
+
+        const currentData = this.data[this.vcfTrackID];
+        this.querySelector(`#track-${this.vcfTrackID}`).data = {
+          sequence: currentData.sequence,
+          variants: [
+            ...currentData.variants,
+            ...vcfVariants.map((vcfVariant) => ({
+              ...vcfVariant,
+              color: "black",
+            })),
+          ],
+        };
+      }
       if (!this.hasData) {
         this.dispatchEvent(
           new CustomEvent("protvista-event", {
@@ -559,6 +580,10 @@ class ProtvistaUniprot extends LitElement {
             id="track-${id}"
           >
           </protvista-variation>
+          <protvista-vcf-adapter
+            accession="${this.accession}"
+            sequence="${this.sequence}"
+          ></protvista-vcf-adapter>
         `;
       case "protvista-variation-graph":
         return html`
