@@ -11,16 +11,16 @@ const config = {
     publicPath: "dist/",
     chunkFilename: "[name].js",
     library: "ProtvistaUniprot",
-    filename: "protvista-uniprot.js"
+    filename: "protvista-uniprot.js",
   },
   target: "web",
   devtool: "source-map",
   resolve: {
-    extensions: [".js"]
+    extensions: [".js"],
   },
   externals: {
     d3: "d3",
-    litemol: "LiteMol"
+    litemol: "LiteMol",
   },
   plugins: [new CleanWebpackPlugin([path.join(PACKAGE_ROOT_PATH, "dist")])],
   module: {
@@ -31,36 +31,37 @@ const config = {
           loader: "babel-loader",
           options: {
             babelrc: false,
-            exclude: /node_modules\/(?!(lit-element|lit-html|protvista-|data-loader)).*/,
+            exclude:
+              /node_modules\/(?!(lit-element|lit-html|protvista-|data-loader)).*/,
             presets: [
               [
                 "@babel/preset-env",
                 {
                   targets: {
                     ie: 11,
-                    browsers: "last 2 versions"
+                    browsers: "last 2 versions",
                   },
-                  modules: false
-                }
-              ]
+                  modules: false,
+                },
+              ],
             ],
             plugins: [
               [
                 "@babel/plugin-transform-runtime",
                 {
-                  regenerator: true
-                }
-              ]
-            ]
-          }
-        }
+                  regenerator: true,
+                },
+              ],
+            ],
+          },
+        },
       },
       {
         test: /\.svg$/,
-        loader: "svg-inline-loader"
-      }
-    ]
-  }
+        loader: "svg-inline-loader",
+      },
+    ],
+  },
 };
 
 module.exports = config;
