@@ -1,4 +1,4 @@
-const loadComponent = function(name, className) {
+const loadComponent = function (name, className) {
   if (!customElements.get(name)) {
     customElements.define(name, className);
   }

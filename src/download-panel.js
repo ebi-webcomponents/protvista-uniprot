@@ -1,11 +1,11 @@
-import { LitElement, html, css, svg } from "lit-element";
-import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
-import urlJoin from "url-join";
-import { saveAs } from "file-saver";
-import downloadIcon from "./download.svg";
+import { LitElement, html, css, svg } from 'lit-element';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+import urlJoin from 'url-join';
+import { saveAs } from 'file-saver';
+import downloadIcon from './download.svg';
 
-const downloadFiles = (downloadConfig, format = "json", accession) => {
-  downloadConfig.forEach(config => {
+const downloadFiles = (downloadConfig, format = 'json', accession) => {
+  downloadConfig.forEach((config) => {
     saveAs(
       urlJoin(
         config.url,
@@ -21,7 +21,7 @@ class DownloadPanel extends LitElement {
   constructor() {
     super();
     this.open = false;
-    this.format = "json";
+    this.format = 'json';
   }
 
   static get properties() {
@@ -29,7 +29,7 @@ class DownloadPanel extends LitElement {
       accession: { type: String },
       config: { type: Array },
       open: { type: Boolean },
-      format: { type: String }
+      format: { type: String },
     };
   }
 
@@ -106,9 +106,7 @@ class DownloadPanel extends LitElement {
 
   render() {
     return html`
-      <button title="Download">
-        ${this.downloadSVG()}
-      </button>
+      <button title="Download">${this.downloadSVG()}</button>
       <div class="${`download-menu ${this.open && `download-menu-open`}`}">
         <ul>
           <li>
@@ -118,7 +116,7 @@ class DownloadPanel extends LitElement {
                 name="download-type"
                 value="json"
                 checked
-                @click="${() => this.handleSetFormat("json")}"
+                @click="${() => this.handleSetFormat('json')}"
               />JSON</label
             >
           </li>
@@ -128,7 +126,7 @@ class DownloadPanel extends LitElement {
                 type="radio"
                 name="download-type"
                 value="xml"
-                @click="${() => this.handleSetFormat("xml")}"
+                @click="${() => this.handleSetFormat('xml')}"
               />XML</label
             >
           </li>
@@ -138,7 +136,7 @@ class DownloadPanel extends LitElement {
                 type="radio"
                 name="download-type"
                 value="gff"
-                @click="${() => this.handleSetFormat("gff")}"
+                @click="${() => this.handleSetFormat('gff')}"
               />GFF</label
             >
           </li>
