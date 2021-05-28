@@ -286,7 +286,7 @@ class ProtvistaUniprot extends LitElement {
       document.addEventListener('click', this._resetTooltip);
     }
 
-    this.addEventListener('load', (e) => {
+    this.addEventListener('load', () => {
       if (!this.hasData) {
         this.dispatchEvent(
           new CustomEvent('protvista-event', {
