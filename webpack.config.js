@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 const PACKAGE_ROOT_PATH = process.cwd();
 
@@ -8,7 +7,7 @@ const config = {
   entry: ["./src/index.js"],
   output: {
     path: path.resolve(PACKAGE_ROOT_PATH, "dist"),
-    publicPath: "dist/",
+    publicPath: "/",
     chunkFilename: "[name].js",
     library: "ProtvistaUniprot",
     filename: "protvista-uniprot.js",
@@ -22,7 +21,6 @@ const config = {
     d3: "d3",
     litemol: "LiteMol",
   },
-  plugins: [new CleanWebpackPlugin([path.join(PACKAGE_ROOT_PATH, "dist")])],
   module: {
     rules: [
       {
@@ -60,6 +58,12 @@ const config = {
         test: /\.svg$/,
         loader: "svg-inline-loader",
       },
+    ],
+  },
+  devServer: {
+    contentBase: [
+      path.join(__dirname, "public"),
+      path.join(__dirname, "node_modules"),
     ],
   },
 };
