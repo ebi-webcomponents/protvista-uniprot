@@ -4,7 +4,7 @@ const path = require('path');
 const PACKAGE_ROOT_PATH = process.cwd();
 
 const config = {
-  entry: ['./src/index.js'],
+  entry: ['./src/index.ts'],
   output: {
     path: path.resolve(PACKAGE_ROOT_PATH, 'dist'),
     publicPath: '/',
@@ -15,7 +15,7 @@ const config = {
   target: 'web',
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.ts', '.js'],
   },
   externals: {
     d3: 'd3',
@@ -24,34 +24,11 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(js)$/,
+        test: /\.(js|ts)$/,
+        exclude:
+          /node_modules\/(?!(lit-element|lit-html|timing-functions|protvista-*|data-loader)).*/,
         use: {
           loader: 'babel-loader',
-          options: {
-            babelrc: false,
-            exclude:
-              /node_modules\/(?!(lit-element|lit-html|protvista-|data-loader)).*/,
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: {
-                    ie: 11,
-                    browsers: 'last 2 versions',
-                  },
-                  modules: false,
-                },
-              ],
-            ],
-            plugins: [
-              [
-                '@babel/plugin-transform-runtime',
-                {
-                  regenerator: true,
-                },
-              ],
-            ],
-          },
         },
       },
       {
