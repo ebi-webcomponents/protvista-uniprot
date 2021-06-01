@@ -1,3 +1,9 @@
+import { ClinicalSignificance } from 'protvista-variation-adapter/dist/es/variants';
+import {
+  ProtvistaVariant,
+  ProtvistaVariationData,
+} from './types/protvista-variation';
+
 const scaleColors = {
   UPDiseaseColor: '#990000',
   UPNonDiseaseColor: '#99cc00',
@@ -9,10 +15,18 @@ const consequences = {
   uncertain: [/uncertain/i, /conflicting/i, /unclassified/i, /risk factor/i],
 };
 
-const significanceMatches = (clinicalSignificance, values) =>
-  values.some((rx) => rx.test(clinicalSignificance));
+const significanceMatches = (
+  clinicalSignificance: ClinicalSignificance[],
+  values: RegExp[]
+) =>
+  clinicalSignificance.some(({ type }) => {
+    return values.some((rx) => rx.test(type));
+  });
 
-export const getFilteredVariants = (variants, callbackFilter) =>
+export const getFilteredVariants = (
+  variants: ProtvistaVariationData,
+  callbackFilter: (variantPos: ProtvistaVariant) => void
+) =>
   variants.map((variant) => {
     const matchingVariants = variant.variants.filter((variantPos) =>
       callbackFilter(variantPos)
@@ -34,7 +48,7 @@ const filterConfig = [
       labels: ['Likely disease'],
       colors: [scaleColors.UPDiseaseColor],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(variants, (variantPos) =>
         variantPos.association?.some((association) => association.disease)
       ),
@@ -49,7 +63,7 @@ const filterConfig = [
       labels: ['Predicted consequence'],
       colors: [scaleColors.predictedColor],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(variants, (variantPos) => variantPos.hasPredictions),
   },
   {
@@ -62,7 +76,7 @@ const filterConfig = [
       labels: ['Likely benign'],
       colors: [scaleColors.UPNonDiseaseColor],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(variants, (variantPos) =>
         variantPos.association?.some(
           (association) => association.disease === false
@@ -79,16 +93,17 @@ const filterConfig = [
       labels: ['Uncertain'],
       colors: [scaleColors.othersColor],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(
         variants,
         (variantPos) =>
           (typeof variantPos.clinicalSignificances === 'undefined' &&
             !variantPos.hasPredictions) ||
-          significanceMatches(
-            variantPos.clinicalSignificances,
-            consequences.uncertain
-          )
+          (variantPos.clinicalSignificances &&
+            significanceMatches(
+              variantPos.clinicalSignificances,
+              consequences.uncertain
+            ))
       ),
   },
   {
@@ -101,7 +116,7 @@ const filterConfig = [
       labels: ['UniProt reviewed'],
       colors: ['#9f9f9f'],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(
         variants,
         (variantPos) =>
@@ -120,7 +135,7 @@ const filterConfig = [
       labels: ['ClinVar reviewed'],
       colors: ['#9f9f9f'],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(
         variants,
         (variantPos) =>
@@ -139,7 +154,7 @@ const filterConfig = [
       labels: ['Large scale studies'],
       colors: ['#9f9f9f'],
     },
-    filterData: (variants) =>
+    filterData: (variants: ProtvistaVariationData) =>
       getFilteredVariants(
         variants,
         (variantPos) =>
@@ -149,34 +164,26 @@ const filterConfig = [
   },
 ];
 
-export const colorConfig = (variant) => {
+const countVariantsForFilter = (
+  filterName: 'disease' | 'nonDisease' | 'uncertain' | 'predicted',
+  variant: ProtvistaVariant
+) => {
   const variantWrapper = [{ variants: [variant] }];
-  if (
-    filterConfig
-      .find((filter) => filter.name === 'disease')
-      .filterData(variantWrapper)[0].variants.length > 0
-  ) {
+  const filter = filterConfig.find((filter) => filter.name === filterName);
+  if (filter) {
+    return filter.filterData(variantWrapper)[0].variants.length > 0;
+  }
+  return false;
+};
+
+export const colorConfig = (variant: ProtvistaVariant) => {
+  if (countVariantsForFilter('disease', variant)) {
     return scaleColors.UPDiseaseColor;
-  }
-  if (
-    filterConfig
-      .find((filter) => filter.name === 'nonDisease')
-      .filterData(variantWrapper)[0].variants.length > 0
-  ) {
+  } else if (countVariantsForFilter('nonDisease', variant)) {
     return scaleColors.UPNonDiseaseColor;
-  }
-  if (
-    filterConfig
-      .find((filter) => filter.name === 'uncertain')
-      .filterData(variantWrapper)[0].variants.length > 0
-  ) {
+  } else if (countVariantsForFilter('uncertain', variant)) {
     return scaleColors.othersColor;
-  }
-  if (
-    filterConfig
-      .find((filter) => filter.name === 'predicted')
-      .filterData(variantWrapper)[0].variants.length > 0
-  ) {
+  } else if (countVariantsForFilter('predicted', variant)) {
     return scaleColors.predictedColor;
   }
   return scaleColors.othersColor;
