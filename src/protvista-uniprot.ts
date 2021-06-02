@@ -54,7 +54,7 @@ type ProtvistaTrackConfig = {
   trackType: TrackType;
   tooltip: string;
   color?: string;
-  shape?: string; //TODO: replace with list
+  shape?: string; //TODO: eventually replace with list
   filterComponent?: 'protvista-filter';
 };
 
@@ -70,7 +70,7 @@ type ProtvistaCategory = {
   url: string;
   tracks: ProtvistaTrackConfig[];
   color?: string;
-  shape?: string; //TODO: replace with list
+  shape?: string; //TODO: eventually replace with list
 };
 
 export type DownloadConfig = {
