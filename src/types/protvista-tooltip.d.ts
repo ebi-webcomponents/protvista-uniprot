@@ -1,6 +1,6 @@
 declare module 'protvista-tooltip';
 
-interface ProtvistaTooltip extends HTMLElement {
+declare class ProtvistaTooltip extends HTMLElement {
   title: string;
   visible: boolean;
   x: number;

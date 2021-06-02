@@ -1,5 +1,5 @@
 declare module 'protvista-track';
 
-interface ProtvistaTrack extends HTMLElement {
+declare class ProtvistaTrack extends HTMLElement {
   data?: any;
 }

@@ -1,6 +1,6 @@
 declare module 'protvista-filter';
 
-interface ProtvistaFilter extends HTMLElement {
+declare class ProtvistaFilter extends HTMLElement {
   filters: {
     name: string;
     type: {
