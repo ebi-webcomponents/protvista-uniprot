@@ -73,12 +73,14 @@ type ProtvistaCategory = {
   shape?: string; //TODO: replace with list
 };
 
+export type DownloadConfig = {
+  type: string;
+  url: string;
+}[];
+
 type ProtvistaConfig = {
   categories: ProtvistaCategory[];
-  download: {
-    type: string;
-    url: string;
-  }[];
+  download: DownloadConfig;
 };
 
 class ProtvistaUniprot extends LitElement {

@@ -2,9 +2,16 @@ import { LitElement, html, css, svg } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import urlJoin from 'url-join';
 import { saveAs } from 'file-saver';
+
 import downloadIcon from './download.svg';
 
-const downloadFiles = (downloadConfig, format = 'json', accession) => {
+import { DownloadConfig } from './protvista-uniprot';
+
+const downloadFiles = (
+  downloadConfig: DownloadConfig,
+  format = 'json',
+  accession: string
+) => {
   downloadConfig.forEach((config) => {
     saveAs(
       urlJoin(
@@ -18,6 +25,11 @@ const downloadFiles = (downloadConfig, format = 'json', accession) => {
 };
 
 class DownloadPanel extends LitElement {
+  open: boolean;
+  format: string;
+  config?: DownloadConfig;
+  accession?: string;
+
   constructor() {
     super();
     this.open = false;
@@ -93,10 +105,12 @@ class DownloadPanel extends LitElement {
   }
 
   handleDownload() {
-    downloadFiles(this.config, this.format, this.accession);
+    if (this.config && this.accession) {
+      downloadFiles(this.config, this.format, this.accession);
+    }
   }
 
-  handleSetFormat(format) {
+  handleSetFormat(format: string) {
     this.format = format;
   }
 
