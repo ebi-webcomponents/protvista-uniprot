@@ -228,7 +228,7 @@ class ProtvistaUniprot extends LitElement {
           this.rawData[url] = data.payload;
         } catch (e) {
           // TODO handle this better based on error code
-          console.error(e);
+          // Fail silently for now
         }
       }
 
@@ -238,18 +238,34 @@ class ProtvistaUniprot extends LitElement {
         const categoryData: any[] = [];
         tracks.forEach(({ data: dataConfig, name: trackName, filter }) => {
           const { url, adapter } = dataConfig[0]; // TODO handle array
-          // 1. Convert data if adapter is defined
-          const data = adapter
-            ? adapters[adapter](this.rawData[url])
-            : this.rawData[url];
-          // 2. Filter and assign track data
+          const trackData = this.rawData[url];
+
+          if (!trackData) {
+            return;
+          }
+          // 1. Convert data
+          const transformedData = adapter
+            ? adapters[adapter](trackData)
+            : trackData;
+
+          // 2. Filter raw data if filter is specified
           const filteredData =
-            Array.isArray(data) && filter
-              ? data.filter(({ type }) => type === filter)
-              : data;
+            Array.isArray(transformedData) && filter
+              ? transformedData.filter(
+                  ({ type }: { type?: string }) => type === filter
+                )
+              : transformedData;
+          if (!filteredData) {
+            return;
+          }
+
+          // 3. Assign track data
           this.data[`${categoryName}-${trackName}`] = filteredData;
-          // 2. Add to category data
-          categoryData.push(...filteredData);
+
+          // 4. Add to category data IF IT'S AN ARRAY (ie not variation)
+          if (Array.isArray(filteredData)) {
+            categoryData.push(...filteredData);
+          }
 
           this.requestUpdate(); // Why?
         });

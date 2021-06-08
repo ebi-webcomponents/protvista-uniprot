@@ -622,16 +622,6 @@
       "trackType": "protvista-variation-graph",
       "tracks": [
         {
-          "name": "variation_graph",
-          "trackType": "protvista-variation-graph",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
-            }
-          ]
-        },
-        {
           "name": "variation",
           "filterComponent": "protvista-filter",
           "trackType": "protvista-variation",
