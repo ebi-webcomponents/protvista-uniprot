@@ -238,44 +238,51 @@ class ProtvistaUniprot extends LitElement {
 
       // Now iterate over tracks and categories, transforming the data
       // and assigning it as adequate
-      this.config.categories.map(({ name: categoryName, tracks }) => {
-        const categoryData: any[] = [];
-        tracks.forEach(({ data: dataConfig, name: trackName, filter }) => {
-          const { url, adapter } = dataConfig[0]; // TODO handle array
-          const trackData = this.rawData[url];
+      this.config.categories.map(
+        ({ name: categoryName, tracks, trackType }) => {
+          // const categoryData: any = [];
+          const categoryData = tracks.map(
+            ({ data: dataConfig, name: trackName, filter }) => {
+              const { url, adapter } = dataConfig[0]; // TODO handle array
+              const trackData = this.rawData[url];
 
-          if (!trackData) {
-            return;
-          }
-          // 1. Convert data
-          const transformedData = adapter
-            ? adapters[adapter](trackData)
-            : trackData;
+              if (!trackData) {
+                return;
+              }
+              // 1. Convert data
+              const transformedData = adapter
+                ? adapters[adapter](trackData)
+                : trackData;
 
-          // 2. Filter raw data if filter is specified
-          const filteredData =
-            Array.isArray(transformedData) && filter
-              ? transformedData.filter(
-                  ({ type }: { type?: string }) => type === filter
-                )
-              : transformedData;
-          if (!filteredData) {
-            return;
-          }
+              // 2. Filter raw data if filter is specified
+              const filteredData =
+                Array.isArray(transformedData) && filter
+                  ? transformedData.filter(
+                      ({ type }: { type?: string }) => type === filter
+                    )
+                  : transformedData;
+              if (!filteredData) {
+                return;
+              }
 
-          // 3. Assign track data
-          this.data[`${categoryName}-${trackName}`] = filteredData;
+              // 3. Assign track data
+              this.data[`${categoryName}-${trackName}`] = filteredData;
 
-          // 4. Add to category data IF IT'S AN ARRAY (ie not variation)
-          if (Array.isArray(filteredData)) {
-            categoryData.push(...filteredData);
-          }
-
-          this.requestUpdate(); // Why?
-        });
-        this.data[categoryName] = [...categoryData];
-      });
+              // 4. Add to category data IF IT'S AN ARRAY (ie not variation)
+              if (Array.isArray(filteredData)) {
+                return filteredData;
+              }
+              return filteredData;
+            }
+          );
+          this.data[categoryName] =
+            trackType === 'protvista-variation-graph'
+              ? categoryData[0]
+              : categoryData.flat();
+        }
+      );
     }
+    this.requestUpdate(); // Why?
   }
 
   async _loadDataInComponents() {
@@ -287,7 +294,12 @@ class ProtvistaUniprot extends LitElement {
       const currentCategory = this.config?.categories.find(
         ({ name }) => name === id
       );
-      if (currentCategory && currentCategory.tracks && data.length > 0) {
+      if (
+        currentCategory &&
+        currentCategory.tracks &&
+        // Check data if array of features or object for protvista-variation
+        (data.length > 0 || Object.keys(data).length > 0)
+      ) {
         // Make category element visible
         const categoryElt = document.getElementById(
           `category_${currentCategory.name}`
