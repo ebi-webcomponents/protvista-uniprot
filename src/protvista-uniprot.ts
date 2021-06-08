@@ -52,6 +52,14 @@ type ProtvistaTrackConfig = {
   label: string;
   filter: string;
   trackType: TrackType;
+  data: {
+    url: string;
+    adapter?:
+      | 'protvista-feature-adapter'
+      | 'protvista-structure-adapter'
+      | 'protvista-proteomics-adapter'
+      | 'protvista-variation-adapter';
+  }[];
   tooltip: string;
   color?: string;
   shape?: string; //TODO: eventually replace with list
@@ -62,12 +70,6 @@ type ProtvistaCategory = {
   name: string;
   label: string;
   trackType: TrackType;
-  adapter:
-    | 'protvista-feature-adapter'
-    | 'protvista-structure-adapter'
-    | 'protvista-proteomics-adapter'
-    | 'protvista-variation-adapter';
-  url: string;
   tracks: ProtvistaTrackConfig[];
   color?: string;
   shape?: string; //TODO: eventually replace with list
@@ -88,6 +90,7 @@ class ProtvistaUniprot extends LitElement {
   notooltip: boolean;
   nostructure: boolean;
   hasData: boolean;
+  rawData: { [key: string]: any };
   data: { [key: string]: any };
   displayCoordinates: { start?: number; end?: number } = {};
   suspend?: boolean;
@@ -102,6 +105,7 @@ class ProtvistaUniprot extends LitElement {
     this.nostructure = false;
     this.hasData = false;
     this.data = {};
+    this.rawData = {};
     this.displayCoordinates = {};
   }
 
@@ -209,47 +213,48 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
   }
 
-  _loadData() {
+  async _loadData() {
     const accession = this.accession;
     if (accession && this.config) {
-      const tasks = this.config.categories.map(
-        ({ name, url, adapter, tracks }) => {
-          const urlWithProtein =
-            url.indexOf('{}') >= 0
-              ? url.replace('{}', accession)
-              : `${url}${accession}`;
-          // TODO: remove this conditional setTimeout when InterPro API more stable
-          // NOTE: this is just to ensure the InterPro fetches are enqueued last
-          return sleep(/interpro/.test(urlWithProtein) ? 100 : 0)
-            .then(() => load(urlWithProtein))
-            .then(({ payload }) => {
-              if (!payload) return;
-              const data = adapter ? adapters[adapter](payload) : payload;
-              this.data[name] =
-                adapter === 'protvista-feature-adapter'
-                  ? data.filter(
-                      ({ category }: { category?: string }) =>
-                        !category || category === name
-                    )
-                  : data;
-              if (tracks) {
-                for (const track of tracks) {
-                  this.data[`${name}-${track.name}`] =
-                    Array.isArray(data) && track.filter
-                      ? data.filter(({ type }) => type === track.filter)
-                      : data;
-                }
-              } else if (Array.isArray(data)) {
-                // if tracks are not defined we create a track per item in the result
-                for (const item of data) {
-                  this.data[`${name}-${item.accession}`] = [item];
-                }
-              }
-              this.requestUpdate();
-            });
+      // Get the list of unique urls
+      const urls = this.config.categories
+        .map(({ tracks }) => tracks.map(({ data }) => data[0].url))
+        .flat();
+      const uniqueUrls = [...new Set(urls)];
+      // Get the data for all urls and store it
+      for (const url of uniqueUrls) {
+        try {
+          const data = await load(url.replace('{accession}', accession));
+          this.rawData[url] = data.payload;
+        } catch (e) {
+          // TODO handle this better based on error code
+          console.error(e);
         }
-      );
-      return Promise.all(tasks);
+      }
+
+      // Now iterate over tracks and categories, transforming the data
+      // and assigning it as adequate
+      this.config.categories.map(({ name: categoryName, tracks }) => {
+        const categoryData: any[] = [];
+        tracks.forEach(({ data: dataConfig, name: trackName, filter }) => {
+          const { url, adapter } = dataConfig[0]; // TODO handle array
+          // 1. Convert data if adapter is defined
+          const data = adapter
+            ? adapters[adapter](this.rawData[url])
+            : this.rawData[url];
+          // 2. Filter and assign track data
+          const filteredData =
+            Array.isArray(data) && filter
+              ? data.filter(({ type }) => type === filter)
+              : data;
+          this.data[`${categoryName}-${trackName}`] = filteredData;
+          // 2. Add to category data
+          categoryData.push(...filteredData);
+
+          this.requestUpdate(); // Why?
+        });
+        this.data[categoryName] = [...categoryData];
+      });
     }
   }
 
