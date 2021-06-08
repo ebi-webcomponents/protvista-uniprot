@@ -134,9 +134,13 @@ class ProtvistaUniprot extends LitElement {
         }
 
         .nav-container,
-        .category,
         .category__track {
           display: flex;
+          margin-bottom: 0.1rem;
+        }
+
+        .category {
+          display: none;
           margin-bottom: 0.1rem;
         }
 
@@ -280,15 +284,18 @@ class ProtvistaUniprot extends LitElement {
       const element = document.getElementById(`track-${id}`) as ProtvistaTrack;
       // set data if it hasn't changed
       if (element && element.data !== data) element.data = data;
-      const currentCategory = this.config?.categories.filter(
+      const currentCategory = this.config?.categories.find(
         ({ name }) => name === id
       );
-      if (
-        currentCategory &&
-        currentCategory.length &&
-        currentCategory[0].tracks
-      ) {
-        for (const track of currentCategory[0].tracks) {
+      if (currentCategory && currentCategory.tracks && data.length > 0) {
+        // Make category element visible
+        const categoryElt = document.getElementById(
+          `category_${currentCategory.name}`
+        );
+        if (categoryElt) {
+          categoryElt.style.display = 'flex';
+        }
+        for (const track of currentCategory.tracks) {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
           ) as ProtvistaTrack;
