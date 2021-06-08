@@ -14,7 +14,7 @@
     "start": "webpack serve --mode=development",
     "test:types": "tsc",
     "test:unit": "jest",
-    "lint": "eslint -c .eslintrc.js src --ext .js ",
+    "lint": "eslint -c .eslintrc.js src --ext .ts ",
     "test": "npm-run-all --continue-on-error test:types test:unit"
   },
   "main": "dist/protvista-uniprot.js",
