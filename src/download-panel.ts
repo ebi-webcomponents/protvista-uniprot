@@ -1,11 +1,18 @@
-import { LitElement, html, css, svg } from "lit-element";
-import { unsafeHTML } from "lit-html/directives/unsafe-html.js";
-import urlJoin from "url-join";
-import { saveAs } from "file-saver";
-import downloadIcon from "./download.svg";
+import { LitElement, html, css, svg } from 'lit-element';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+import urlJoin from 'url-join';
+import { saveAs } from 'file-saver';
 
-const downloadFiles = (downloadConfig, format = "json", accession) => {
-  downloadConfig.forEach(config => {
+import downloadIcon from './download.svg';
+
+import { DownloadConfig } from './protvista-uniprot';
+
+const downloadFiles = (
+  downloadConfig: DownloadConfig,
+  format = 'json',
+  accession: string
+) => {
+  downloadConfig.forEach((config) => {
     saveAs(
       urlJoin(
         config.url,
@@ -18,10 +25,15 @@ const downloadFiles = (downloadConfig, format = "json", accession) => {
 };
 
 class DownloadPanel extends LitElement {
+  open: boolean;
+  format: string;
+  config?: DownloadConfig;
+  accession?: string;
+
   constructor() {
     super();
     this.open = false;
-    this.format = "json";
+    this.format = 'json';
   }
 
   static get properties() {
@@ -29,7 +41,7 @@ class DownloadPanel extends LitElement {
       accession: { type: String },
       config: { type: Array },
       open: { type: Boolean },
-      format: { type: String }
+      format: { type: String },
     };
   }
 
@@ -93,10 +105,12 @@ class DownloadPanel extends LitElement {
   }
 
   handleDownload() {
-    downloadFiles(this.config, this.format, this.accession);
+    if (this.config && this.accession) {
+      downloadFiles(this.config, this.format, this.accession);
+    }
   }
 
-  handleSetFormat(format) {
+  handleSetFormat(format: string) {
     this.format = format;
   }
 
@@ -106,9 +120,7 @@ class DownloadPanel extends LitElement {
 
   render() {
     return html`
-      <button title="Download">
-        ${this.downloadSVG()}
-      </button>
+      <button title="Download">${this.downloadSVG()}</button>
       <div class="${`download-menu ${this.open && `download-menu-open`}`}">
         <ul>
           <li>
@@ -118,7 +130,7 @@ class DownloadPanel extends LitElement {
                 name="download-type"
                 value="json"
                 checked
-                @click="${() => this.handleSetFormat("json")}"
+                @click="${() => this.handleSetFormat('json')}"
               />JSON</label
             >
           </li>
@@ -128,7 +140,7 @@ class DownloadPanel extends LitElement {
                 type="radio"
                 name="download-type"
                 value="xml"
-                @click="${() => this.handleSetFormat("xml")}"
+                @click="${() => this.handleSetFormat('xml')}"
               />XML</label
             >
           </li>
@@ -138,7 +150,7 @@ class DownloadPanel extends LitElement {
                 type="radio"
                 name="download-type"
                 value="gff"
-                @click="${() => this.handleSetFormat("gff")}"
+                @click="${() => this.handleSetFormat('gff')}"
               />GFF</label
             >
           </li>

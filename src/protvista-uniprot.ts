@@ -1,28 +1,29 @@
-import { LitElement, html } from "lit-element";
-import { sleep, frame } from "timing-functions";
+import { LitElement, html } from 'lit-element';
+import { sleep, frame } from 'timing-functions';
 // components
-import ProtvistaNavigation from "protvista-navigation";
-import ProtvistaTooltip from "protvista-tooltip";
-import ProtvistaTrack from "protvista-track";
-import ProtvistaInterproTrack from "protvista-interpro-track";
-import ProtvistaSequence from "protvista-sequence";
-import ProtvistaVariation from "protvista-variation";
-import ProtvistaVariationGraph from "protvista-variation-graph";
-import ProtvistaFilter from "protvista-filter";
-import ProtvistaManager from "protvista-manager";
+import ProtvistaNavigation from 'protvista-navigation';
+import ProtvistaTooltip from 'protvista-tooltip';
+import ProtvistaTrackConfig from 'protvista-track';
+import ProtvistaInterproTrack from 'protvista-interpro-track';
+import ProtvistaSequence from 'protvista-sequence';
+import ProtvistaVariation from 'protvista-variation';
+import ProtvistaVariationGraph from 'protvista-variation-graph';
+import ProtvistaFilter from 'protvista-filter';
+import ProtvistaManager from 'protvista-manager';
 
-import { load } from "data-loader";
+import { load } from 'data-loader';
 // adapters
-import { transformData as _transformDataFeatureAdapter } from "protvista-feature-adapter";
-import { transformData as _transformDataProteomicsAdapter } from "protvista-proteomics-adapter";
-import { transformData as _transformDataStructureAdapter } from "protvista-structure-adapter";
-import { transformData as _transformDataVariationAdapter } from "protvista-variation-adapter";
-import { transformData as _transformDataInterproAdapter } from "protvista-interpro-adapter";
+import { transformData as _transformDataFeatureAdapter } from 'protvista-feature-adapter';
+import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
+import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
+import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
+import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 
-import defaultConfig from "./config.json";
-import ProtvistaUniprotStructure from "./protvista-uniprot-structure";
-import { loadComponent } from "./loadComponents.js";
-import _filterConfig, { colorConfig as _colorConfig } from "./filterConfig";
+import defaultConfig from './config.json';
+import ProtvistaUniprotStructure from './protvista-uniprot-structure';
+import { loadComponent } from './loadComponents';
+import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
+import { NightingaleEvent } from './types/nightingale-components';
 
 export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
@@ -33,14 +34,67 @@ export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 
 const adapters = {
-  "protvista-feature-adapter": transformDataFeatureAdapter,
-  "protvista-interpro-adapter": transformDataInterproAdapter,
-  "protvista-proteomics-adapter": transformDataProteomicsAdapter,
-  "protvista-structure-adapter": transformDataStructureAdapter,
-  "protvista-variation-adapter": transformDataVariationAdapter,
+  'protvista-feature-adapter': transformDataFeatureAdapter,
+  'protvista-interpro-adapter': transformDataInterproAdapter,
+  'protvista-proteomics-adapter': transformDataProteomicsAdapter,
+  'protvista-structure-adapter': transformDataStructureAdapter,
+  'protvista-variation-adapter': transformDataVariationAdapter,
+};
+
+type TrackType =
+  | 'protvista-track'
+  | 'protvista-variation'
+  | 'protvista-variation-graph'
+  | 'protvista-interpro-track';
+
+type ProtvistaTrackConfig = {
+  name: string;
+  label: string;
+  filter: string;
+  trackType: TrackType;
+  tooltip: string;
+  color?: string;
+  shape?: string; //TODO: eventually replace with list
+  filterComponent?: 'protvista-filter';
+};
+
+type ProtvistaCategory = {
+  name: string;
+  label: string;
+  trackType: TrackType;
+  adapter:
+    | 'protvista-feature-adapter'
+    | 'protvista-structure-adapter'
+    | 'protvista-proteomics-adapter'
+    | 'protvista-variation-adapter';
+  url: string;
+  tracks: ProtvistaTrackConfig[];
+  color?: string;
+  shape?: string; //TODO: eventually replace with list
+};
+
+export type DownloadConfig = {
+  type: string;
+  url: string;
+}[];
+
+type ProtvistaConfig = {
+  categories: ProtvistaCategory[];
+  download: DownloadConfig;
 };
 
 class ProtvistaUniprot extends LitElement {
+  private openCategories: string[];
+  private notooltip: boolean;
+  private nostructure: boolean;
+  private hasData: boolean;
+  private data: { [key: string]: any };
+  private displayCoordinates: { start?: number; end?: number } = {};
+  private suspend?: boolean;
+  private accession?: string;
+  private sequence?: string;
+  private config?: ProtvistaConfig;
+
   constructor() {
     super();
     this.openCategories = [];
@@ -48,7 +102,7 @@ class ProtvistaUniprot extends LitElement {
     this.nostructure = false;
     this.hasData = false;
     this.data = {};
-    this.displayCoordinates = null;
+    this.displayCoordinates = {};
   }
 
   static get properties() {
@@ -102,7 +156,7 @@ class ProtvistaUniprot extends LitElement {
         }
 
         .category-label::before {
-          content: " ";
+          content: ' ';
           display: inline-block;
           width: 0;
           height: 0;
@@ -117,7 +171,7 @@ class ProtvistaUniprot extends LitElement {
         }
 
         .category-label.open::before {
-          content: " ";
+          content: ' ';
           display: inline-block;
           width: 0;
           height: 0;
@@ -143,70 +197,80 @@ class ProtvistaUniprot extends LitElement {
   }
 
   registerWebComponents() {
-    loadComponent("protvista-navigation", ProtvistaNavigation);
-    loadComponent("protvista-tooltip", ProtvistaTooltip);
-    loadComponent("protvista-track", ProtvistaTrack);
-    loadComponent("protvista-interpro-track", ProtvistaInterproTrack);
-    loadComponent("protvista-sequence", ProtvistaSequence);
-    loadComponent("protvista-variation", ProtvistaVariation);
-    loadComponent("protvista-variation-graph", ProtvistaVariationGraph);
-    loadComponent("protvista-filter", ProtvistaFilter);
-    loadComponent("protvista-manager", ProtvistaManager);
-    loadComponent("protvista-uniprot-structure", ProtvistaUniprotStructure);
+    loadComponent('protvista-navigation', ProtvistaNavigation);
+    loadComponent('protvista-tooltip', ProtvistaTooltip);
+    loadComponent('protvista-track', ProtvistaTrackConfig);
+    loadComponent('protvista-interpro-track', ProtvistaInterproTrack);
+    loadComponent('protvista-sequence', ProtvistaSequence);
+    loadComponent('protvista-variation', ProtvistaVariation);
+    loadComponent('protvista-variation-graph', ProtvistaVariationGraph);
+    loadComponent('protvista-filter', ProtvistaFilter);
+    loadComponent('protvista-manager', ProtvistaManager);
+    loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
   }
 
   _loadData() {
-    const tasks = this.config.categories.map(
-      ({ name, url, adapter, tracks }) => {
-        const urlWithProtein =
-          url.indexOf("{}") >= 0
-            ? url.replace("{}", this.accession)
-            : `${url}${this.accession}`;
-        // TODO: remove this conditional setTimeout when InterPro API more stable
-        // NOTE: this is just to ensure the InterPro fetches are enqueued last
-        return sleep(/interpro/.test(urlWithProtein) ? 100 : 0)
-          .then(() => load(urlWithProtein))
-          .then(({ payload }) => {
-            if (!payload) return;
-            const data = adapter ? adapters[adapter](payload) : payload;
-            this.data[name] =
-              adapter === "protvista-feature-adapter"
-                ? data.filter(({ category }) => !category || category === name)
-                : data;
-            if (tracks) {
-              for (const track of tracks) {
-                this.data[`${name}-${track.name}`] =
-                  Array.isArray(data) && track.filter
-                    ? data.filter(({ type }) => type === track.filter)
-                    : data;
+    const accession = this.accession;
+    if (accession && this.config) {
+      const tasks = this.config.categories.map(
+        ({ name, url, adapter, tracks }) => {
+          const urlWithProtein =
+            url.indexOf('{}') >= 0
+              ? url.replace('{}', accession)
+              : `${url}${accession}`;
+          // TODO: remove this conditional setTimeout when InterPro API more stable
+          // NOTE: this is just to ensure the InterPro fetches are enqueued last
+          return sleep(/interpro/.test(urlWithProtein) ? 100 : 0)
+            .then(() => load(urlWithProtein))
+            .then(({ payload }) => {
+              if (!payload) return;
+              const data = adapter ? adapters[adapter](payload) : payload;
+              this.data[name] =
+                adapter === 'protvista-feature-adapter'
+                  ? data.filter(
+                      ({ category }: { category?: string }) =>
+                        !category || category === name
+                    )
+                  : data;
+              if (tracks) {
+                for (const track of tracks) {
+                  this.data[`${name}-${track.name}`] =
+                    Array.isArray(data) && track.filter
+                      ? data.filter(({ type }) => type === track.filter)
+                      : data;
+                }
+              } else if (Array.isArray(data)) {
+                // if tracks are not defined we create a track per item in the result
+                for (const item of data) {
+                  this.data[`${name}-${item.accession}`] = [item];
+                }
               }
-            } else if (Array.isArray(data)) {
-              // if tracks are not defined we create a track per item in the result
-              for (const item of data) {
-                this.data[`${name}-${item.accession}`] = [item];
-              }
-            }
-            this.requestUpdate();
-          });
-      }
-    );
-    return Promise.all(tasks);
+              this.requestUpdate();
+            });
+        }
+      );
+      return Promise.all(tasks);
+    }
   }
 
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element = document.getElementById(`track-${id}`);
+      const element = document.getElementById(`track-${id}`) as ProtvistaTrack;
       // set data if it hasn't changed
       if (element && element.data !== data) element.data = data;
-      const currentCategory = this.config.categories.filter(
+      const currentCategory = this.config?.categories.filter(
         ({ name }) => name === id
       );
-      if (currentCategory.length && currentCategory[0].tracks) {
+      if (
+        currentCategory &&
+        currentCategory.length &&
+        currentCategory[0].tracks
+      ) {
         for (const track of currentCategory[0].tracks) {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
-          );
+          ) as ProtvistaTrack;
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
@@ -215,20 +279,24 @@ class ProtvistaUniprot extends LitElement {
     });
   }
 
-  updated(changedProperties) {
+  updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
 
-    const filterComponent = this.querySelector("protvista-filter");
+    const filterComponent = this.querySelector(
+      'protvista-filter'
+    ) as ProtvistaFilter;
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
 
-    const variationComponent = this.querySelector("protvista-variation");
+    const variationComponent = this.querySelector(
+      'protvista-variation'
+    ) as ProtvistaVariation;
     if (variationComponent && variationComponent.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
 
-    if (changedProperties.has("suspend")) {
+    if (changedProperties.has('suspend')) {
       if (this.suspend) return;
       this._init();
     }
@@ -238,13 +306,13 @@ class ProtvistaUniprot extends LitElement {
 
   _init() {
     if (!this.config) {
-      this.config = defaultConfig;
+      this.config = defaultConfig as ProtvistaConfig;
     }
 
     if (!this.accession) return;
     this.loadEntry(this.accession).then((entryData) => {
       this.sequence = entryData.sequence.sequence;
-      this.displayCoordinates = { start: 1, end: this.sequence.length };
+      this.displayCoordinates = { start: 1, end: this.sequence?.length };
       // We need to get the length of the protein before rendering it
     });
     this._loadData();
@@ -256,40 +324,43 @@ class ProtvistaUniprot extends LitElement {
 
     if (!this.suspend) this._init();
 
-    this.addEventListener("change", (e) => {
-      if (e.detail.displaystart) {
+    this.addEventListener('change', (e: NightingaleEvent) => {
+      if (e.detail?.displaystart) {
         this.displayCoordinates.start = e.detail.displaystart;
       }
-      if (e.detail.displayend) {
+      if (e.detail?.displayend) {
         this.displayCoordinates.end = e.detail.displayend;
       }
 
       if (!this.notooltip) {
-        if (!e.detail.eventtype) {
+        if (!e.detail?.eventtype) {
           this._resetTooltip();
-        } else if (e.detail.eventtype === "click") {
-          this.updateTooltip(e, true);
+        } else if (e.detail.eventtype === 'click') {
+          this.updateTooltip(e);
         }
       }
     });
 
     if (!this.notooltip) {
-      this.addEventListener("click", (e) => {
+      this.addEventListener('click', (e) => {
+        const target = e.target as Element;
         if (
-          !e.target.closest(".feature") &&
-          !e.target.closest("protvista-tooltip")
+          !target.closest('.feature') &&
+          !target.closest('protvista-tooltip')
         ) {
-          const tooltip = this.querySelector("protvista-tooltip");
+          const tooltip = this.querySelector(
+            'protvista-tooltip'
+          ) as ProtvistaTooltip;
           tooltip.visible = false;
         }
       });
-      document.addEventListener("click", this._resetTooltip);
+      document.addEventListener('click', this._resetTooltip);
     }
 
-    this.addEventListener("load", (e) => {
+    this.addEventListener('load', () => {
       if (!this.hasData) {
         this.dispatchEvent(
-          new CustomEvent("protvista-event", {
+          new CustomEvent('protvista-event', {
             detail: {
               hasData: true,
             },
@@ -303,18 +374,20 @@ class ProtvistaUniprot extends LitElement {
 
   disconnectedCallback() {
     if (!this.notooltip) {
-      document.removeEventListener("click", this._resetTooltip);
+      document.removeEventListener('click', this._resetTooltip);
     }
   }
 
-  _resetTooltip(e) {
-    if (this && (!e || !e.target.closest("protvista-uniprot"))) {
-      const tooltip = this.querySelector("protvista-tooltip");
+  _resetTooltip(e?: MouseEvent) {
+    if (this && (!e || !(e.target as Element)?.closest('protvista-uniprot'))) {
+      const tooltip = this.querySelector(
+        'protvista-tooltip'
+      ) as ProtvistaTooltip;
       if (tooltip) tooltip.visible = false;
     }
   }
 
-  async loadEntry(accession) {
+  async loadEntry(accession: string) {
     try {
       return await (
         await fetch(`https://www.ebi.ac.uk/proteins/api/proteins/${accession}`)
@@ -356,8 +429,8 @@ class ProtvistaUniprot extends LitElement {
             <protvista-sequence
               length="${this.sequence.length}"
               sequence="${this.sequence}"
-              displaystart=${this.displayCoordinates.start}
-              displayend="${this.displayCoordinates.end}"
+              displaystart=${this.displayCoordinates?.start}
+              displayend="${this.displayCoordinates?.end}"
             ></protvista-sequence>
           </div>
         </div>
@@ -378,13 +451,13 @@ class ProtvistaUniprot extends LitElement {
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content"
                   .style="${this.openCategories.includes(category.name)
-                    ? "opacity:0"
-                    : "opacity:1"}"
+                    ? 'opacity:0'
+                    : 'opacity:1'}"
                 >
                   ${this.data[category.name] &&
                   this.getTrack(
                     category.trackType,
-                    "non-overlapping",
+                    'non-overlapping',
                     category.color,
                     category.shape,
                     category.name
@@ -415,7 +488,7 @@ class ProtvistaUniprot extends LitElement {
                           >
                             ${this.getTrack(
                               track.trackType,
-                              "non-overlapping",
+                              'non-overlapping',
                               track.color || category.color,
                               track.shape || category.shape,
                               `${category.name}-${track.name}`
@@ -423,38 +496,40 @@ class ProtvistaUniprot extends LitElement {
                           </div>
                         </div>
                       `
-                    : "";
+                    : '';
                 }
               })}
               ${!category.tracks
-                ? this.data[category.name].map((item) => {
-                    if (this.openCategories.includes(category.name)) {
-                      if (!item || !item.accession) return "";
-                      return html`
-                        <div
-                          class="category__track"
-                          id="track_${item.accession}"
-                        >
-                          <div class="track-label" title="${item.accession}">
-                            ${item.accession}
-                          </div>
+                ? this.data[category.name].map(
+                    (item: { accession?: string }) => {
+                      if (this.openCategories.includes(category.name)) {
+                        if (!item || !item.accession) return '';
+                        return html`
                           <div
-                            class="track-content"
-                            data-id="track_${item.accession}"
+                            class="category__track"
+                            id="track_${item.accession}"
                           >
-                            ${this.getTrack(
-                              category.trackType,
-                              "non-overlapping",
-                              category.color,
-                              category.shape,
-                              `${category.name}-${item.accession}`
-                            )}
+                            <div class="track-label" title="${item.accession}">
+                              ${item.accession}
+                            </div>
+                            <div
+                              class="track-content"
+                              data-id="track_${item.accession}"
+                            >
+                              ${this.getTrack(
+                                category.trackType,
+                                'non-overlapping',
+                                category.color,
+                                category.shape,
+                                `${category.name}-${item.accession}`
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      `;
+                        `;
+                      }
                     }
-                  })
-                : ""}
+                  )
+                : ''}
             `
         )}
         <div class="nav-container">
@@ -471,49 +546,51 @@ class ProtvistaUniprot extends LitElement {
         ${!this.nostructure
           ? html`
               <protvista-uniprot-structure
-                accession="${this.accession || ""}"
+                accession="${this.accession || ''}"
               ></protvista-uniprot-structure>
             `
-          : ""}
+          : ''}
         <protvista-tooltip />
       </protvista-manager>
     `;
   }
 
-  async updateTooltip(e) {
-    const d = e.detail.feature;
+  async updateTooltip(e: NightingaleEvent) {
+    const d = e.detail?.feature;
 
     if (!d.tooltipContent) return;
 
-    const tooltip = this.querySelector("protvista-tooltip");
+    const tooltip = this.querySelector('protvista-tooltip') as ProtvistaTooltip;
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
     tooltip.visible = true;
 
-    const [x, y] = e.detail.coords;
-
-    tooltip.x = x;
-    tooltip.y = y;
+    if (e.detail?.coords) {
+      const [x, y] = e.detail.coords;
+      tooltip.x = x;
+      tooltip.y = y;
+    }
   }
 
-  handleCategoryClick(e) {
-    const toggle = e.target.getAttribute("data-category-toggle");
-    if (!e.target.classList.contains("open")) {
-      e.target.classList.add("open");
+  handleCategoryClick(e: MouseEvent) {
+    const target = e.target as Element;
+    const toggle = target.getAttribute('data-category-toggle');
+    if (toggle && !target.classList.contains('open')) {
+      target.classList.add('open');
       this.openCategories = [...this.openCategories, toggle];
     } else {
-      e.target.classList.remove("open");
+      target.classList.remove('open');
       this.openCategories = [...this.openCategories].filter(
         (d) => d !== toggle
       );
     }
   }
 
-  getCategoryTypesAsString(tracks) {
-    return tracks.map((t) => t.filter).join(",");
+  getCategoryTypesAsString(tracks: ProtvistaTrackConfig[]) {
+    return tracks.map((t) => t.filter).join(',');
   }
 
-  getFilterComponent(forId) {
+  getFilterComponent(forId: string) {
     return html`
       <protvista-filter
         style="minWidth: 20%"
@@ -522,57 +599,57 @@ class ProtvistaUniprot extends LitElement {
     `;
   }
 
-  getTrack(trackType, layout = "", color = "", shape = "", id = "") {
+  getTrack(trackType: TrackType, layout = '', color = '', shape = '', id = '') {
     // lit-html doesn't allow to have dynamic tag names, hence the switch/case
     // with repeated code
     switch (trackType) {
-      case "protvista-track":
+      case 'protvista-track':
         return html`
           <protvista-track
-            length="${this.sequence.length}"
+            length="${this.sequence?.length}"
             layout="${layout}"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates.start}"
-            displayend="${this.displayCoordinates.end}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
           >
           </protvista-track>
         `;
-      case "protvista-interpro-track":
+      case 'protvista-interpro-track':
         return html`
           <protvista-interpro-track
-            length="${this.sequence.length}"
+            length="${this.sequence?.length}"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates.start}"
-            displayend="${this.displayCoordinates.end}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
           >
           </protvista-interpro-track>
         `;
-      case "protvista-variation":
+      case 'protvista-variation':
         return html`
           <protvista-variation
-            length="${this.sequence.length}"
-            displaystart="${this.displayCoordinates.start}"
-            displayend="${this.displayCoordinates.end}"
+            length="${this.sequence?.length}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
           >
           </protvista-variation>
         `;
-      case "protvista-variation-graph":
+      case 'protvista-variation-graph':
         return html`
           <protvista-variation-graph
-            length="${this.sequence.length}"
-            displaystart="${this.displayCoordinates.start}"
-            displayend="${this.displayCoordinates.end}"
+            length="${this.sequence?.length}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
           >
           </protvista-variation-graph>
         `;
       default:
-        console.warn("No Matching ProtvistaTrack Found.");
+        console.warn('No Matching ProtvistaTrack Found.');
         break;
     }
   }

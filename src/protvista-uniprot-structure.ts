@@ -1,30 +1,52 @@
-import { LitElement, html } from "lit-element";
-import { load } from "data-loader";
-import ProtvistaStructure from "protvista-structure";
-import ProtvistaDatatable from "protvista-datatable";
-import { loadComponent } from "./loadComponents";
+import { LitElement, html } from 'lit-element';
+import { load } from 'data-loader';
+import ProtvistaStructure from 'protvista-structure';
+import ProtvistaDatatable from 'protvista-datatable';
+import { loadComponent } from './loadComponents';
 
 const PDBLinks = [
-  { name: "PDB", link: "https://www.ebi.ac.uk/pdbe-srv/view/entry/" },
-  { name: "RCSB-PDB", link: "https://www.rcsb.org/structure/" },
-  { name: "PDBj", link: "https://pdbj.org/mine/summary/" },
-  { name: "PDBsum", link: "https://www.ebi.ac.uk/pdbsum/" },
+  { name: 'PDB', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
+  { name: 'RCSB-PDB', link: 'https://www.rcsb.org/structure/' },
+  { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
+  { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
 
-const processData = (data) =>
+type StructureData = {
+  dbReferences: {
+    type: 'PDB' | string;
+    id: string;
+    properties: {
+      method: string;
+      chains: string;
+      resolution: string;
+    };
+  }[];
+};
+
+type ProcessedStructureData =
+  | {
+      id: string;
+      method: string;
+      resolution?: string;
+      chain?: string;
+      positions?: string;
+      protvistaFeatureId: string;
+    }[];
+
+const processData = (data: StructureData): ProcessedStructureData =>
   data.dbReferences
-    .filter((xref) => xref.type === "PDB")
+    .filter((xref) => xref.type === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
     .map(({ id, properties }) => {
       if (!properties) {
-        return null;
+        return;
       }
       const { chains, resolution, method } = properties;
 
       let chain;
       let positions;
       if (chains) {
-        const tokens = chains.split("=");
+        const tokens = chains.split('=');
         if (tokens.length === 2) {
           [chain, positions] = tokens;
         }
@@ -32,36 +54,39 @@ const processData = (data) =>
       return {
         id,
         method,
-        resolution: !resolution || resolution === "-" ? null : resolution,
+        resolution: !resolution || resolution === '-' ? undefined : resolution,
         chain,
         positions,
         protvistaFeatureId: id,
       };
-    });
+    })
+    .filter(
+      (transformedItem) => transformedItem !== undefined
+    ) as ProcessedStructureData;
 
-const getColumnConfig = () => ({
+const getColumnConfig = (): ColumnConfig<StructureData> => ({
   type: {
-    label: "PDB Entry",
+    label: 'PDB Entry',
     resolver: ({ id }) => id,
   },
   method: {
-    label: "Method",
+    label: 'Method',
     resolver: ({ method }) => method,
   },
   resolution: {
-    label: "Resolution",
-    resolver: ({ resolution }) => resolution && resolution.replace("A", "Å"),
+    label: 'Resolution',
+    resolver: ({ resolution }) => resolution && resolution.replace('A', 'Å'),
   },
   chain: {
-    label: "Chain",
+    label: 'Chain',
     resolver: ({ chain }) => chain,
   },
   positions: {
-    label: "Positions",
+    label: 'Positions',
     resolver: ({ positions }) => positions,
   },
   links: {
-    label: "Links",
+    label: 'Links',
     resolver: ({ id }) =>
       html`
         ${PDBLinks.map((pdbLink) => {
@@ -72,10 +97,14 @@ const getColumnConfig = () => ({
 });
 
 class ProtvistaUniprotStructure extends LitElement {
+  accession?: string;
+  data?: ProcessedStructureData;
+  pdbId?: string;
+
   constructor() {
     super();
-    loadComponent("protvista-structure", ProtvistaStructure);
-    loadComponent("protvista-datatable", ProtvistaDatatable);
+    loadComponent('protvista-structure', ProtvistaStructure);
+    loadComponent('protvista-datatable', ProtvistaDatatable);
     this.onTableRowClick = this.onTableRowClick.bind(this);
   }
 
@@ -96,7 +125,9 @@ class ProtvistaUniprotStructure extends LitElement {
     const data = processData(payload);
     if (!data || !data.length) return;
     this.data = data;
-    const protvistaDatatableElt = this.querySelector("protvista-datatable");
+    const protvistaDatatableElt = this.querySelector(
+      'protvista-datatable'
+    ) as ProtvistaDatatable;
     // Select the first element in the table
     this.pdbId = this.data[0].id;
     protvistaDatatableElt.columns = getColumnConfig();
@@ -105,7 +136,7 @@ class ProtvistaUniprotStructure extends LitElement {
     protvistaDatatableElt.selectedid = this.pdbId;
   }
 
-  onTableRowClick({ id }) {
+  onTableRowClick({ id }: { id: string }) {
     this.pdbId = id;
   }
 
