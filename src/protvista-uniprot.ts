@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit-element';
-import { sleep, frame } from 'timing-functions';
+import { frame } from 'timing-functions';
 // components
 import ProtvistaNavigation from 'protvista-navigation';
 import ProtvistaTooltip from 'protvista-tooltip';
