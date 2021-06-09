@@ -299,6 +299,7 @@ class ProtvistaUniprot extends LitElement {
       if (
         currentCategory &&
         currentCategory.tracks &&
+        data &&
         // Check data if array of features or object for protvista-variation
         (data.length > 0 || Object.keys(data).length > 0)
       ) {
