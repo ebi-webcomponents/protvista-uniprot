@@ -86,17 +86,16 @@ type ProtvistaConfig = {
 };
 
 class ProtvistaUniprot extends LitElement {
-  openCategories: string[];
-  notooltip: boolean;
-  nostructure: boolean;
-  hasData: boolean;
-  rawData: { [key: string]: any };
-  data: { [key: string]: any };
-  displayCoordinates: { start?: number; end?: number } = {};
-  suspend?: boolean;
-  accession?: string;
-  sequence?: string;
-  config?: ProtvistaConfig;
+  private openCategories: string[];
+  private notooltip: boolean;
+  private nostructure: boolean;
+  private hasData: boolean;
+  private data: { [key: string]: any };
+  private displayCoordinates: { start?: number; end?: number } = {};
+  private suspend?: boolean;
+  private accession?: string;
+  private sequence?: string;
+  private config?: ProtvistaConfig;
 
   constructor() {
     super();
