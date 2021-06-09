@@ -244,7 +244,7 @@ class ProtvistaUniprot extends LitElement {
           const categoryData = tracks.map(
             ({ data: dataConfig, name: trackName, filter }) => {
               const { url, adapter } = dataConfig[0]; // TODO handle array
-              const trackData = this.rawData[url];
+              const trackData = this.rawData[url] || [];
 
               if (!trackData) {
                 return;
@@ -268,10 +268,6 @@ class ProtvistaUniprot extends LitElement {
               // 3. Assign track data
               this.data[`${categoryName}-${trackName}`] = filteredData;
 
-              // 4. Add to category data IF IT'S AN ARRAY (ie not variation)
-              if (Array.isArray(filteredData)) {
-                return filteredData;
-              }
               return filteredData;
             }
           );
@@ -300,8 +296,11 @@ class ProtvistaUniprot extends LitElement {
         currentCategory &&
         currentCategory.tracks &&
         data &&
-        // Check data if array of features or object for protvista-variation
-        (data.length > 0 || Object.keys(data).length > 0)
+        // Check there's data and special case for variants
+        // NOTE: should refactor protvista-variation-adapter
+        // to return a list of variants and set the sequence
+        // on protvista-variation separately
+        (data.length > 0 || data.variants?.length)
       ) {
         // Make category element visible
         const categoryElt = document.getElementById(
