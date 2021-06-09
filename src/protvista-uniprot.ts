@@ -91,6 +91,7 @@ class ProtvistaUniprot extends LitElement {
   private nostructure: boolean;
   private hasData: boolean;
   private data: { [key: string]: any };
+  private rawData: { [key: string]: any };
   private displayCoordinates: { start?: number; end?: number } = {};
   private suspend?: boolean;
   private accession?: string;
@@ -287,7 +288,9 @@ class ProtvistaUniprot extends LitElement {
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element = document.getElementById(`track-${id}`) as ProtvistaTrack;
+      const element: ProtvistaTrack | null = document.getElementById(
+        `track-${id}`
+      );
       // set data if it hasn't changed
       if (element && element.data !== data) element.data = data;
       const currentCategory = this.config?.categories.find(
@@ -307,9 +310,9 @@ class ProtvistaUniprot extends LitElement {
           categoryElt.style.display = 'flex';
         }
         for (const track of currentCategory.tracks) {
-          const elementTrack = document.getElementById(
+          const elementTrack: ProtvistaTrack | null = document.getElementById(
             `track-${id}-${track.name}`
-          ) as ProtvistaTrack;
+          );
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
@@ -321,16 +324,15 @@ class ProtvistaUniprot extends LitElement {
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
 
-    const filterComponent = this.querySelector(
-      'protvista-filter'
-    ) as ProtvistaFilter;
+    const filterComponent =
+      this.querySelector<ProtvistaFilter>('protvista-filter');
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
 
-    const variationComponent = this.querySelector(
+    const variationComponent = this.querySelector<ProtvistaVariation>(
       'protvista-variation'
-    ) as ProtvistaVariation;
+    );
     if (variationComponent && variationComponent.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
@@ -387,10 +389,11 @@ class ProtvistaUniprot extends LitElement {
           !target.closest('.feature') &&
           !target.closest('protvista-tooltip')
         ) {
-          const tooltip = this.querySelector(
-            'protvista-tooltip'
-          ) as ProtvistaTooltip;
-          tooltip.visible = false;
+          const tooltip =
+            this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+          if (tooltip) {
+            tooltip.visible = false;
+          }
         }
       });
       document.addEventListener('click', this._resetTooltip);
@@ -419,10 +422,10 @@ class ProtvistaUniprot extends LitElement {
 
   _resetTooltip(e?: MouseEvent) {
     if (this && (!e || !(e.target as Element)?.closest('protvista-uniprot'))) {
-      const tooltip = this.querySelector(
-        'protvista-tooltip'
-      ) as ProtvistaTooltip;
-      if (tooltip) tooltip.visible = false;
+      const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+      if (tooltip) {
+        tooltip.visible = false;
+      }
     }
   }
 
@@ -597,9 +600,15 @@ class ProtvistaUniprot extends LitElement {
   async updateTooltip(e: NightingaleEvent) {
     const d = e.detail?.feature;
 
-    if (!d.tooltipContent) return;
+    if (!d.tooltipContent) {
+      return;
+    }
 
-    const tooltip = this.querySelector('protvista-tooltip') as ProtvistaTooltip;
+    const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+    if (!tooltip) {
+      return;
+    }
+
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
     tooltip.visible = true;

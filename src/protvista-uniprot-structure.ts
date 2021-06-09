@@ -23,17 +23,16 @@ type StructureData = {
   }[];
 };
 
-type ProcessedStructureData =
-  | {
-      id: string;
-      method: string;
-      resolution?: string;
-      chain?: string;
-      positions?: string;
-      protvistaFeatureId: string;
-    }[];
+type ProcessedStructureData = {
+  id: string;
+  method: string;
+  resolution?: string;
+  chain?: string;
+  positions?: string;
+  protvistaFeatureId: string;
+};
 
-const processData = (data: StructureData): ProcessedStructureData =>
+const processData = (data: StructureData): ProcessedStructureData[] =>
   data.dbReferences
     .filter((xref) => xref.type === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
@@ -51,7 +50,7 @@ const processData = (data: StructureData): ProcessedStructureData =>
           [chain, positions] = tokens;
         }
       }
-      return {
+      const output: ProcessedStructureData = {
         id,
         method,
         resolution: !resolution || resolution === '-' ? undefined : resolution,
@@ -59,12 +58,16 @@ const processData = (data: StructureData): ProcessedStructureData =>
         positions,
         protvistaFeatureId: id,
       };
+      return output;
     })
     .filter(
-      (transformedItem) => transformedItem !== undefined
-    ) as ProcessedStructureData;
+      (
+        transformedItem: ProcessedStructureData | undefined
+      ): transformedItem is ProcessedStructureData =>
+        transformedItem !== undefined
+    );
 
-const getColumnConfig = (): ColumnConfig<StructureData> => ({
+const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
   type: {
     label: 'PDB Entry',
     resolver: ({ id }) => id,
@@ -75,15 +78,16 @@ const getColumnConfig = (): ColumnConfig<StructureData> => ({
   },
   resolution: {
     label: 'Resolution',
-    resolver: ({ resolution }) => resolution && resolution.replace('A', 'Å'),
+    resolver: ({ resolution }) =>
+      resolution ? resolution.replace('A', 'Å') : '',
   },
   chain: {
     label: 'Chain',
-    resolver: ({ chain }) => chain,
+    resolver: ({ chain }) => chain || '',
   },
   positions: {
     label: 'Positions',
-    resolver: ({ positions }) => positions,
+    resolver: ({ positions }) => positions || '',
   },
   links: {
     label: 'Links',
@@ -98,7 +102,7 @@ const getColumnConfig = (): ColumnConfig<StructureData> => ({
 
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
-  data?: ProcessedStructureData;
+  data?: ProcessedStructureData[];
   pdbId?: string;
 
   constructor() {
