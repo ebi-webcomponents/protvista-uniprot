@@ -226,15 +226,16 @@ class ProtvistaUniprot extends LitElement {
         .flat();
       const uniqueUrls = [...new Set(urls)];
       // Get the data for all urls and store it
-      for (const url of uniqueUrls) {
-        try {
-          const data = await load(url.replace('{accession}', accession));
-          this.rawData[url] = data.payload;
-        } catch (e) {
-          // TODO handle this better based on error code
-          // Fail silently for now
-        }
-      }
+      await Promise.all(
+        uniqueUrls.map((url) =>
+          load(url.replace('{accession}', accession)).then(
+            (data) => (this.rawData[url] = data.payload),
+            // TODO handle this better based on error code
+            // Fail silently for now
+            (error) => console.warn(error)
+          )
+        )
+      );
 
       // Now iterate over tracks and categories, transforming the data
       // and assigning it as adequate
