@@ -11,6 +11,7 @@ const config = {
     chunkFilename: '[name].js',
     library: 'ProtvistaUniprot',
     filename: 'protvista-uniprot.js',
+    clean: true,
   },
   target: 'web',
   devtool: 'source-map',
@@ -42,6 +43,7 @@ const config = {
       path.join(__dirname, 'public'),
       path.join(__dirname, 'node_modules'),
     ],
+    open: true,
   },
 };
 

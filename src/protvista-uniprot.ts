@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit-element';
-import { sleep, frame } from 'timing-functions';
+import { frame } from 'timing-functions';
 // components
 import ProtvistaNavigation from 'protvista-navigation';
 import ProtvistaTooltip from 'protvista-tooltip';
@@ -52,6 +52,14 @@ type ProtvistaTrackConfig = {
   label: string;
   filter: string;
   trackType: TrackType;
+  data: {
+    url: string;
+    adapter?:
+      | 'protvista-feature-adapter'
+      | 'protvista-structure-adapter'
+      | 'protvista-proteomics-adapter'
+      | 'protvista-variation-adapter';
+  }[];
   tooltip: string;
   color?: string;
   shape?: string; //TODO: eventually replace with list
@@ -62,12 +70,6 @@ type ProtvistaCategory = {
   name: string;
   label: string;
   trackType: TrackType;
-  adapter:
-    | 'protvista-feature-adapter'
-    | 'protvista-structure-adapter'
-    | 'protvista-proteomics-adapter'
-    | 'protvista-variation-adapter';
-  url: string;
   tracks: ProtvistaTrackConfig[];
   color?: string;
   shape?: string; //TODO: eventually replace with list
@@ -89,6 +91,7 @@ class ProtvistaUniprot extends LitElement {
   private nostructure: boolean;
   private hasData: boolean;
   private data: { [key: string]: any };
+  private rawData: { [key: string]: any };
   private displayCoordinates: { start?: number; end?: number } = {};
   private suspend?: boolean;
   private accession?: string;
@@ -102,6 +105,7 @@ class ProtvistaUniprot extends LitElement {
     this.nostructure = false;
     this.hasData = false;
     this.data = {};
+    this.rawData = {};
     this.displayCoordinates = {};
   }
 
@@ -130,9 +134,13 @@ class ProtvistaUniprot extends LitElement {
         }
 
         .nav-container,
-        .category,
         .category__track {
           display: flex;
+          margin-bottom: 0.1rem;
+        }
+
+        .category {
+          display: none;
           margin-bottom: 0.1rem;
         }
 
@@ -209,68 +217,103 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
   }
 
-  _loadData() {
+  async _loadData() {
     const accession = this.accession;
     if (accession && this.config) {
-      const tasks = this.config.categories.map(
-        ({ name, url, adapter, tracks }) => {
-          const urlWithProtein =
-            url.indexOf('{}') >= 0
-              ? url.replace('{}', accession)
-              : `${url}${accession}`;
-          // TODO: remove this conditional setTimeout when InterPro API more stable
-          // NOTE: this is just to ensure the InterPro fetches are enqueued last
-          return sleep(/interpro/.test(urlWithProtein) ? 100 : 0)
-            .then(() => load(urlWithProtein))
-            .then(({ payload }) => {
-              if (!payload) return;
-              const data = adapter ? adapters[adapter](payload) : payload;
-              this.data[name] =
-                adapter === 'protvista-feature-adapter'
-                  ? data.filter(
-                      ({ category }: { category?: string }) =>
-                        !category || category === name
-                    )
-                  : data;
-              if (tracks) {
-                for (const track of tracks) {
-                  this.data[`${name}-${track.name}`] =
-                    Array.isArray(data) && track.filter
-                      ? data.filter(({ type }) => type === track.filter)
-                      : data;
-                }
-              } else if (Array.isArray(data)) {
-                // if tracks are not defined we create a track per item in the result
-                for (const item of data) {
-                  this.data[`${name}-${item.accession}`] = [item];
-                }
+      // Get the list of unique urls
+      const urls = this.config.categories
+        .map(({ tracks }) => tracks.map(({ data }) => data[0].url))
+        .flat();
+      const uniqueUrls = [...new Set(urls)];
+      // Get the data for all urls and store it
+      await Promise.all(
+        uniqueUrls.map((url) =>
+          load(url.replace('{accession}', accession)).then(
+            (data) => (this.rawData[url] = data.payload),
+            // TODO handle this better based on error code
+            // Fail silently for now
+            (error) => console.warn(error)
+          )
+        )
+      );
+
+      // Now iterate over tracks and categories, transforming the data
+      // and assigning it as adequate
+      this.config.categories.map(
+        ({ name: categoryName, tracks, trackType }) => {
+          // const categoryData: any = [];
+          const categoryData = tracks.map(
+            ({ data: dataConfig, name: trackName, filter }) => {
+              const { url, adapter } = dataConfig[0]; // TODO handle array
+              const trackData = this.rawData[url] || [];
+
+              if (!trackData) {
+                return;
               }
-              this.requestUpdate();
-            });
+              // 1. Convert data
+              const transformedData = adapter
+                ? adapters[adapter](trackData)
+                : trackData;
+
+              // 2. Filter raw data if filter is specified
+              const filteredData =
+                Array.isArray(transformedData) && filter
+                  ? transformedData.filter(
+                      ({ type }: { type?: string }) => type === filter
+                    )
+                  : transformedData;
+              if (!filteredData) {
+                return;
+              }
+
+              // 3. Assign track data
+              this.data[`${categoryName}-${trackName}`] = filteredData;
+
+              return filteredData;
+            }
+          );
+          this.data[categoryName] =
+            trackType === 'protvista-variation-graph'
+              ? categoryData[0]
+              : categoryData.flat();
         }
       );
-      return Promise.all(tasks);
     }
+    this.requestUpdate(); // Why?
   }
 
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element = document.getElementById(`track-${id}`) as ProtvistaTrack;
+      const element: ProtvistaTrack | null = document.getElementById(
+        `track-${id}`
+      );
       // set data if it hasn't changed
       if (element && element.data !== data) element.data = data;
-      const currentCategory = this.config?.categories.filter(
+      const currentCategory = this.config?.categories.find(
         ({ name }) => name === id
       );
       if (
         currentCategory &&
-        currentCategory.length &&
-        currentCategory[0].tracks
+        currentCategory.tracks &&
+        data &&
+        // Check there's data and special case for variants
+        // NOTE: should refactor protvista-variation-adapter
+        // to return a list of variants and set the sequence
+        // on protvista-variation separately
+        (data.length > 0 || data.variants?.length)
       ) {
-        for (const track of currentCategory[0].tracks) {
-          const elementTrack = document.getElementById(
+        // Make category element visible
+        const categoryElt = document.getElementById(
+          `category_${currentCategory.name}`
+        );
+        if (categoryElt) {
+          categoryElt.style.display = 'flex';
+        }
+        for (const track of currentCategory.tracks) {
+          const elementTrack: ProtvistaTrack | null = document.getElementById(
             `track-${id}-${track.name}`
-          ) as ProtvistaTrack;
+          );
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
@@ -282,16 +325,15 @@ class ProtvistaUniprot extends LitElement {
   updated(changedProperties: Map<string, string>) {
     super.updated(changedProperties);
 
-    const filterComponent = this.querySelector(
-      'protvista-filter'
-    ) as ProtvistaFilter;
+    const filterComponent =
+      this.querySelector<ProtvistaFilter>('protvista-filter');
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
 
-    const variationComponent = this.querySelector(
+    const variationComponent = this.querySelector<ProtvistaVariation>(
       'protvista-variation'
-    ) as ProtvistaVariation;
+    );
     if (variationComponent && variationComponent.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
@@ -348,10 +390,11 @@ class ProtvistaUniprot extends LitElement {
           !target.closest('.feature') &&
           !target.closest('protvista-tooltip')
         ) {
-          const tooltip = this.querySelector(
-            'protvista-tooltip'
-          ) as ProtvistaTooltip;
-          tooltip.visible = false;
+          const tooltip =
+            this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+          if (tooltip) {
+            tooltip.visible = false;
+          }
         }
       });
       document.addEventListener('click', this._resetTooltip);
@@ -380,10 +423,10 @@ class ProtvistaUniprot extends LitElement {
 
   _resetTooltip(e?: MouseEvent) {
     if (this && (!e || !(e.target as Element)?.closest('protvista-uniprot'))) {
-      const tooltip = this.querySelector(
-        'protvista-tooltip'
-      ) as ProtvistaTooltip;
-      if (tooltip) tooltip.visible = false;
+      const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+      if (tooltip) {
+        tooltip.visible = false;
+      }
     }
   }
 
@@ -558,9 +601,15 @@ class ProtvistaUniprot extends LitElement {
   async updateTooltip(e: NightingaleEvent) {
     const d = e.detail?.feature;
 
-    if (!d.tooltipContent) return;
+    if (!d.tooltipContent) {
+      return;
+    }
 
-    const tooltip = this.querySelector('protvista-tooltip') as ProtvistaTooltip;
+    const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
+    if (!tooltip) {
+      return;
+    }
+
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
     tooltip.innerHTML = d.tooltipContent;
     tooltip.visible = true;

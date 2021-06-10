@@ -3,7 +3,7 @@ declare module 'protvista-datatable';
 type ColumnConfig<T> = {
   [key: string]: {
     label: string;
-    resolver: (T) => string | import('lit-html').TemplateResult;
+    resolver: (data: T) => string | import('lit-html').TemplateResult;
   };
 };
 
