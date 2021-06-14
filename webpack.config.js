@@ -20,7 +20,6 @@ const config = {
   },
   externals: {
     d3: 'd3',
-    litemol: 'LiteMol',
   },
   module: {
     rules: [
@@ -35,6 +34,10 @@ const config = {
       {
         test: /\.svg$/,
         loader: 'svg-inline-loader',
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },

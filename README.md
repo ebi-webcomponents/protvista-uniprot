@@ -7,33 +7,37 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 ## Usage
 
 ### Importing as a module
+
 ```
 import ProtvistaUniprot from 'protvista-uniprot';
 ...
 window.customElements.define('protvista-uniprot', ProtvistaUniprot);
 ```
+
 You can then use it like this:
+
 ```
 <protvista-uniprot accession="P05067" />
 ```
+
 #### Dependencies
-The component relies on d3 and LiteMol (optional) which are set as global variables and need to be added to your project.
+
+The component relies on d3 which is set as a global variable and needs to be added to your project.
+
 ```
 <script src="https://d3js.org/d3.v4.min.js" charset="utf-8" defer></script>
-
-<!-- Only if you want to use the 3D structure viewer --->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litemol@2.4.2/dist/css/LiteMol-plugin.min.css" type="text/css"></link>
-<script src="https://cdn.jsdelivr.net/npm/litemol@2.4.2/dist/js/LiteMol-plugin.min.js" defer></script>
 ```
 
 ### or via CDN
+
 See [here](https://codepen.io/xwatkins/pen/rXpZXX)
 
 ### API
- - accession: String
- - config?: Array [see below](#configuration)
- - notooltip?: Boolean(false)
- - nostructure?: Boolean(false)
+
+- accession: String
+- config?: Array [see below](#configuration)
+- notooltip?: Boolean(false)
+- nostructure?: Boolean(false)
 
 ## Development
 

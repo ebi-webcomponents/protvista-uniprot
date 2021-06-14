@@ -441,7 +441,6 @@ class ProtvistaUniprot extends LitElement {
   }
 
   /**
-   * LiteMol doesn't work well with the Shadow DOM, therefore
    * we need to use the light DOM.
    * */
   createRenderRoot() {
