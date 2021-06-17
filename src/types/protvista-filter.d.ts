@@ -11,6 +11,6 @@ declare class ProtvistaFilter extends HTMLElement {
       labels: string[];
       colors: string[];
     };
-    filterData: (data: any) => returnedData;
+    filterData: (data: any) => any;
   }[];
 }

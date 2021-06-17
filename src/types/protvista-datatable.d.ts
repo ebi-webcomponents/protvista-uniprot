@@ -8,7 +8,7 @@ type ColumnConfig<T> = {
 };
 
 declare class ProtvistaDatatable extends HTMLElement {
-  columns: ColumnConfig;
+  columns: ColumnConfig<any>;
   data: any[];
   rowClickEvent: (e) => void;
   selectedid?: string;

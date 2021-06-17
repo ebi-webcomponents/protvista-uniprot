@@ -7,7 +7,8 @@
     "src"
   ],
   "scripts": {
-    "build": "webpack --mode=production",
+    "build:es": "tsc",
+    "build": "yarn build:es && webpack --mode=production",
     "watch": "webpack --mode=development -w",
     "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
     "add-all": "yarn add protvista-feature-adapter protvista-filter protvista-manager protvista-navigation protvista-proteomics-adapter protvista-sequence protvista-structure-adapter protvista-tooltip protvista-track protvista-variation protvista-variation-adapter protvista-variation-graph protvista-zoomable protvista-datatable protvista-structure data-loader",
@@ -18,7 +19,7 @@
     "test": "npm-run-all --continue-on-error test:*"
   },
   "main": "dist/protvista-uniprot.js",
-  "module": "src/protvista-uniprot.js",
+  "module": "dist/es/protvista-uniprot.js",
   "keywords": [],
   "author": "Xavier Watkins &lt;xwatkins@ebi.ac.uk&gt;",
   "license": "MIT",

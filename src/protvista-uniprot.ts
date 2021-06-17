@@ -227,7 +227,7 @@ class ProtvistaUniprot extends LitElement {
       const uniqueUrls = [...new Set(urls)];
       // Get the data for all urls and store it
       await Promise.all(
-        uniqueUrls.map((url) =>
+        uniqueUrls.map((url: string) =>
           load(url.replace('{accession}', accession)).then(
             (data) => (this.rawData[url] = data.payload),
             // TODO handle this better based on error code
