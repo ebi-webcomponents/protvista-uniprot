@@ -90,6 +90,7 @@ class ProtvistaUniprot extends LitElement {
   private notooltip: boolean;
   private nostructure: boolean;
   private hasData: boolean;
+  private finishedLoading: boolean;
   private data: { [key: string]: any };
   private rawData: { [key: string]: any };
   private displayCoordinates: { start?: number; end?: number } = {};
@@ -104,6 +105,7 @@ class ProtvistaUniprot extends LitElement {
     this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
+    this.finishedLoading = false;
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
@@ -228,12 +230,21 @@ class ProtvistaUniprot extends LitElement {
       // Get the data for all urls and store it
       await Promise.all(
         uniqueUrls.map((url) =>
-          load(url.replace('{accession}', accession)).then(
-            (data) => (this.rawData[url] = data.payload),
-            // TODO handle this better based on error code
-            // Fail silently for now
-            (error) => console.warn(error)
-          )
+          load(url.replace('{accession}', accession))
+            .then(
+              (data) => {
+                this.rawData[url] = data.payload;
+                // Some endpoints return empty arrays, while most fail 🙄
+                if (!this.hasData && data.payload?.features.length)
+                  this.hasData = true;
+              },
+              // TODO handle this better based on error code
+              // Fail silently for now
+              (error) => console.warn(error)
+            )
+            .catch((e) => {
+              console.log(e);
+            })
         )
       );
 
@@ -247,7 +258,11 @@ class ProtvistaUniprot extends LitElement {
               const { url, adapter } = dataConfig[0]; // TODO handle array
               const trackData = this.rawData[url] || [];
 
-              if (!trackData) {
+              if (
+                !trackData ||
+                (adapter === 'protvista-variation-adapter' &&
+                  trackData.length === 0)
+              ) {
                 return;
               }
               // 1. Convert data
@@ -279,6 +294,7 @@ class ProtvistaUniprot extends LitElement {
         }
       );
     }
+    this.finishedLoading = true;
     this.requestUpdate(); // Why?
   }
 
@@ -400,6 +416,7 @@ class ProtvistaUniprot extends LitElement {
       document.addEventListener('click', this._resetTooltip);
     }
 
+    // Note: this doesn't seem to work
     this.addEventListener('load', () => {
       if (!this.hasData) {
         this.dispatchEvent(
@@ -448,8 +465,15 @@ class ProtvistaUniprot extends LitElement {
   }
 
   render() {
+    // Component isn't ready
     if (!this.sequence || !this.config || this.suspend) {
       return html``;
+    }
+    if (!this.finishedLoading) {
+      return html`<div>Loading</div>`;
+    }
+    if (!this.hasData) {
+      return html`<div>No data available</div>`;
     }
     return html`
       ${this.cssStyle}
