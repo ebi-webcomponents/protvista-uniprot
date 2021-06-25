@@ -105,8 +105,7 @@ const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
 });
 
 class ProtvistaUniprotStructure extends LitElement {
-  private loading = true;
-  private hasData = false;
+  private loading?: boolean;
   private accession?: string;
   private data?: ProcessedStructureData[];
   private pdbId?: string;
@@ -115,6 +114,7 @@ class ProtvistaUniprotStructure extends LitElement {
     super();
     loadComponent('protvista-structure', ProtvistaStructure);
     loadComponent('protvista-datatable', ProtvistaDatatable);
+    this.loading = true;
     this.onTableRowClick = this.onTableRowClick.bind(this);
     this.addStyles();
   }
@@ -124,6 +124,7 @@ class ProtvistaUniprotStructure extends LitElement {
       accession: { type: String },
       pdbId: { type: String },
       data: { type: Object },
+      loading: { type: Boolean },
     };
   }
 
@@ -132,14 +133,11 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!this.accession) return;
     const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const { payload } = await load(url);
-    if (!payload) return;
     this.loading = false;
+    if (!payload) return;
     const data = processData(payload);
     if (!data || !data.length) return;
     this.data = data;
-    if (this.data) {
-      this.hasData = true;
-    }
     const protvistaDatatableElt = this.querySelector(
       'protvista-datatable'
     ) as ProtvistaDatatable;
@@ -172,6 +170,7 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   render() {
+    console.log(this.loading);
     return html`
       <div>
         ${this.pdbId
@@ -185,8 +184,10 @@ class ProtvistaUniprotStructure extends LitElement {
               ${svg`${unsafeHTML(loaderIcon)}`}
             </div>`
           : html``}
-        ${!this.hasData && !this.loading
-          ? html`<div>No structure information available</div>`
+        ${!this.data && !this.loading
+          ? html`<div class="protvista-no-results">
+              No structure information available for ${this.accession}
+            </div>`
           : html``}
         <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
       </div>

@@ -408,7 +408,9 @@ class ProtvistaUniprot extends LitElement {
       </div>`;
     }
     if (!this.hasData) {
-      return html`<div>No data available</div>`;
+      return html`<div class="protvista-no-results">
+        No feature data available for ${this.accession}
+      </div>`;
     }
     return html`
       <protvista-manager
