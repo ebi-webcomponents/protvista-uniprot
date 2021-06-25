@@ -25,6 +25,7 @@ type StructureData = {
 
 type ProcessedStructureData = {
   id: string;
+  source: 'PDB' | 'AlphaFold';
   method: string;
   resolution?: string;
   chain?: string;
@@ -32,7 +33,27 @@ type ProcessedStructureData = {
   protvistaFeatureId: string;
 };
 
-const processData = (data: StructureData): ProcessedStructureData[] =>
+type PredictionData = {
+  entryId: string;
+  gene?: string;
+  uniprotAccession?: string;
+  uniprotId?: string;
+  uniprotDescription?: string;
+  taxId?: number;
+  organismScientificName?: string;
+  uniprotStart?: number;
+  uniprotEnd?: number;
+  uniprotSequence?: string;
+  modelCreatedDate?: string;
+  latestVersion?: number;
+  allVersions?: number[];
+  bcifUrl?: string;
+  cifUrl?: string;
+  pdbUrl?: string;
+  distogramUrl?: string;
+};
+
+const processPDBData = (data: StructureData): ProcessedStructureData[] =>
   data.dbReferences
     .filter((xref) => xref.type === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
@@ -52,6 +73,7 @@ const processData = (data: StructureData): ProcessedStructureData[] =>
       }
       const output: ProcessedStructureData = {
         id,
+        source: 'PDB',
         method,
         resolution: !resolution || resolution === '-' ? undefined : resolution,
         chain,
@@ -67,9 +89,21 @@ const processData = (data: StructureData): ProcessedStructureData[] =>
         transformedItem !== undefined
     );
 
+const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
+  data.map((d) => ({
+    id: d.entryId,
+    source: 'AlphaFold',
+    method: 'Predicted',
+    protvistaFeatureId: d.entryId,
+  }));
+
 const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
+  source: {
+    label: 'Source',
+    resolver: ({ source }) => source,
+  },
   type: {
-    label: 'PDB Entry',
+    label: 'Identifier',
     resolver: ({ id }) => id,
   },
   method: {
@@ -123,10 +157,28 @@ class ProtvistaUniprotStructure extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     if (!this.accession) return;
-    const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
-    const { payload } = await load(url);
-    if (!payload) return;
-    const data = processData(payload);
+    // https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
+    const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
+    const alphaFoldURl = `https://test.alphafold.ebi.ac.uk/api/prediction/${this.accession}?key=AIzaSyCeurAJz7ZGjPQUtEaerUkBZ3TaBkXrY94`;
+
+    const rawData: { [key: string]: any } = [];
+
+    await Promise.all(
+      [pdbUrl, alphaFoldURl].map((url: string) =>
+        load(url).then(
+          (data) => (rawData[url] = data.payload),
+          // TODO handle this better based on error code
+          // Fail silently for now
+          (error) => console.warn(error)
+        )
+      )
+    );
+
+    // TODO: return if no data at all
+    // if (!payload) return;
+    const pdbData = processPDBData(rawData[pdbUrl] || []);
+    const afData = processAFData(rawData[alphaFoldURl] || []);
+    const data = [...pdbData, ...afData];
     if (!data || !data.length) return;
     this.data = data;
     const protvistaDatatableElt = this.querySelector(
