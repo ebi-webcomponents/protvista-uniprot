@@ -4,11 +4,11 @@ import ProtvistaUniprot from './protvista-uniprot';
 import DownloadPanel from './download-panel';
 import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 
-import _transformDataFeatureAdapter from './protvista-uniprot';
-import _transformDataProteomicsAdapter from './protvista-uniprot';
-import _transformDataStructureAdapter from './protvista-uniprot';
-import _transformDataVariationAdapter from './protvista-uniprot';
-import _transformDataInterproAdapter from './protvista-uniprot';
+import { transformDataFeatureAdapter as _transformDataFeatureAdapter } from './protvista-uniprot';
+import { transformDataProteomicsAdapter as _transformDataProteomicsAdapter } from './protvista-uniprot';
+import { transformDataStructureAdapter as _transformDataStructureAdapter } from './protvista-uniprot';
+import { transformDataVariationAdapter as _transformDataVariationAdapter } from './protvista-uniprot';
+import { transformDataInterproAdapter as _transformDataInterproAdapter } from './protvista-uniprot';
 
 export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
