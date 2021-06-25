@@ -3,7 +3,7 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import urlJoin from 'url-join';
 import { saveAs } from 'file-saver';
 
-import downloadIcon from './download.svg';
+import downloadIcon from './icons/download.svg';
 
 import { DownloadConfig } from './protvista-uniprot';
 

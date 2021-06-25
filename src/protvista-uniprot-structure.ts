@@ -1,8 +1,12 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html, svg } from 'lit-element';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { load } from 'data-loader';
 import ProtvistaStructure from 'protvista-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
+
+import loaderIcon from './icons/spinner.svg';
+import loaderStyles from './styles/loader-styles';
 
 const PDBLinks = [
   { name: 'PDB', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
@@ -101,15 +105,18 @@ const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
 });
 
 class ProtvistaUniprotStructure extends LitElement {
-  accession?: string;
-  data?: ProcessedStructureData[];
-  pdbId?: string;
+  private loading = true;
+  private hasData = false;
+  private accession?: string;
+  private data?: ProcessedStructureData[];
+  private pdbId?: string;
 
   constructor() {
     super();
     loadComponent('protvista-structure', ProtvistaStructure);
     loadComponent('protvista-datatable', ProtvistaDatatable);
     this.onTableRowClick = this.onTableRowClick.bind(this);
+    this.addStyles();
   }
 
   static get properties() {
@@ -126,9 +133,13 @@ class ProtvistaUniprotStructure extends LitElement {
     const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const { payload } = await load(url);
     if (!payload) return;
+    this.loading = false;
     const data = processData(payload);
     if (!data || !data.length) return;
     this.data = data;
+    if (this.data) {
+      this.hasData = true;
+    }
     const protvistaDatatableElt = this.querySelector(
       'protvista-datatable'
     ) as ProtvistaDatatable;
@@ -138,6 +149,15 @@ class ProtvistaUniprotStructure extends LitElement {
     protvistaDatatableElt.data = this.data;
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
     protvistaDatatableElt.selectedid = this.pdbId;
+  }
+
+  addStyles() {
+    // We are not using static get styles()
+    // as we are not using the shadowDOM
+    // because of Mol*
+    const styleTag = document.createElement('style');
+    styleTag.innerHTML = loaderStyles.toString();
+    document.querySelector('head')?.append(styleTag);
   }
 
   onTableRowClick({ id }: { id: string }) {
@@ -159,6 +179,14 @@ class ProtvistaUniprotStructure extends LitElement {
               pdb-id=${this.pdbId}
               accession=${this.accession}
             ></protvista-structure>`
+          : html``}
+        ${this.loading
+          ? html`<div class="protvista-loader">
+              ${svg`${unsafeHTML(loaderIcon)}`}
+            </div>`
+          : html``}
+        ${!this.hasData && !this.loading
+          ? html`<div>No structure information available</div>`
           : html``}
         <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
       </div>

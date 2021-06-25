@@ -1,4 +1,5 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html, svg } from 'lit-element';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
 // components
 import ProtvistaNavigation from 'protvista-navigation';
@@ -24,6 +25,10 @@ import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 import { loadComponent } from './loadComponents';
 import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
 import { NightingaleEvent } from './types/nightingale-components';
+
+import loaderIcon from './icons/spinner.svg';
+import protvistaStyles from './styles/protvista-styles';
+import loaderStyles from './styles/loader-styles';
 
 export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
@@ -109,6 +114,7 @@ class ProtvistaUniprot extends LitElement {
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
+    this.addStyles();
   }
 
   static get properties() {
@@ -124,86 +130,13 @@ class ProtvistaUniprot extends LitElement {
     };
   }
 
-  get cssStyle() {
-    return html`
-      <style>
-        protvista-tooltip a {
-          text-decoration: underline;
-          color: #fff;
-        }
-        .track-content {
-          width: 80vw;
-        }
-
-        .nav-container,
-        .category__track {
-          display: flex;
-          margin-bottom: 0.1rem;
-        }
-
-        .category {
-          display: none;
-          margin-bottom: 0.1rem;
-        }
-
-        .category-label,
-        .track-label,
-        .action-buttons,
-        .credits {
-          width: 20vw;
-          padding: 0.5em;
-        }
-
-        .action-buttons {
-          display: flex;
-          justify-content: flex-end;
-          align-items: flex-end;
-        }
-
-        .category-label {
-          background-color: #b2f5ff;
-          cursor: pointer;
-        }
-
-        .category-label::before {
-          content: ' ';
-          display: inline-block;
-          width: 0;
-          height: 0;
-          border-top: 5px solid transparent;
-          border-bottom: 5px solid transparent;
-          border-left: 5px solid #333;
-          margin-right: 5px;
-          -webkit-transition: all 0.1s;
-          /* Safari */
-          -o-transition: all 0.1s;
-          transition: all 0.1s;
-        }
-
-        .category-label.open::before {
-          content: ' ';
-          display: inline-block;
-          width: 0;
-          height: 0;
-          border-left: 5px solid transparent;
-          border-right: 5px solid transparent;
-          border-top: 5px solid #333;
-          margin-right: 5px;
-        }
-
-        .track-label {
-          background-color: #d9faff;
-        }
-
-        protvista-track {
-          border-top: 1px solid #d9faff;
-        }
-
-        .feature {
-          cursor: pointer;
-        }
-      </style>
-    `;
+  addStyles() {
+    // We are not using static get styles()
+    // as we are not using the shadowDOM
+    // because of Mol*
+    const styleTag = document.createElement('style');
+    styleTag.innerHTML = `${protvistaStyles.toString()} ${loaderStyles.toString()}`;
+    document.querySelector('head')?.append(styleTag);
   }
 
   registerWebComponents() {
@@ -470,13 +403,14 @@ class ProtvistaUniprot extends LitElement {
       return html``;
     }
     if (!this.finishedLoading) {
-      return html`<div>Loading</div>`;
+      return html`<div class="protvista-loader">
+        ${svg`${unsafeHTML(loaderIcon)}`}
+      </div>`;
     }
     if (!this.hasData) {
       return html`<div>No data available</div>`;
     }
     return html`
-      ${this.cssStyle}
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
         additionalsubscribers="protvista-structure"
