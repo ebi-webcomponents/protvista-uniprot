@@ -10,6 +10,7 @@ const PDBLinks = [
   { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
+const alphaFoldLink = 'https://test.alphafold.ebi.ac.uk/entry/';
 
 type StructureData = {
   dbReferences: {
@@ -94,10 +95,13 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
     id: d.entryId,
     source: 'AlphaFold',
     method: 'Predicted',
+    positions: `${d.uniprotStart}-${d.uniprotEnd}`,
     protvistaFeatureId: d.entryId,
   }));
 
-const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
+const getColumnConfig = (
+  accession: string
+): ColumnConfig<ProcessedStructureData> => ({
   source: {
     label: 'Source',
     resolver: ({ source }) => source,
@@ -125,19 +129,23 @@ const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
   },
   links: {
     label: 'Links',
-    resolver: ({ id }) =>
-      html`
-        ${PDBLinks.map((pdbLink) => {
-          return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
-        }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
-      `,
+    resolver: ({ source, id }) => {
+      if (source === 'PDB') {
+        return html`
+          ${PDBLinks.map((pdbLink) => {
+            return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
+          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
+        `;
+      }
+      return html`<a href="${alphaFoldLink}${accession}">AlphaFold</a>`;
+    },
   },
 });
 
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   data?: ProcessedStructureData[];
-  pdbId?: string;
+  structureId?: string;
 
   constructor() {
     super();
@@ -149,7 +157,7 @@ class ProtvistaUniprotStructure extends LitElement {
   static get properties() {
     return {
       accession: { type: String },
-      pdbId: { type: String },
+      structureId: { type: String },
       data: { type: Object },
     };
   }
@@ -178,6 +186,7 @@ class ProtvistaUniprotStructure extends LitElement {
     // if (!payload) return;
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     const afData = processAFData(rawData[alphaFoldURl] || []);
+    console.log(pdbData);
     const data = [...pdbData, ...afData];
     if (!data || !data.length) return;
     this.data = data;
@@ -185,15 +194,15 @@ class ProtvistaUniprotStructure extends LitElement {
       'protvista-datatable'
     ) as ProtvistaDatatable;
     // Select the first element in the table
-    this.pdbId = this.data[0].id;
-    protvistaDatatableElt.columns = getColumnConfig();
+    this.structureId = this.data[0].id;
+    protvistaDatatableElt.columns = getColumnConfig(this.accession);
     protvistaDatatableElt.data = this.data;
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
-    protvistaDatatableElt.selectedid = this.pdbId;
+    protvistaDatatableElt.selectedid = this.structureId;
   }
 
   onTableRowClick({ id }: { id: string }) {
-    this.pdbId = id;
+    this.structureId = id;
   }
 
   /**
@@ -206,9 +215,9 @@ class ProtvistaUniprotStructure extends LitElement {
   render() {
     return html`
       <div>
-        ${this.pdbId
+        ${this.structureId
           ? html`<protvista-structure
-              pdb-id=${this.pdbId}
+              pdb-id=${this.structureId}
               accession=${this.accession}
             ></protvista-structure>`
           : html``}
