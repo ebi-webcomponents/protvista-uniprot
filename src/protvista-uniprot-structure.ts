@@ -170,7 +170,6 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   render() {
-    console.log(this.loading);
     return html`
       <div>
         ${this.pdbId
