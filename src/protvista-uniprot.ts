@@ -95,7 +95,7 @@ class ProtvistaUniprot extends LitElement {
   private notooltip: boolean;
   private nostructure: boolean;
   private hasData: boolean;
-  private finishedLoading: boolean;
+  private loading: boolean;
   private data: { [key: string]: any };
   private rawData: { [key: string]: any };
   private displayCoordinates: { start?: number; end?: number } = {};
@@ -110,7 +110,7 @@ class ProtvistaUniprot extends LitElement {
     this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
-    this.finishedLoading = false;
+    this.loading = true;
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
@@ -227,7 +227,7 @@ class ProtvistaUniprot extends LitElement {
         }
       );
     }
-    this.finishedLoading = true;
+    this.loading = false;
     this.requestUpdate(); // Why?
   }
 
@@ -402,7 +402,7 @@ class ProtvistaUniprot extends LitElement {
     if (!this.sequence || !this.config || this.suspend) {
       return html``;
     }
-    if (!this.finishedLoading) {
+    if (this.loading) {
       return html`<div class="protvista-loader">
         ${svg`${unsafeHTML(loaderIcon)}`}
       </div>`;
