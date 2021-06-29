@@ -104,6 +104,8 @@ const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
   },
 });
 
+const styleId = 'protvista-styles';
+
 class ProtvistaUniprotStructure extends LitElement {
   private loading?: boolean;
   private accession?: string;
@@ -149,13 +151,27 @@ class ProtvistaUniprotStructure extends LitElement {
     protvistaDatatableElt.selectedid = this.pdbId;
   }
 
+  disconnectedCallback() {
+    this.removeStyles();
+  }
+
   addStyles() {
     // We are not using static get styles()
     // as we are not using the shadowDOM
     // because of Mol*
-    const styleTag = document.createElement('style');
-    styleTag.innerHTML = loaderStyles.toString();
-    document.querySelector('head')?.append(styleTag);
+    if (!document.getElementById(styleId)) {
+      const styleTag = document.createElement('style');
+      styleTag.id = styleId;
+      styleTag.innerHTML = loaderStyles.toString();
+      document.querySelector('head')?.append(styleTag);
+    }
+  }
+
+  removeStyles() {
+    const styleTag = document.getElementById(styleId);
+    if (styleTag) {
+      styleTag.remove();
+    }
   }
 
   onTableRowClick({ id }: { id: string }) {
