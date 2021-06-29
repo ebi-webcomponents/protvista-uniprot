@@ -4,6 +4,11 @@ import ProtvistaStructure from 'protvista-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
 
+import {
+  PredictionData,
+  StructureData,
+} from 'protvista-structure/dist/es/protvista-structure';
+
 const PDBLinks = [
   { name: 'PDB', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
   { name: 'RCSB-PDB', link: 'https://www.rcsb.org/structure/' },
@@ -11,18 +16,6 @@ const PDBLinks = [
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
 const alphaFoldLink = 'https://test.alphafold.ebi.ac.uk/entry/';
-
-type StructureData = {
-  dbReferences: {
-    type: 'PDB' | string;
-    id: string;
-    properties: {
-      method: string;
-      chains: string;
-      resolution: string;
-    };
-  }[];
-};
 
 type ProcessedStructureData = {
   id: string;
@@ -32,26 +25,6 @@ type ProcessedStructureData = {
   chain?: string;
   positions?: string;
   protvistaFeatureId: string;
-};
-
-type PredictionData = {
-  entryId: string;
-  gene?: string;
-  uniprotAccession?: string;
-  uniprotId?: string;
-  uniprotDescription?: string;
-  taxId?: number;
-  organismScientificName?: string;
-  uniprotStart?: number;
-  uniprotEnd?: number;
-  uniprotSequence?: string;
-  modelCreatedDate?: string;
-  latestVersion?: number;
-  allVersions?: number[];
-  bcifUrl?: string;
-  cifUrl?: string;
-  pdbUrl?: string;
-  distogramUrl?: string;
 };
 
 const processPDBData = (data: StructureData): ProcessedStructureData[] =>
@@ -217,7 +190,7 @@ class ProtvistaUniprotStructure extends LitElement {
       <div>
         ${this.structureId
           ? html`<protvista-structure
-              pdb-id=${this.structureId}
+              id=${this.structureId}
               accession=${this.accession}
             ></protvista-structure>`
           : html``}
