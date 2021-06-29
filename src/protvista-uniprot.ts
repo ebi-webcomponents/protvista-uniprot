@@ -168,7 +168,7 @@ class ProtvistaUniprot extends LitElement {
               (data) => {
                 this.rawData[url] = data.payload;
                 // Some endpoints return empty arrays, while most fail 🙄
-                if (!this.hasData && data.payload?.features.length)
+                if (!this.hasData && data.payload?.features?.length)
                   this.hasData = true;
               },
               // TODO handle this better based on error code
