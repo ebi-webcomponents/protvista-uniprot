@@ -77,7 +77,7 @@ const getColumnConfig = (
 ): ColumnConfig<ProcessedStructureData> => ({
   source: {
     label: 'Source',
-    resolver: ({ source }) => source,
+    resolver: ({ source }) => html`<strong>${source}</strong>`,
   },
   type: {
     label: 'Identifier',
@@ -114,6 +114,22 @@ const getColumnConfig = (
     },
   },
 });
+
+const orderModels = (
+  data: ProcessedStructureData[]
+): ProcessedStructureData[] => {
+  // This would sort widest range first
+  return data.sort((a, b) => {
+    if (!a.positions) return;
+    const covA =
+      Number(a.positions.split('-')[1]) - Number(a.positions.split('-')[0]);
+    const covB =
+      Number(b.positions.split('-')[1]) - Number(b.positions.split('-')[0]);
+    return covB - covA;
+  });
+
+  // data.find(d => d.source === 'AlphaFold')
+};
 
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
@@ -159,9 +175,9 @@ class ProtvistaUniprotStructure extends LitElement {
     // if (!payload) return;
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     const afData = processAFData(rawData[alphaFoldURl] || []);
-    console.log(pdbData);
     const data = [...pdbData, ...afData];
     if (!data || !data.length) return;
+
     this.data = data;
     const protvistaDatatableElt = this.querySelector(
       'protvista-datatable'
@@ -169,7 +185,7 @@ class ProtvistaUniprotStructure extends LitElement {
     // Select the first element in the table
     this.structureId = this.data[0].id;
     protvistaDatatableElt.columns = getColumnConfig(this.accession);
-    protvistaDatatableElt.data = this.data;
+    protvistaDatatableElt.data = orderModels(this.data);
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
     protvistaDatatableElt.selectedid = this.structureId;
   }
