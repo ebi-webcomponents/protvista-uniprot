@@ -16,7 +16,8 @@
     "test:lint": "eslint src --ext .ts ",
     "test:types": "tsc",
     "test:unit": "jest",
-    "test": "npm-run-all --continue-on-error test:*"
+    "test": "npm-run-all --continue-on-error test:*",
+    "clear-cdn-cache": "./scripts/clearCDNcaches.sh"
   },
   "main": "dist/protvista-uniprot.js",
   "module": "dist/es/protvista-uniprot.js",
