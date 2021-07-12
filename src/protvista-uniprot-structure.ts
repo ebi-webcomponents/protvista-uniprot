@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html, TemplateResult } from 'lit-element';
 import { load } from 'data-loader';
 import ProtvistaStructure from 'protvista-structure';
 import ProtvistaDatatable from 'protvista-datatable';
@@ -118,23 +118,53 @@ const getColumnConfig = (
 const orderModels = (
   data: ProcessedStructureData[]
 ): ProcessedStructureData[] => {
-  // This would sort widest range first
-  return data.sort((a, b) => {
-    if (!a.positions) return;
-    const covA =
-      Number(a.positions.split('-')[1]) - Number(a.positions.split('-')[0]);
-    const covB =
-      Number(b.positions.split('-')[1]) - Number(b.positions.split('-')[0]);
-    return covB - covA;
-  });
-
+  return data;
+  // // This would sort widest range first
+  // return data.sort((a, b) => {
+  //   if (!a.positions) return;
+  //   const covA =
+  //     Number(a.positions.split('-')[1]) - Number(a.positions.split('-')[0]);
+  //   const covB =
+  //     Number(b.positions.split('-')[1]) - Number(b.positions.split('-')[0]);
+  //   return covB - covA;
+  // });
   // data.find(d => d.source === 'AlphaFold')
 };
+
+const AFMetaInfo = html`
+  <strong>Model Confidence:</strong>
+  <ul class="no-bullet">
+    <li>
+      <span class="af-legend" style="background-color: rgb(0, 83, 214)"></span>
+      Very high (pLDDT > 90)
+    </li>
+    <li>
+      <span
+        class="af-legend"
+        style="background-color: rgb(101, 203, 243)"
+      ></span>
+      Confident (90 > pLDDT > 70)
+    </li>
+    <li>
+      <span class="af-legend" style="background-color:rgb(255, 219, 19)"></span>
+      Low (70 > pLDDT > 50)
+    </li>
+    <li>
+      <span class="af-legend" style="background-color:rgb(255, 125, 69)"></span>
+      Very low (pLDDT < 50)
+    </li>
+  </ul>
+  <p class="small">
+    AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100.
+    Some regions with low pLDDT may be unstructured in isolation.
+  </p>
+`;
 
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   data?: ProcessedStructureData[];
   structureId?: string;
+  metaInfo?: TemplateResult;
 
   constructor() {
     super();
@@ -192,6 +222,48 @@ class ProtvistaUniprotStructure extends LitElement {
 
   onTableRowClick({ id }: { id: string }) {
     this.structureId = id;
+    if (this.structureId.startsWith('AF-')) {
+      this.metaInfo = AFMetaInfo;
+    } else {
+      this.metaInfo = undefined;
+    }
+  }
+
+  get cssStyle() {
+    return html`
+      <style>
+        .protvista-uniprot-structure__structure {
+          display: flex;
+        }
+        .protvista-uniprot-structure__meta {
+          flex: 1;
+          padding: 1rem;
+        }
+        .protvista-uniprot-structure__structure protvista-structure {
+          width: 100%;
+          flex: 4;
+        }
+        .protvista-uniprot-structure__meta .small {
+          font-size: 0.75rem;
+        }
+        .protvista-uniprot-structure__meta .no-bullet {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        .protvista-uniprot-structure__meta .no-bullet li {
+          padding: 0;
+          margin: 0.5rem 0;
+        }
+        .protvista-uniprot-structure__meta .af-legend::before {
+          content: '';
+          margin: 0;
+          display: inline-block;
+          width: 20px;
+          height: 16px;
+        }
+      </style>
+    `;
   }
 
   /**
@@ -203,14 +275,28 @@ class ProtvistaUniprotStructure extends LitElement {
 
   render() {
     return html`
-      <div>
-        ${this.structureId
-          ? html`<protvista-structure
-              id=${this.structureId}
-              accession=${this.accession}
-            ></protvista-structure>`
-          : html``}
-        <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
+      ${this.cssStyle}
+      <div class="protvista-uniprot-structure">
+        <div class="protvista-uniprot-structure__structure">
+          ${
+            this.metaInfo
+              ? html`<div class="protvista-uniprot-structure__meta">
+                  ${this.metaInfo}
+                </div>`
+              : html``
+          }
+          ${
+            this.structureId
+              ? html`<protvista-structure
+                  id=${this.structureId}
+                  accession=${this.accession}
+                ></protvista-structure>`
+              : html``
+          }
+        </div>
+        <div class="class="protvista-uniprot-structure__table">
+          <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
+        </div>
       </div>
     `;
   }
