@@ -1,8 +1,12 @@
-import { LitElement, html, TemplateResult } from 'lit-element';
+import { LitElement, html, svg, TemplateResult, css } from 'lit-element';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { load } from 'data-loader';
 import ProtvistaStructure from 'protvista-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
+
+import loaderIcon from './icons/spinner.svg';
+import loaderStyles from './styles/loader-styles';
 
 import {
   PredictionData,
@@ -160,17 +164,21 @@ const AFMetaInfo = html`
   </p>
 `;
 
+const styleId = 'protvista-styles';
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   data?: ProcessedStructureData[];
   structureId?: string;
   metaInfo?: TemplateResult;
+  private loading?: boolean;
 
   constructor() {
     super();
     loadComponent('protvista-structure', ProtvistaStructure);
     loadComponent('protvista-datatable', ProtvistaDatatable);
+    this.loading = true;
     this.onTableRowClick = this.onTableRowClick.bind(this);
+    this.addStyles();
   }
 
   static get properties() {
@@ -178,6 +186,7 @@ class ProtvistaUniprotStructure extends LitElement {
       accession: { type: String },
       structureId: { type: String },
       data: { type: Object },
+      loading: { type: Boolean },
     };
   }
 
@@ -201,6 +210,7 @@ class ProtvistaUniprotStructure extends LitElement {
       )
     );
 
+    this.loading = false;
     // TODO: return if no data at all
     // if (!payload) return;
     const pdbData = processPDBData(rawData[pdbUrl] || []);
@@ -220,6 +230,32 @@ class ProtvistaUniprotStructure extends LitElement {
     protvistaDatatableElt.selectedid = this.structureId;
   }
 
+  disconnectedCallback() {
+    this.removeStyles();
+  }
+
+  addStyles() {
+    // We are not using static get styles()
+    // as we are not using the shadowDOM
+    // because of Mol*
+    if (!document.getElementById(styleId)) {
+      const styleTag = document.createElement('style');
+      styleTag.id = styleId;
+      styleTag.innerHTML = `
+      ${loaderStyles.toString()}
+      ${this.cssStyle}
+      `;
+      document.querySelector('head')?.append(styleTag);
+    }
+  }
+
+  removeStyles() {
+    const styleTag = document.getElementById(styleId);
+    if (styleTag) {
+      styleTag.remove();
+    }
+  }
+
   onTableRowClick({ id }: { id: string }) {
     this.structureId = id;
     if (this.structureId.startsWith('AF-')) {
@@ -230,39 +266,37 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   get cssStyle() {
-    return html`
-      <style>
-        .protvista-uniprot-structure__structure {
-          display: flex;
-        }
-        .protvista-uniprot-structure__meta {
-          flex: 1;
-          padding: 1rem;
-        }
-        .protvista-uniprot-structure__structure protvista-structure {
-          width: 100%;
-          flex: 4;
-        }
-        .protvista-uniprot-structure__meta .small {
-          font-size: 0.75rem;
-        }
-        .protvista-uniprot-structure__meta .no-bullet {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        .protvista-uniprot-structure__meta .no-bullet li {
-          padding: 0;
-          margin: 0.5rem 0;
-        }
-        .protvista-uniprot-structure__meta .af-legend::before {
-          content: '';
-          margin: 0;
-          display: inline-block;
-          width: 20px;
-          height: 16px;
-        }
-      </style>
+    return css`
+      .protvista-uniprot-structure__structure {
+        display: flex;
+      }
+      .protvista-uniprot-structure__meta {
+        flex: 1;
+        padding: 1rem;
+      }
+      .protvista-uniprot-structure__structure protvista-structure {
+        width: 100%;
+        flex: 4;
+      }
+      .protvista-uniprot-structure__meta .small {
+        font-size: 0.75rem;
+      }
+      .protvista-uniprot-structure__meta .no-bullet {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .protvista-uniprot-structure__meta .no-bullet li {
+        padding: 0;
+        margin: 0.5rem 0;
+      }
+      .protvista-uniprot-structure__meta .af-legend::before {
+        content: '';
+        margin: 0;
+        display: inline-block;
+        width: 20px;
+        height: 16px;
+      }
     `;
   }
 
@@ -275,28 +309,32 @@ class ProtvistaUniprotStructure extends LitElement {
 
   render() {
     return html`
-      ${this.cssStyle}
       <div class="protvista-uniprot-structure">
         <div class="protvista-uniprot-structure__structure">
-          ${
-            this.metaInfo
-              ? html`<div class="protvista-uniprot-structure__meta">
-                  ${this.metaInfo}
-                </div>`
-              : html``
-          }
-          ${
-            this.structureId
-              ? html`<protvista-structure
-                  id=${this.structureId}
-                  accession=${this.accession}
-                ></protvista-structure>`
-              : html``
-          }
+          ${this.metaInfo
+            ? html`<div class="protvista-uniprot-structure__meta">
+                ${this.metaInfo}
+              </div>`
+            : html``}
+          ${this.structureId
+            ? html`<protvista-structure
+                id=${this.structureId}
+                accession=${this.accession}
+              ></protvista-structure>`
+            : html``}
         </div>
         <div class="class="protvista-uniprot-structure__table">
-          <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
-        </div>
+        <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
+        ${this.loading
+          ? html`<div class="protvista-loader">
+              ${svg`${unsafeHTML(loaderIcon)}`}
+            </div>`
+          : html``}
+        ${!this.data && !this.loading
+          ? html`<div class="protvista-no-results">
+              No structure information available for ${this.accession}
+            </div>`
+          : html``}
       </div>
     `;
   }
