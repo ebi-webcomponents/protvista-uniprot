@@ -119,22 +119,6 @@ const getColumnConfig = (
   },
 });
 
-const orderModels = (
-  data: ProcessedStructureData[]
-): ProcessedStructureData[] => {
-  return data;
-  // // This would sort widest range first
-  // return data.sort((a, b) => {
-  //   if (!a.positions) return;
-  //   const covA =
-  //     Number(a.positions.split('-')[1]) - Number(a.positions.split('-')[0]);
-  //   const covB =
-  //     Number(b.positions.split('-')[1]) - Number(b.positions.split('-')[0]);
-  //   return covB - covA;
-  // });
-  // data.find(d => d.source === 'AlphaFold')
-};
-
 const AFMetaInfo = html`
   <strong>Model Confidence:</strong>
   <ul class="no-bullet">
@@ -225,7 +209,7 @@ class ProtvistaUniprotStructure extends LitElement {
     // Select the first element in the table
     this.structureId = this.data[0].id;
     protvistaDatatableElt.columns = getColumnConfig(this.accession);
-    protvistaDatatableElt.data = orderModels(this.data);
+    protvistaDatatableElt.data = this.data;
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
     protvistaDatatableElt.selectedid = this.structureId;
   }
