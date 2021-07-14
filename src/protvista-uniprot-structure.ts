@@ -302,7 +302,7 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
           ${this.structureId
             ? html`<protvista-structure
-                id=${this.structureId}
+                structureid=${this.structureId}
                 accession=${this.accession}
               ></protvista-structure>`
             : html``}
