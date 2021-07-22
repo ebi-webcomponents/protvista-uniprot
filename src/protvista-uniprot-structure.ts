@@ -259,6 +259,7 @@ class ProtvistaUniprotStructure extends LitElement {
         padding: 1rem;
       }
       .protvista-uniprot-structure__structure protvista-structure {
+        z-index: 99999;
         width: 100%;
         flex: 4;
       }
