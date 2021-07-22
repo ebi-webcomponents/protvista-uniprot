@@ -19,7 +19,7 @@ const PDBLinks = [
   { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
-const alphaFoldLink = 'https://test.alphafold.ebi.ac.uk/entry/';
+const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 
 type ProcessedStructureData = {
   id: string;
@@ -179,7 +179,7 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!this.accession) return;
     // https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
     const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
-    const alphaFoldURl = `https://test.alphafold.ebi.ac.uk/api/prediction/${this.accession}?key=AIzaSyCeurAJz7ZGjPQUtEaerUkBZ3TaBkXrY94`;
+    const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
     const rawData: { [key: string]: any } = [];
 
