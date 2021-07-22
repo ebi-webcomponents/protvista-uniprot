@@ -1,4 +1,4 @@
-import { LitElement, html, svg } from 'lit-element';
+import { LitElement, html, svg, TemplateResult, css } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { load } from 'data-loader';
 import ProtvistaStructure from 'protvista-structure';
@@ -8,27 +8,22 @@ import { loadComponent } from './loadComponents';
 import loaderIcon from './icons/spinner.svg';
 import loaderStyles from './styles/loader-styles';
 
+import {
+  PredictionData,
+  StructureData,
+} from 'protvista-structure/dist/es/protvista-structure';
+
 const PDBLinks = [
   { name: 'PDB', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
   { name: 'RCSB-PDB', link: 'https://www.rcsb.org/structure/' },
   { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
-
-type StructureData = {
-  dbReferences: {
-    type: 'PDB' | string;
-    id: string;
-    properties: {
-      method: string;
-      chains: string;
-      resolution: string;
-    };
-  }[];
-};
+const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 
 type ProcessedStructureData = {
   id: string;
+  source: 'PDB' | 'AlphaFold';
   method: string;
   resolution?: string;
   chain?: string;
@@ -36,7 +31,7 @@ type ProcessedStructureData = {
   protvistaFeatureId: string;
 };
 
-const processData = (data: StructureData): ProcessedStructureData[] =>
+const processPDBData = (data: StructureData): ProcessedStructureData[] =>
   data.dbReferences
     .filter((xref) => xref.type === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
@@ -56,6 +51,7 @@ const processData = (data: StructureData): ProcessedStructureData[] =>
       }
       const output: ProcessedStructureData = {
         id,
+        source: 'PDB',
         method,
         resolution: !resolution || resolution === '-' ? undefined : resolution,
         chain,
@@ -71,9 +67,24 @@ const processData = (data: StructureData): ProcessedStructureData[] =>
         transformedItem !== undefined
     );
 
-const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
+const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
+  data.map((d) => ({
+    id: d.entryId,
+    source: 'AlphaFold',
+    method: 'Predicted',
+    positions: `${d.uniprotStart}-${d.uniprotEnd}`,
+    protvistaFeatureId: d.entryId,
+  }));
+
+const getColumnConfig = (
+  accession: string
+): ColumnConfig<ProcessedStructureData> => ({
+  source: {
+    label: 'Source',
+    resolver: ({ source }) => html`<strong>${source}</strong>`,
+  },
   type: {
-    label: 'PDB Entry',
+    label: 'Identifier',
     resolver: ({ id }) => id,
   },
   method: {
@@ -95,22 +106,55 @@ const getColumnConfig = (): ColumnConfig<ProcessedStructureData> => ({
   },
   links: {
     label: 'Links',
-    resolver: ({ id }) =>
-      html`
-        ${PDBLinks.map((pdbLink) => {
-          return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
-        }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
-      `,
+    resolver: ({ source, id }) => {
+      if (source === 'PDB') {
+        return html`
+          ${PDBLinks.map((pdbLink) => {
+            return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
+          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
+        `;
+      }
+      return html`<a href="${alphaFoldLink}${accession}">AlphaFold</a>`;
+    },
   },
 });
 
-const styleId = 'protvista-styles';
+const AFMetaInfo = html`
+  <strong>Model Confidence:</strong>
+  <ul class="no-bullet">
+    <li>
+      <span class="af-legend" style="background-color: rgb(0, 83, 214)"></span>
+      Very high (pLDDT > 90)
+    </li>
+    <li>
+      <span
+        class="af-legend"
+        style="background-color: rgb(101, 203, 243)"
+      ></span>
+      Confident (90 > pLDDT > 70)
+    </li>
+    <li>
+      <span class="af-legend" style="background-color:rgb(255, 219, 19)"></span>
+      Low (70 > pLDDT > 50)
+    </li>
+    <li>
+      <span class="af-legend" style="background-color:rgb(255, 125, 69)"></span>
+      Very low (pLDDT < 50)
+    </li>
+  </ul>
+  <p class="small">
+    AlphaFold produces a per-residue confidence score (pLDDT) between 0 and 100.
+    Some regions with low pLDDT may be unstructured in isolation.
+  </p>
+`;
 
+const styleId = 'protvista-styles';
 class ProtvistaUniprotStructure extends LitElement {
+  accession?: string;
+  data?: ProcessedStructureData[];
+  structureId?: string;
+  metaInfo?: TemplateResult;
   private loading?: boolean;
-  private accession?: string;
-  private data?: ProcessedStructureData[];
-  private pdbId?: string;
 
   constructor() {
     super();
@@ -124,7 +168,7 @@ class ProtvistaUniprotStructure extends LitElement {
   static get properties() {
     return {
       accession: { type: String },
-      pdbId: { type: String },
+      structureId: { type: String },
       data: { type: Object },
       loading: { type: Boolean },
     };
@@ -133,22 +177,41 @@ class ProtvistaUniprotStructure extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     if (!this.accession) return;
-    const url = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
-    const { payload } = await load(url);
+    // https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
+    const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
+    const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
+
+    const rawData: { [key: string]: any } = [];
+
+    await Promise.all(
+      [pdbUrl, alphaFoldURl].map((url: string) =>
+        load(url).then(
+          (data) => (rawData[url] = data.payload),
+          // TODO handle this better based on error code
+          // Fail silently for now
+          (error) => console.warn(error)
+        )
+      )
+    );
+
     this.loading = false;
-    if (!payload) return;
-    const data = processData(payload);
+    // TODO: return if no data at all
+    // if (!payload) return;
+    const pdbData = processPDBData(rawData[pdbUrl] || []);
+    const afData = processAFData(rawData[alphaFoldURl] || []);
+    const data = [...pdbData, ...afData];
     if (!data || !data.length) return;
+
     this.data = data;
     const protvistaDatatableElt = this.querySelector(
       'protvista-datatable'
     ) as ProtvistaDatatable;
     // Select the first element in the table
-    this.pdbId = this.data[0].id;
-    protvistaDatatableElt.columns = getColumnConfig();
+    this.structureId = this.data[0].id;
+    protvistaDatatableElt.columns = getColumnConfig(this.accession);
     protvistaDatatableElt.data = this.data;
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
-    protvistaDatatableElt.selectedid = this.pdbId;
+    protvistaDatatableElt.selectedid = this.structureId;
   }
 
   disconnectedCallback() {
@@ -162,7 +225,10 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!document.getElementById(styleId)) {
       const styleTag = document.createElement('style');
       styleTag.id = styleId;
-      styleTag.innerHTML = loaderStyles.toString();
+      styleTag.innerHTML = `
+      ${loaderStyles.toString()}
+      ${this.cssStyle}
+      `;
       document.querySelector('head')?.append(styleTag);
     }
   }
@@ -175,7 +241,48 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   onTableRowClick({ id }: { id: string }) {
-    this.pdbId = id;
+    this.structureId = id;
+    if (this.structureId.startsWith('AF-')) {
+      this.metaInfo = AFMetaInfo;
+    } else {
+      this.metaInfo = undefined;
+    }
+  }
+
+  get cssStyle() {
+    return css`
+      .protvista-uniprot-structure__structure {
+        display: flex;
+      }
+      .protvista-uniprot-structure__meta {
+        flex: 1;
+        padding: 1rem;
+      }
+      .protvista-uniprot-structure__structure protvista-structure {
+        z-index: 40000;
+        width: 100%;
+        flex: 4;
+      }
+      .protvista-uniprot-structure__meta .small {
+        font-size: 0.75rem;
+      }
+      .protvista-uniprot-structure__meta .no-bullet {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .protvista-uniprot-structure__meta .no-bullet li {
+        padding: 0;
+        margin: 0.5rem 0;
+      }
+      .protvista-uniprot-structure__meta .af-legend::before {
+        content: '';
+        margin: 0;
+        display: inline-block;
+        width: 20px;
+        height: 16px;
+      }
+    `;
   }
 
   /**
@@ -187,13 +294,22 @@ class ProtvistaUniprotStructure extends LitElement {
 
   render() {
     return html`
-      <div>
-        ${this.pdbId
-          ? html`<protvista-structure
-              pdb-id=${this.pdbId}
-              accession=${this.accession}
-            ></protvista-structure>`
-          : html``}
+      <div class="protvista-uniprot-structure">
+        <div class="protvista-uniprot-structure__structure">
+          ${this.metaInfo
+            ? html`<div class="protvista-uniprot-structure__meta">
+                ${this.metaInfo}
+              </div>`
+            : html``}
+          ${this.structureId
+            ? html`<protvista-structure
+                structureid=${this.structureId}
+                accession=${this.accession}
+              ></protvista-structure>`
+            : html``}
+        </div>
+        <div class="class="protvista-uniprot-structure__table">
+        <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
         ${this.loading
           ? html`<div class="protvista-loader">
               ${svg`${unsafeHTML(loaderIcon)}`}
@@ -204,7 +320,6 @@ class ProtvistaUniprotStructure extends LitElement {
               No structure information available for ${this.accession}
             </div>`
           : html``}
-        <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
       </div>
     `;
   }
