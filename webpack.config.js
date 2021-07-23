@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const PACKAGE_ROOT_PATH = process.cwd();
 
@@ -41,6 +42,11 @@ const config = {
       },
     ],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [{ from: 'src/icons', to: 'es/icons' }],
+    }),
+  ],
   devServer: {
     contentBase: [
       path.join(__dirname, 'public'),
