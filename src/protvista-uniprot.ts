@@ -21,7 +21,8 @@ import { transformData as _transformDataVariationAdapter } from 'protvista-varia
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 
 import defaultConfig from './config.json';
-import ProtvistaUniprotStructure from './protvista-uniprot-structure';
+import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
+import _DownloadPanel from './download-panel';
 import { loadComponent } from './loadComponents';
 import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
 import { NightingaleEvent } from './types/nightingale-components';
@@ -37,6 +38,8 @@ export const transformDataVariationAdapter = _transformDataVariationAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
+export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
+export const DownloadPanel = _DownloadPanel;
 
 const adapters = {
   'protvista-feature-adapter': transformDataFeatureAdapter,
@@ -149,7 +152,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('protvista-variation-graph', ProtvistaVariationGraph);
     loadComponent('protvista-filter', ProtvistaFilter);
     loadComponent('protvista-manager', ProtvistaManager);
-    loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
+    loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
   }
 
   async _loadData() {
