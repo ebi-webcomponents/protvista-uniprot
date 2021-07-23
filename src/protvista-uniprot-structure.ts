@@ -207,7 +207,7 @@ class ProtvistaUniprotStructure extends LitElement {
       'protvista-datatable'
     ) as ProtvistaDatatable;
     // Select the first element in the table
-    this.structureId = this.data[0].id;
+    this.onTableRowClick({ id: this.data[0].id });
     protvistaDatatableElt.columns = getColumnConfig(this.accession);
     protvistaDatatableElt.data = this.data;
     protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
