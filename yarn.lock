@@ -6180,10 +6180,10 @@ mkdirp@^0.5.5:
   dependencies:
     minimist "^1.2.5"
 
-molstar@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/molstar/-/molstar-2.0.6.tgz#5f886f2eb4da686268b806c1d0037612159be82e"
-  integrity sha512-EfX5DEcbHgticllgX/Fr8O26C4gHUthk8F2zXBQiQe2fmg/0HDjqXBJYgwAra3cxETrpQxIDarudb440tAnR7w==
+molstar@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/molstar/-/molstar-2.2.0.tgz#43efd1ef49ac7b1ff32ca2bf46966054db254259"
+  integrity sha512-HsL+QQj9q6/0FS4ChTdRGp1tzjGlOWtImuWXaTy2T/GzL16F3Xqe9vL63cVoEBwDrZKy8VJrHhyjaZUqDHVp6w==
   dependencies:
     "@types/argparse" "^1.0.38"
     "@types/benchmark" "^2.1.0"
@@ -6981,13 +6981,13 @@ protvista-structure-adapter@^2.18.0:
     protvista-feature-adapter "^2.18.0"
     uuid "^8.1.0"
 
-protvista-structure@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/protvista-structure/-/protvista-structure-3.3.0.tgz#77eb321d2514c3a487815c57f8f5c23bae3bf26e"
-  integrity sha512-Uh0bkVH0n4Cq+nraZUd3LODN8uAmX512pYzWQDf3eaGLJYIqxAmcXbhA8PD7QsgPQtElM17wqCW/3zCkeyDHig==
+protvista-structure@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/protvista-structure/-/protvista-structure-3.3.1.tgz#d4a64c03c87bc0694fe22de4accc481a0ee10472"
+  integrity sha512-PAGFj603beWEZdIQ60sv9o3WBM6RdKXsnKpPG4ytu9nszJWKiXAu3xJm+oH3HDITFsTsViWcA01X8yRQ7lYK5w==
   dependencies:
     data-loader "3.0.0"
-    molstar "2.0.6"
+    molstar "2.2.0"
     react "17.0.2"
 
 protvista-tooltip@^2.18.3:
