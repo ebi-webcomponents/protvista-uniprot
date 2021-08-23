@@ -309,7 +309,11 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
         </div>
         <div class="class="protvista-uniprot-structure__table">
-        <protvista-datatable noScrollToRow noDeselect></protvista-datatable>
+        <protvista-datatable
+          noScrollToRow
+          noDeselect
+          filter-scroll
+        ></protvista-datatable>
         ${this.loading
           ? html`<div class="protvista-loader">
               ${svg`${unsafeHTML(loaderIcon)}`}
