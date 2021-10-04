@@ -555,7 +555,7 @@
           "data": [
             {
               "adapter": "protvista-feature-adapter",
-              "url": "http://wwwdev.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
             }
           ],
           "tooltip": "Site which has been experimentally altered by mutagenesis"
