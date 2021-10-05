@@ -6,6 +6,7 @@ import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
 
 import loaderIcon from './icons/spinner.svg';
+import downloadIcon from './icons/download.svg';
 import loaderStyles from './styles/loader-styles';
 
 import {
@@ -28,6 +29,7 @@ type ProcessedStructureData = {
   resolution?: string;
   chain?: string;
   positions?: string;
+  downloadLink?: string;
   protvistaFeatureId: string;
 };
 
@@ -54,6 +56,7 @@ const processPDBData = (data: StructureData): ProcessedStructureData[] =>
         source: 'PDB',
         method,
         resolution: !resolution || resolution === '-' ? undefined : resolution,
+        downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
         chain,
         positions,
         protvistaFeatureId: id,
@@ -74,6 +77,7 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
     method: 'Predicted',
     positions: `${d.uniprotStart}-${d.uniprotEnd}`,
     protvistaFeatureId: d.entryId,
+    downloadLink: d.pdbUrl,
   }));
 
 const AFMetaInfo = html`
@@ -241,6 +245,9 @@ class ProtvistaUniprotStructure extends LitElement {
         width: 20px;
         height: 16px;
       }
+      .download-link svg {
+        width: 1rem;
+      }
     `;
   }
 
@@ -279,6 +286,7 @@ class ProtvistaUniprotStructure extends LitElement {
                 <th>Chain</th>
                 <th>Positions</th>
                 <th>Links</th>
+                <th><!--Download--></th>
               </tr>
             </thead>
             <tbody>
@@ -290,6 +298,7 @@ class ProtvistaUniprotStructure extends LitElement {
                   resolution,
                   chain,
                   positions,
+                  downloadLink,
                 }) => html`<tr
                   data-id="${id}"
                   @click="${() => this.onTableRowClick({ id })}"
@@ -316,6 +325,13 @@ class ProtvistaUniprotStructure extends LitElement {
                       : html`<a href="${alphaFoldLink}${this.accession}"
                           >AlphaFold</a
                         >`}
+                  </td>
+                  <td>
+                    ${downloadLink
+                      ? html`<a href="${downloadLink}" class="download-link"
+                          >${svg`${unsafeHTML(downloadIcon)}`}</a
+                        >`
+                      : ''}
                   </td>
                 </tr>`
               )}
