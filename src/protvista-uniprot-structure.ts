@@ -272,9 +272,9 @@ class ProtvistaUniprotStructure extends LitElement {
           <table>
             <thead>
               <tr>
-                <th>Source</th>
+                <th data-filter="source">Source</th>
                 <th>Identifier</th>
-                <th>Method</th>
+                <th data-filter="method">Method</th>
                 <th>Resolution</th>
                 <th>Chain</th>
                 <th>Positions</th>
@@ -294,9 +294,13 @@ class ProtvistaUniprotStructure extends LitElement {
                   data-id="${id}"
                   @click="${() => this.onTableRowClick({ id })}"
                 >
-                  <td><strong>${source}</strong></td>
+                  <td data-filter="source" data-filter-value="${source}">
+                    <strong>${source}</strong>
+                  </td>
                   <td>${id}</td>
-                  <td>${method}</td>
+                  <td data-filter="method" data-filter-value="${method}">
+                    ${method}
+                  </td>
                   <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
                   <td>${chain || ''}</td>
                   <td>${positions || ''}</td>
