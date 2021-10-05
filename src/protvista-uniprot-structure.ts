@@ -160,16 +160,21 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!data || !data.length) return;
 
     this.data = data;
-    const protvistaDatatableElt = this.querySelector(
-      'protvista-datatable'
-    ) as ProtvistaDatatable;
-    // Select the first element in the table
-    this.onTableRowClick({ id: this.data[0].id });
-    protvistaDatatableElt.selectedid = this.structureId;
   }
 
   disconnectedCallback() {
     this.removeStyles();
+  }
+
+  updated() {
+    const protvistaDatatableElt = this.querySelector(
+      'protvista-datatable'
+    ) as ProtvistaDatatable;
+    if (!protvistaDatatableElt.selectedid) {
+      // Select the first element in the table
+      this.onTableRowClick({ id: this.data[0].id });
+      protvistaDatatableElt.selectedid = this.structureId;
+    }
   }
 
   addStyles() {
