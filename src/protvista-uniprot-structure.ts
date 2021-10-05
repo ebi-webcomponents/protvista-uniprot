@@ -76,49 +76,6 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
     protvistaFeatureId: d.entryId,
   }));
 
-const getColumnConfig = (
-  accession: string
-): ColumnConfig<ProcessedStructureData> => ({
-  source: {
-    label: 'Source',
-    resolver: ({ source }) => html`<strong>${source}</strong>`,
-  },
-  type: {
-    label: 'Identifier',
-    resolver: ({ id }) => id,
-  },
-  method: {
-    label: 'Method',
-    resolver: ({ method }) => method,
-  },
-  resolution: {
-    label: 'Resolution',
-    resolver: ({ resolution }) =>
-      resolution ? resolution.replace('A', 'Å') : '',
-  },
-  chain: {
-    label: 'Chain',
-    resolver: ({ chain }) => chain || '',
-  },
-  positions: {
-    label: 'Positions',
-    resolver: ({ positions }) => positions || '',
-  },
-  links: {
-    label: 'Links',
-    resolver: ({ source, id }) => {
-      if (source === 'PDB') {
-        return html`
-          ${PDBLinks.map((pdbLink) => {
-            return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
-          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
-        `;
-      }
-      return html`<a href="${alphaFoldLink}${accession}">AlphaFold</a>`;
-    },
-  },
-});
-
 const AFMetaInfo = html`
   <strong>Model Confidence:</strong>
   <ul class="no-bullet">
@@ -208,9 +165,6 @@ class ProtvistaUniprotStructure extends LitElement {
     ) as ProtvistaDatatable;
     // Select the first element in the table
     this.onTableRowClick({ id: this.data[0].id });
-    protvistaDatatableElt.columns = getColumnConfig(this.accession);
-    protvistaDatatableElt.data = this.data;
-    protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
     protvistaDatatableElt.selectedid = this.structureId;
   }
 
@@ -309,11 +263,56 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
         </div>
         <div class="class="protvista-uniprot-structure__table">
-        <protvista-datatable
-          noScrollToRow
-          noDeselect
-          filter-scroll
-        ></protvista-datatable>
+        <protvista-datatable noScrollToRow noDeselect filter-scroll>
+          <table>
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Identifier</th>
+                <th>Method</th>
+                <th>Resolution</th>
+                <th>Chain</th>
+                <th>Positions</th>
+                <th>Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.data.map(
+                ({
+                  source,
+                  id,
+                  method,
+                  resolution,
+                  chain,
+                  positions,
+                }) => html`<tr
+                  data-id="${id}"
+                  @click="${() => this.onTableRowClick({ id })}"
+                >
+                  <td><strong>${source}</strong></td>
+                  <td>${id}</td>
+                  <td>${method}</td>
+                  <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
+                  <td>${chain || ''}</td>
+                  <td>${positions || ''}</td>
+                  <td>
+                    ${source === 'PDB'
+                      ? html`
+                          ${PDBLinks.map((pdbLink) => {
+                            return html`
+                              <a href="${pdbLink.link}${id}">${pdbLink.name}</a>
+                            `;
+                          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
+                        `
+                      : html`<a href="${alphaFoldLink}${this.accession}"
+                          >AlphaFold</a
+                        >`}
+                  </td>
+                </tr>`
+              )}
+            </tbody>
+          </table>
+        </protvista-datatable>
         ${this.loading
           ? html`<div class="protvista-loader">
               ${svg`${unsafeHTML(loaderIcon)}`}
