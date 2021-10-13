@@ -6,6 +6,7 @@ import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
 
 import loaderIcon from './icons/spinner.svg';
+import downloadIcon from './icons/download.svg';
 import loaderStyles from './styles/loader-styles';
 
 import {
@@ -28,6 +29,7 @@ type ProcessedStructureData = {
   resolution?: string;
   chain?: string;
   positions?: string;
+  downloadLink?: string;
   protvistaFeatureId: string;
 };
 
@@ -54,6 +56,7 @@ const processPDBData = (data: StructureData): ProcessedStructureData[] =>
         source: 'PDB',
         method,
         resolution: !resolution || resolution === '-' ? undefined : resolution,
+        downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
         chain,
         positions,
         protvistaFeatureId: id,
@@ -74,50 +77,8 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
     method: 'Predicted',
     positions: `${d.uniprotStart}-${d.uniprotEnd}`,
     protvistaFeatureId: d.entryId,
+    downloadLink: d.pdbUrl,
   }));
-
-const getColumnConfig = (
-  accession: string
-): ColumnConfig<ProcessedStructureData> => ({
-  source: {
-    label: 'Source',
-    resolver: ({ source }) => html`<strong>${source}</strong>`,
-  },
-  type: {
-    label: 'Identifier',
-    resolver: ({ id }) => id,
-  },
-  method: {
-    label: 'Method',
-    resolver: ({ method }) => method,
-  },
-  resolution: {
-    label: 'Resolution',
-    resolver: ({ resolution }) =>
-      resolution ? resolution.replace('A', 'Å') : '',
-  },
-  chain: {
-    label: 'Chain',
-    resolver: ({ chain }) => chain || '',
-  },
-  positions: {
-    label: 'Positions',
-    resolver: ({ positions }) => positions || '',
-  },
-  links: {
-    label: 'Links',
-    resolver: ({ source, id }) => {
-      if (source === 'PDB') {
-        return html`
-          ${PDBLinks.map((pdbLink) => {
-            return html` <a href="${pdbLink.link}${id}">${pdbLink.name}</a> `;
-          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
-        `;
-      }
-      return html`<a href="${alphaFoldLink}${accession}">AlphaFold</a>`;
-    },
-  },
-});
 
 const AFMetaInfo = html`
   <strong>Model Confidence:</strong>
@@ -203,19 +164,21 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!data || !data.length) return;
 
     this.data = data;
-    const protvistaDatatableElt = this.querySelector(
-      'protvista-datatable'
-    ) as ProtvistaDatatable;
-    // Select the first element in the table
-    this.onTableRowClick({ id: this.data[0].id });
-    protvistaDatatableElt.columns = getColumnConfig(this.accession);
-    protvistaDatatableElt.data = this.data;
-    protvistaDatatableElt.rowClickEvent = this.onTableRowClick;
-    protvistaDatatableElt.selectedid = this.structureId;
   }
 
   disconnectedCallback() {
     this.removeStyles();
+  }
+
+  updated() {
+    const protvistaDatatableElt = this.querySelector(
+      'protvista-datatable'
+    ) as ProtvistaDatatable;
+    if (!protvistaDatatableElt.selectedid) {
+      // Select the first element in the table
+      this.onTableRowClick({ id: this.data[0].id });
+      protvistaDatatableElt.selectedid = this.structureId;
+    }
   }
 
   addStyles() {
@@ -282,6 +245,9 @@ class ProtvistaUniprotStructure extends LitElement {
         width: 20px;
         height: 16px;
       }
+      .download-link svg {
+        width: 1rem;
+      }
     `;
   }
 
@@ -309,11 +275,69 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
         </div>
         <div class="class="protvista-uniprot-structure__table">
-        <protvista-datatable
-          noScrollToRow
-          noDeselect
-          filter-scroll
-        ></protvista-datatable>
+        <protvista-datatable noScrollToRow noDeselect filter-scroll>
+          <table>
+            <thead>
+              <tr>
+                <th data-filter="source">Source</th>
+                <th>Identifier</th>
+                <th data-filter="method">Method</th>
+                <th>Resolution</th>
+                <th>Chain</th>
+                <th>Positions</th>
+                <th>Links</th>
+                <th><!--Download--></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.data.map(
+                ({
+                  source,
+                  id,
+                  method,
+                  resolution,
+                  chain,
+                  positions,
+                  downloadLink,
+                }) => html`<tr
+                  data-id="${id}"
+                  @click="${() => this.onTableRowClick({ id })}"
+                >
+                  <td data-filter="source" data-filter-value="${source}">
+                    <strong>${source}</strong>
+                  </td>
+                  <td>${id}</td>
+                  <td data-filter="method" data-filter-value="${method}">
+                    ${method}
+                  </td>
+                  <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
+                  <td>${chain || ''}</td>
+                  <td>${positions || ''}</td>
+                  <td>
+                    ${source === 'PDB'
+                      ? html`
+                          ${PDBLinks.map((pdbLink) => {
+                            return html`
+                              <a href="${pdbLink.link}${id}">${pdbLink.name}</a>
+                            `;
+                          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
+                        `
+                      : html`<a href="${alphaFoldLink}${this.accession}"
+                          >AlphaFold</a
+                        >`}
+                  </td>
+                  <td>
+                    ${downloadLink
+                      ? html`<a href="${downloadLink}" class="download-link"
+                          >${svg`${unsafeHTML(downloadIcon)}`}</a
+                        >`
+                      : ''}
+                  </td>
+                </tr>`
+              )}
+            </tbody>
+          </table>
+        </protvista-datatable>
         ${this.loading
           ? html`<div class="protvista-loader">
               ${svg`${unsafeHTML(loaderIcon)}`}
