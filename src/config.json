@@ -567,7 +567,10 @@
       "label": "Proteomics",
       "trackType": "protvista-track",
       "adapter": "protvista-proteomics-adapter",
-      "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
+      "urls": [
+        "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
+        "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+      ],
       "tracks": [
         {
           "name": "unique",
@@ -591,6 +594,18 @@
             {
               "adapter": "protvista-proteomics-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+            }
+          ],
+          "tooltip": ""
+        },
+        {
+          "name": "proteomics-ptm",
+          "label": "PTM",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
             }
           ],
           "tooltip": ""
