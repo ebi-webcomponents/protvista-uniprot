@@ -290,7 +290,7 @@ class ProtvistaUniprotStructure extends LitElement {
               </tr>
             </thead>
             <tbody>
-              ${this.data.map(
+              ${this.data?.map(
                 ({
                   source,
                   id,
