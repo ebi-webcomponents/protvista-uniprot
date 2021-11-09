@@ -6,7 +6,7 @@ export default css`
     color: #fff;
   }
   .track-content {
-    width: 80vw;
+    width: 80%;
   }
 
   .nav-container,
@@ -24,7 +24,7 @@ export default css`
   .track-label,
   .action-buttons,
   .credits {
-    width: 20vw;
+    width: 20%;
     padding: 0.5em;
   }
 
