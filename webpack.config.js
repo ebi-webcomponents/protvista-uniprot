@@ -48,6 +48,7 @@ const config = {
     }),
   ],
   devServer: {
+    port: 8083,
     contentBase: [
       path.join(__dirname, 'public'),
       path.join(__dirname, 'node_modules'),
