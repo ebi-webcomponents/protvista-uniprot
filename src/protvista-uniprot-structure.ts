@@ -275,69 +275,75 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
         </div>
         <div class="class="protvista-uniprot-structure__table">
-        <protvista-datatable noScrollToRow noDeselect filter-scroll>
-          <table>
-            <thead>
-              <tr>
-                <th data-filter="source">Source</th>
-                <th>Identifier</th>
-                <th data-filter="method">Method</th>
-                <th>Resolution</th>
-                <th>Chain</th>
-                <th>Positions</th>
-                <th>Links</th>
-                <th><!--Download--></th>
-              </tr>
-            </thead>
-            <tbody>
-              ${this.data?.map(
-                ({
-                  source,
-                  id,
-                  method,
-                  resolution,
-                  chain,
-                  positions,
-                  downloadLink,
-                }) => html`<tr
-                  data-id="${id}"
-                  @click="${() => this.onTableRowClick({ id })}"
-                >
-                  <td data-filter="source" data-filter-value="${source}">
-                    <strong>${source}</strong>
-                  </td>
-                  <td>${id}</td>
-                  <td data-filter="method" data-filter-value="${method}">
-                    ${method}
-                  </td>
-                  <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
-                  <td>${chain || ''}</td>
-                  <td>${positions || ''}</td>
-                  <td>
-                    ${source === 'PDB'
-                      ? html`
-                          ${PDBLinks.map((pdbLink) => {
-                            return html`
-                              <a href="${pdbLink.link}${id}">${pdbLink.name}</a>
-                            `;
-                          }).reduce((prev, curr) => html` ${prev} · ${curr} `)}
-                        `
-                      : html`<a href="${alphaFoldLink}${this.accession}"
-                          >AlphaFold</a
-                        >`}
-                  </td>
-                  <td>
-                    ${downloadLink
-                      ? html`<a href="${downloadLink}" class="download-link"
-                          >${svg`${unsafeHTML(downloadIcon)}`}</a
-                        >`
-                      : ''}
-                  </td>
-                </tr>`
-              )}
-            </tbody>
-          </table>
-        </protvista-datatable>
+        ${this.data && this.data.length
+          ? html`<protvista-datatable noScrollToRow noDeselect filter-scroll>
+              <table>
+                <thead>
+                  <tr>
+                    <th data-filter="source">Source</th>
+                    <th>Identifier</th>
+                    <th data-filter="method">Method</th>
+                    <th>Resolution</th>
+                    <th>Chain</th>
+                    <th>Positions</th>
+                    <th>Links</th>
+                    <th><!--Download--></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${this.data?.map(
+                    ({
+                      source,
+                      id,
+                      method,
+                      resolution,
+                      chain,
+                      positions,
+                      downloadLink,
+                    }) => html`<tr
+                      data-id="${id}"
+                      @click="${() => this.onTableRowClick({ id })}"
+                    >
+                      <td data-filter="source" data-filter-value="${source}">
+                        <strong>${source}</strong>
+                      </td>
+                      <td>${id}</td>
+                      <td data-filter="method" data-filter-value="${method}">
+                        ${method}
+                      </td>
+                      <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
+                      <td>${chain || ''}</td>
+                      <td>${positions || ''}</td>
+                      <td>
+                        ${source === 'PDB'
+                          ? html`
+                              ${PDBLinks.map((pdbLink) => {
+                                return html`
+                                  <a href="${pdbLink.link}${id}"
+                                    >${pdbLink.name}</a
+                                  >
+                                `;
+                              }).reduce(
+                                (prev, curr) => html` ${prev} · ${curr} `
+                              )}
+                            `
+                          : html`<a href="${alphaFoldLink}${this.accession}"
+                              >AlphaFold</a
+                            >`}
+                      </td>
+                      <td>
+                        ${downloadLink
+                          ? html`<a href="${downloadLink}" class="download-link"
+                              >${svg`${unsafeHTML(downloadIcon)}`}</a
+                            >`
+                          : ''}
+                      </td>
+                    </tr>`
+                  )}
+                </tbody>
+              </table>
+            </protvista-datatable>`
+          : html``}
         ${this.loading
           ? html`<div class="protvista-loader">
               ${svg`${unsafeHTML(loaderIcon)}`}
