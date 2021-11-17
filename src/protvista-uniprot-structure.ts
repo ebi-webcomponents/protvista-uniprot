@@ -15,7 +15,7 @@ import {
 } from 'protvista-structure/dist/es/protvista-structure';
 
 const PDBLinks = [
-  { name: 'PDB', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
+  { name: 'PDBe', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
   { name: 'RCSB-PDB', link: 'https://www.rcsb.org/structure/' },
   { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
