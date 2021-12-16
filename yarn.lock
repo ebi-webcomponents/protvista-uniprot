@@ -6904,10 +6904,10 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-protvista-datatable@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-3.5.1.tgz#9fa333b31bdc3bae99644139d2b5303d4e207b53"
-  integrity sha512-mUzLRBcra47JXMoOajg209Oh2DoIxoaXsJNLaq5ChDpbBrrIho3naKsNLcRVSQXuSoOEaDi6ZRaLUNdp3vegCg==
+protvista-datatable@3.5.5:
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-3.5.5.tgz#69f6eb3e6cc95c87a2129943dc8eeec9cdd33117"
+  integrity sha512-p0IYDsvaX4ysKaA0gNdniEFxsjD8ElUlHzTXhCklfBZsj/VHzQQ2eyPgnzffDvu/SKi+chqvUbB5GxUTZeeBqQ==
   dependencies:
     lit-element "^2.4.0"
     lit-html "^1.3.0"
@@ -7013,10 +7013,10 @@ protvista-utils@^3.4.0:
   resolved "https://registry.yarnpkg.com/protvista-utils/-/protvista-utils-3.4.0.tgz#2d21e8730d2818f8d2dd16d965a185473a7b3bb4"
   integrity sha512-4VRstRv2U1z/BL6Yw8mLJNQu2Aheh89PdNoHWkK5KVxtpxaKPMUqIzGZ+8XHduhQwvjw12iwz+WWv+d+6OK+Pw==
 
-protvista-variation-adapter@^3.4.5:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/protvista-variation-adapter/-/protvista-variation-adapter-3.5.2.tgz#4567705de29f5e769b4ae8e62280b816f94280b7"
-  integrity sha512-Vl9qqPSfMhIWKvmpR9K3TTiEZNnHh/ujb0Fpz4T3+QcLi8VlTxupNM4JJKpqxzc0S0OOXdrz+NCDkVbNA4aF5Q==
+protvista-variation-adapter@^3.5.6:
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/protvista-variation-adapter/-/protvista-variation-adapter-3.5.6.tgz#cb557d1ee1d39bd48ebac45fc0d1d0eb5968075d"
+  integrity sha512-qJv4GEFa7C4iKu9MerpCwInzXqfSrG0gQZ0gPQkPC7ueTdgYk7u3PViw5riRF6J8WkwJzEweu0/i7VkMn0sn9w==
   dependencies:
     d3-scale "^3.2.3"
     data-loader "^3.0.0"
