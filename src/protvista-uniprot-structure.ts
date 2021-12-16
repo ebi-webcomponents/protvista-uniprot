@@ -174,7 +174,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const protvistaDatatableElt = this.querySelector(
       'protvista-datatable'
     ) as ProtvistaDatatable;
-    if (!protvistaDatatableElt.selectedid && this.data?.[0]) {
+    if (!protvistaDatatableElt?.selectedid && this.data?.[0]) {
       // Select the first element in the table
       this.onTableRowClick({ id: this.data[0].id });
       protvistaDatatableElt.selectedid = this.structureId;
