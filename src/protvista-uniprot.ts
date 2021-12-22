@@ -30,6 +30,7 @@ import { NightingaleEvent } from './types/nightingale-components';
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
+import { generateTooltip } from './tooltips';
 
 export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
@@ -563,17 +564,13 @@ class ProtvistaUniprot extends LitElement {
   async updateTooltip(e: NightingaleEvent) {
     const d = e.detail?.feature;
 
-    if (!d.tooltipContent) {
-      return;
-    }
-
     const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
     if (!tooltip) {
       return;
     }
 
     tooltip.title = `${d.type} ${d.start}-${d.end}`;
-    tooltip.innerHTML = d.tooltipContent;
+    tooltip.innerHTML = generateTooltip(e.detail.feature.data);
     tooltip.visible = true;
 
     if (e.detail?.coords) {
