@@ -1,4 +1,3 @@
-import { formatXrefs, getEvidenceFromCodes } from 'protvista-feature-adapter';
 import groupBy from 'lodash-es/groupBy';
 import {
   Association,
@@ -7,6 +6,7 @@ import {
   Prediction,
   Variant,
 } from 'protvista-variation-adapter/src/variants';
+import { formatXrefs, getEvidenceFromCodes } from '.';
 
 export const getDiseaseAssociations = (associations: Association[]): string =>
   associations
