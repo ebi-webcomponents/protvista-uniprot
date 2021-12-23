@@ -1,4 +1,6 @@
+import { Prediction } from 'protvista-variation-adapter/dist/es/variants';
 import ecoMap from './evidences';
+import { getPredictions } from './variationTooltips';
 
 const formatSource = (source) => {
   return source.name.toLowerCase() === 'PubMed'.toLowerCase()
@@ -84,10 +86,19 @@ export const generateTooltip = (data: Record<string, string>) => {
           value
         )}`;
       }
-      if (Array.isArray(value)) {
-        return `<strong>${key}</strong>${value.map((value2) =>
-          generateTooltip(value2)
+      if (key === 'predictions') {
+        return `<strong>Predictions</strong>${getPredictions(
+          value as unknown as Prediction[]
         )}`;
+      }
+      if (Array.isArray(value)) {
+        return value
+          .map((value2) => generateTooltip({ [key]: value2 }))
+          .join('');
+      }
+      if (typeof value === 'object') {
+        return `<strong>${key}</strong>
+          ${generateTooltip(value)}`;
       }
       return `<li><strong>${key}</strong>: ${value}</li>`;
     })
