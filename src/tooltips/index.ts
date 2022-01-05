@@ -3,9 +3,11 @@ import ecoMap from './evidences';
 import { getPredictions } from './variationTooltips';
 
 const formatSource = (source) => {
-  return source.name.toLowerCase() === 'PubMed'.toLowerCase()
+  return source.name?.toLowerCase() === 'PubMed'.toLowerCase()
     ? `${source.id}&nbsp;(<a href='${source.url}' style="color:#FFF" target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' style="color:#FFF" target='_blank'>EuropePMC</a>)`
-    : `&nbsp;<a href='${source.url}' style="color:#FFF" target='_blank'>${source.id}</a>&nbsp;(${source.name})`;
+    : `&nbsp;<a href='${source.url}' style="color:#FFF" target='_blank'>${
+        source.id
+      }</a>${source.name ? `&nbsp;(${source.name})` : ``}`;
 };
 
 export const getEvidenceFromCodes = (evidenceList) => {
@@ -38,41 +40,41 @@ export const formatXrefs = (xrefs) => {
     .join('')}</ul>`;
 };
 
-export const formatTooltip = (feature) => {
-  const evidenceHTML = getEvidenceFromCodes(feature.evidences);
-  return `
-        ${
-          feature.description
-            ? `<h5>Description</h5><p>${feature.description}</p>`
-            : ``
-        }
-        ${
-          feature.matchScore
-            ? `<h5>Match score</h5><p>${feature.matchScore}%</p>`
-            : ``
-        }
-        ${feature.ftId ? `<h5>Feature ID</h5><p>${feature.ftId}</p>` : ``}
-        ${
-          feature.alternativeSequence
-            ? `<h5>Alternative sequence</h5><p>${feature.alternativeSequence}</p>`
-            : ``
-        }
-        ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
-        ${
-          feature.xrefs
-            ? `<h5>Cross-references</h5>${formatXrefs(feature.xrefs)}`
-            : ''
-        }
-        ${feature.peptide ? `<h5>Peptide</h5><p>${feature.peptide}</p>` : ''}
-        ${
-          feature.ptms
-            ? `<h5>PTMs</h5><ul>${feature.ptms.map(
-                (item) => `<li>${item.name} - position: ${item.position}</li>`
-              )}</ul>`
-            : ''
-        }
-          `;
-};
+// export const formatTooltip = (feature) => {
+//   const evidenceHTML = getEvidenceFromCodes(feature.evidences);
+//   return `
+//         ${
+//           feature.description
+//             ? `<h5>Description</h5><p>${feature.description}</p>`
+//             : ``
+//         }
+//         ${
+//           feature.matchScore
+//             ? `<h5>Match score</h5><p>${feature.matchScore}%</p>`
+//             : ``
+//         }
+//         ${feature.ftId ? `<h5>Feature ID</h5><p>${feature.ftId}</p>` : ``}
+//         ${
+//           feature.alternativeSequence
+//             ? `<h5>Alternative sequence</h5><p>${feature.alternativeSequence}</p>`
+//             : ``
+//         }
+//         ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
+//         ${
+//           feature.xrefs
+//             ? `<h5>Cross-references</h5>${formatXrefs(feature.xrefs)}`
+//             : ''
+//         }
+//         ${feature.peptide ? `<h5>Peptide</h5><p>${feature.peptide}</p>` : ''}
+//         ${
+//           feature.ptms
+//             ? `<h5>PTMs</h5><ul>${feature.ptms.map(
+//                 (item) => `<li>${item.name} - position: ${item.position}</li>`
+//               )}</ul>`
+//             : ''
+//         }
+//           `;
+// };
 
 export const generateTooltip = (data: Record<string, string>) => {
   return `<ul>
@@ -90,6 +92,9 @@ export const generateTooltip = (data: Record<string, string>) => {
         return `<strong>Predictions</strong>${getPredictions(
           value as unknown as Prediction[]
         )}`;
+      }
+      if (key === 'source') {
+        return formatSource(value);
       }
       if (Array.isArray(value)) {
         return value
