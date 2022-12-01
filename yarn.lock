@@ -3471,18 +3471,18 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-data-loader@3.0.0, data-loader@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/data-loader/-/data-loader-3.0.0.tgz#0bec82bbec4b0c746eb3182a8e3985bad8bd4af1"
-  integrity sha512-hhFM63RYRL1dR9flnHgpHAIpVTdQ4Bz8FNK92xcmB/hQ/wsriHdAGJvE4pcKvxFN9oHTWRhQvVNZzFf73BkVCA==
-  dependencies:
-    "@types/lodash-es" "4.17.3"
-    lodash-es "^4.17.11"
-
 data-loader@^2.9.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/data-loader/-/data-loader-2.9.1.tgz#1a5906d8bbba8fa4e894f2013b6024c29f8dc14b"
   integrity sha512-KXsgTG9hFaBl5aIuWf0umshJzPMHYF1x2CEzIRmT3lH140ltThIFaIqg/hz5yPNSl2AaZNGKKELcef8bIIAVNA==
+  dependencies:
+    "@types/lodash-es" "4.17.3"
+    lodash-es "^4.17.11"
+
+data-loader@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/data-loader/-/data-loader-3.8.4.tgz#e9d33e0a8ccb626ff3098e1f53074e252c4b048d"
+  integrity sha512-0SeXJ7oVktX3lYoWfsOj1u4b2vsDcZfAWIApBjCoDflfh1h1Xmh7QABzi3Tl24OI/5InSot0VF91Bwm++ictVA==
   dependencies:
     "@types/lodash-es" "4.17.3"
     lodash-es "^4.17.11"
@@ -6904,149 +6904,150 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-protvista-datatable@3.5.5:
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-3.5.5.tgz#69f6eb3e6cc95c87a2129943dc8eeec9cdd33117"
-  integrity sha512-p0IYDsvaX4ysKaA0gNdniEFxsjD8ElUlHzTXhCklfBZsj/VHzQQ2eyPgnzffDvu/SKi+chqvUbB5GxUTZeeBqQ==
+protvista-datatable@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-3.8.4.tgz#29983f648b71b546893e34b3cf7a8b4573837a28"
+  integrity sha512-U0zBNsq1nArlcT7zTjtxBG7NS0bDwcBEyjcw3p5aioUf/MtP3vJdMa6IFB3QJKsK5EcIyDXO3GXVHI58nLmS/w==
   dependencies:
     lit-element "^2.4.0"
     lit-html "^1.3.0"
-    protvista-utils "^3.4.0"
+    protvista-utils "^3.8.4"
     type-fest "^1.2.1"
     uuid "^8.3.1"
 
-protvista-feature-adapter@3.5.1, protvista-feature-adapter@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-3.5.1.tgz#72e3ab0e793a9988e5a1e299fd82a38f287314ca"
-  integrity sha512-cm3C5xFtmW17RkWuqkvGDAnTm//25eye+K8okAqu5f6PVq1MktJiVD602mSFpo/NhAEnKLKJnLgj0ui7sxj45A==
+protvista-feature-adapter@3.8.4, protvista-feature-adapter@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-3.8.4.tgz#404044c24b752828f48f35b57bde48c81cb66041"
+  integrity sha512-27Ax4H+LQxvKPmNhta5wdZ83NMKXMB7rqC+pmGNZ0ERR2deszg/g6QpDrprXFIlWt+2GWnCMFVF4wcexmHe1Ng==
   dependencies:
-    protvista-track "^3.4.0"
+    protvista-track "^3.8.4"
     uuid "^8.3.1"
 
-protvista-filter@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/protvista-filter/-/protvista-filter-3.1.2.tgz#e93052bade7316b638a8bfd122bb43f848fba48c"
-  integrity sha512-gc9JUbRRs2zhxheZX7446eb+YxZl9CivBm6oVUli6dpIUPH0+cnG3GRhfjESuVtsQAJ5FQOT7bqQfJBmop4Low==
+protvista-filter@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-filter/-/protvista-filter-3.8.4.tgz#a6db7596133f50a39f26d9594eac14823cf555e6"
+  integrity sha512-A1iBZN3Gbt+D3Ou7KmPrOHT+H2TFmBJWPAjfjibXYGC50HArIuk/hEpAk+e2CwE9nv13jjcURpaONc/go7KP/g==
   dependencies:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
 
-protvista-interpro-adapter@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-3.4.0.tgz#041cb61ca52227c6a8e88bc5613a09b5df8261fc"
-  integrity sha512-2YNClL7vABfawZO5CcgKJGZtnTiKGjvUYX17q3+qrqBaKeo7i0IMsTWfkxGPqw899A7uHcMVoI2yQQ3Ih00dQg==
+protvista-interpro-adapter@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-3.8.4.tgz#99743941df0630c03c45ff81fd9ee944a06e93e7"
+  integrity sha512-gPYgKnYQP4ob2aWHKYjkyQBHVIwBRb27Rstm+cFqdulHpzyszZSzkRIwa81TAogKhVMTVMDR9onqleGBfBriMw==
 
-protvista-interpro-track@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-interpro-track/-/protvista-interpro-track-3.4.0.tgz#a563523f3d7bf4b28e744e63112a3486e9bf15c7"
-  integrity sha512-dftvYfJ2W+ZdJT6xJMUySFz8nJFvrgHZ0JBVgO3oEjtf9xaj3sTb0slN4RjTvwV2v3VFKgEFZUd9J7esUj7Lag==
+protvista-interpro-track@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-interpro-track/-/protvista-interpro-track-3.8.4.tgz#0857fc2a34aeca5134aae47344f9e44371834f0e"
+  integrity sha512-m0LnYshWbWHi0fpE0VfJt0sMdUbIRllFAG3al1yrMLGhvc5oZgOt/EapLTuYOzW0cDgaBgkfpPxQWwNbk51A5A==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-track "^3.4.0"
+    protvista-track "^3.8.4"
 
-protvista-manager@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-manager/-/protvista-manager-3.4.0.tgz#e30e18cafa526c285559daee3168ece9f6aa663e"
-  integrity sha512-c3TWLgC+fLAIN4yWWgKN1CTIGana5EHkYUVsn2h403lTEvoY9vvRpYrzSY+rWOWFZxxvYP97Oz87Fyrj95jmFA==
+protvista-manager@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-manager/-/protvista-manager-3.8.4.tgz#d19f068dc272d29a8b8a282772fbb51c76a40da7"
+  integrity sha512-wecGTGCRiIpWS43/dOwBgajOBfFlcmUCtWomOKvU3tl0Y4pIF3qEpLWvshjh117Dmq55XjlGaKx1lGeU3VNSfg==
   dependencies:
     lodash-es "^4.17.11"
 
-protvista-navigation@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-navigation/-/protvista-navigation-3.5.1.tgz#e54051ac4bfc8539272b07f0c9fd295ebdca219c"
-  integrity sha512-BJ6JZiIzB+4oLaWrvSqlhrKoCB5gLIIpC4Ts6Btm3y1HJ9LWSJ6wcEBkpYkzttuSIhU9/GhblJjfCj64ga2Olw==
+protvista-navigation@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-navigation/-/protvista-navigation-3.8.4.tgz#4006dbecf3e6fcbcad790fccacd43c13e3115381"
+  integrity sha512-R0wmlNmIoegpew8SFgm5O+/lK9bPFtLjX+hWw5MWJCPEmpRUvepbwKD3CmbColOqQQy2XTNpevamA7AWeqwpxA==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-utils "^3.4.0"
+    protvista-utils "^3.8.4"
 
-protvista-proteomics-adapter@^3.4.5:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-proteomics-adapter/-/protvista-proteomics-adapter-3.5.1.tgz#4195c7bcc1fc50aa80e7cf62433d21bebf644657"
-  integrity sha512-uwxVRODlPdz73LhFunfwuZATAey+zurx/HavLrZA1bTcuR8ZE1He8d6J5SgW5JZgD4rBH1VlQeYlWeCS7pfu8g==
+protvista-proteomics-adapter@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-proteomics-adapter/-/protvista-proteomics-adapter-3.8.4.tgz#747bda7e2d1984d08d741409116694033efc2271"
+  integrity sha512-hd5FEZIfSOQ74pluChi2KYm0ficeuRjTsKEzZbo25JH7Oa9WVGvLVW0/L9IK3lhtOPtVCHOHwCf5LfBp+vkPaw==
   dependencies:
-    protvista-feature-adapter "^3.5.1"
+    protvista-feature-adapter "^3.8.4"
     uuid "^8.3.1"
 
-protvista-sequence@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-sequence/-/protvista-sequence-3.5.1.tgz#753a71c9a5cca59988cf5d5a79b2876e3867bca6"
-  integrity sha512-Ve1LCb0KrQUiviTv7dOVo3xU8AxvDAwHwcUj92s4dXjnTDG4b2645HsD3D3kL+4vdh5qXhKQF7Jto8zBpFrN7Q==
+protvista-sequence@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-sequence/-/protvista-sequence-3.8.4.tgz#d90059b7eadd872aa6fe5157891d5350d93ef4ec"
+  integrity sha512-RUBOgIxYv3KTcCrPaeRJiwV9NObQb1H+pISAGbcMx1qhcRHNQaDXIQ35mahvPBXG5idN4FoiIQMBlGu0SwlElA==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-zoomable "^3.4.0"
+    protvista-zoomable "^3.8.4"
 
-protvista-structure-adapter@3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/protvista-structure-adapter/-/protvista-structure-adapter-3.5.1.tgz#b1fea305dcc09e57c23e802fae23ddbd44b982fb"
-  integrity sha512-1ZZLiZ3DtDXuj1uM9FiLlOjnt6ZBgGPKtQEp9CoFqPbIv9lL+1TKCYcwB+pws/isLf3gA8DffJWgpevwA3TMUA==
+protvista-structure-adapter@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-structure-adapter/-/protvista-structure-adapter-3.8.4.tgz#0791af005ebed78c1d73434f1a7983a675eb67dc"
+  integrity sha512-P635B+9YJeGh7m8TDYIao/inYcFSZSxLoJEKWWg8Vx4GiPS3yrMH8YVMr2lxovCKRZSMoUalaVzNWvRiBlwmsg==
   dependencies:
-    protvista-feature-adapter "^3.5.1"
+    protvista-feature-adapter "^3.8.4"
     uuid "^8.3.1"
 
-protvista-structure@3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/protvista-structure/-/protvista-structure-3.5.2.tgz#800b321fa7da39da97244d411b1ebb20e898c7b7"
-  integrity sha512-HKw/jPre7A29IiyBImlIh5pHeV47nHs7vO3kFgEKm2VCS6LRxMm6wMKGIEBSAw0OYb0N1VN+Ajl8vAzuHaBMNw==
+protvista-structure@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-structure/-/protvista-structure-3.8.4.tgz#46b3e210c9f78e4fa142e87120371b1c47b28fe7"
+  integrity sha512-AUKupaWFBanGepFmeBG2ltfb09LS6hCEOy5yrEkd3R03peJYoviKonOT6jCUCTb8irrhKrI6GA0Agn++rw5g0g==
   dependencies:
-    data-loader "3.0.0"
+    data-loader "^3.8.4"
+    lodash-es "^4.17.11"
     molstar "2.2.0"
     react "17.0.2"
 
-protvista-tooltip@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-3.1.2.tgz#2da11a28027ffdf686a560b857c3dffa815c6f84"
-  integrity sha512-X9H/oN1/1fbagRhOBfBO+5r2LLARl5QelSLNSpOgWh50iBcCyIU8P5iC6S3cCtNdb+VGssGB4+fHpOBv7nu7Lw==
+protvista-tooltip@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-3.8.4.tgz#56d6c41208c8066f1fa9b8e5b1514f94e7ea2120"
+  integrity sha512-yFWFbVjZ8gp44x9bsDd3/iBSvTCLKUorFb0+yJ4nAspFJNfTjU5WUBnUzqajJbf2x0I7qeL8W6R3rO3NuK+rpQ==
   dependencies:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
 
-protvista-track@3.4.0, protvista-track@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.4.0.tgz#c7bcfb989c94a6392ddfb3117018617f7b85e36a"
-  integrity sha512-8N8n+DS0GlVsW9vCtBVf5thSw6DxlgXqPM0MAdCA+cCXBWTIiJQpTtK46ZgZTsNF7JJYFXhTJ3hrlcJCRdU7gA==
+protvista-track@3.8.4, protvista-track@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.8.4.tgz#988d47c9a8497d88b3e6a419f98a36e2d64e76f9"
+  integrity sha512-oom4e2oRFT2MrzV2Sbhl9jXzzfitloMwop3U7jIpiMzQwup+PkVGe5ZdJVMrBDqRgIoPHlfr1nST9ok7rS1Vyw==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-zoomable "^3.4.0"
+    protvista-zoomable "^3.8.4"
 
-protvista-utils@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-utils/-/protvista-utils-3.4.0.tgz#2d21e8730d2818f8d2dd16d965a185473a7b3bb4"
-  integrity sha512-4VRstRv2U1z/BL6Yw8mLJNQu2Aheh89PdNoHWkK5KVxtpxaKPMUqIzGZ+8XHduhQwvjw12iwz+WWv+d+6OK+Pw==
+protvista-utils@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-utils/-/protvista-utils-3.8.4.tgz#04dba3099854389f8f371c44e9cece6ec330329d"
+  integrity sha512-FRrGMjpwGl5hCIfzl7jHHhRjsbZiQd/1rx2cgKNO016ERTU9KJE4zzSuBGy+mrCLoKjrqSlJCGwrqbawOshhWw==
 
-protvista-variation-adapter@^3.5.6:
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/protvista-variation-adapter/-/protvista-variation-adapter-3.5.6.tgz#cb557d1ee1d39bd48ebac45fc0d1d0eb5968075d"
-  integrity sha512-qJv4GEFa7C4iKu9MerpCwInzXqfSrG0gQZ0gPQkPC7ueTdgYk7u3PViw5riRF6J8WkwJzEweu0/i7VkMn0sn9w==
+protvista-variation-adapter@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-variation-adapter/-/protvista-variation-adapter-3.8.4.tgz#406730a79998a6d1d51b243533849301b9369eab"
+  integrity sha512-MJT6fmdrgMmf7hRkib2SUpXYzwZ5iWzWe2RgxPt5rkc0ikPIpZj4UHGZ1ffJF//js9G05MwNkAvr5ho0FuobPg==
   dependencies:
     d3-scale "^3.2.3"
-    data-loader "^3.0.0"
+    data-loader "^3.8.4"
     lodash-es "^4.17.11"
-    protvista-feature-adapter "^3.5.1"
-    protvista-variation "^3.5.2"
+    protvista-feature-adapter "^3.8.4"
+    protvista-variation "^3.8.4"
     uuid "^8.3.1"
 
-protvista-variation-graph@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-3.4.0.tgz#34c309a3884cfb517182ac71f5207d77526149ca"
-  integrity sha512-45VVwFgyzwIIw+h4GG1Ajsb9QfjimMPkfQlkj7R/FVPw16x4aKZLtSHXHN76Ju37Cl7oDRRSTx3fb4ilqIS9KQ==
+protvista-variation-graph@3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-variation-graph/-/protvista-variation-graph-3.8.4.tgz#1f9f8690ed380678f09bab39a1891d8258e40f95"
+  integrity sha512-7wocYMJiAssIrPT1rLlgweR2Wjor/mQjsNAKOB5Bo5X7zZkQFu+eHj7nLO1RuIU3NKWFvTmSP2G0zT8AXygZmg==
   dependencies:
-    protvista-track "^3.4.0"
+    protvista-track "^3.8.4"
 
-protvista-variation@3.5.2, protvista-variation@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/protvista-variation/-/protvista-variation-3.5.2.tgz#48c5a6ec53f4feadc61a0fac88a88e4b751be141"
-  integrity sha512-jXJUrWEq1fBYmpstdyTCIp0pAhIKZV0wJp6XSPNiACtIhhC48pfiMnNoFCLvgr+IyuzfE0wAQVgqYd4T9SE81w==
+protvista-variation@3.8.4, protvista-variation@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-variation/-/protvista-variation-3.8.4.tgz#6f8888cf0c55154100eabe2fcb22c674f925fa46"
+  integrity sha512-zzmXv8MsmC8jHhoMvNsAkr9IDHgWYwaWTW8x2Hs0fqvXAQVNq0opAiypy1eT0fY9Iyi4sxiYQNMENrDy5HOOtw==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-track "^3.4.0"
+    protvista-track "^3.8.4"
 
-protvista-zoomable@3.4.0, protvista-zoomable@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/protvista-zoomable/-/protvista-zoomable-3.4.0.tgz#593b023abddf0c5b01361d9a67797ca10b825753"
-  integrity sha512-3BAmXBhzfZaSBIRBJgM1hu7q7lwUcQJ26LpqXhyCvTQy79n8t8dXwuNcabS5GA2L7tQ/EVOn+sz4p3I3hkbp3Q==
+protvista-zoomable@3.8.4, protvista-zoomable@^3.8.4:
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/protvista-zoomable/-/protvista-zoomable-3.8.4.tgz#e7d1601e257cd0ec65c5bc4a5932e5cc66601d1b"
+  integrity sha512-fpbgYybqoUSClMwyyuaa/U0uOOcwWKzkQPa+bnYL7/B7wUsA+rKsdeMrnMynTviDwq5mO9TqkNYSpUBV/zYLhg==
   dependencies:
     lodash-es "^4.17.11"
-    protvista-utils "^3.4.0"
+    protvista-utils "^3.8.4"
     resize-observer-polyfill "^1.5.0"
 
 proxy-addr@~2.0.5:
