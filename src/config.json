@@ -268,6 +268,19 @@
           "tooltip": "Modified residues such as phosphorylation, acetylation, acylation, methylation"
         },
         {
+          "name": "mod_res_ls",
+          "label": "Modified residue (large scale)",
+          "filter": "MOD_RES_LS",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-ptm-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+            }
+          ],
+          "tooltip": "Modified residues from Large scale studies"
+        },
+        {
           "name": "carbohyd",
           "label": "Glycosylation",
           "filter": "CARBOHYD",

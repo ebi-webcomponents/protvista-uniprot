@@ -19,6 +19,7 @@ import { transformData as _transformDataProteomicsAdapter } from 'protvista-prot
 import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
 import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
+import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
@@ -36,6 +37,7 @@ export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
+export const transformDataProteomicsPTMApdapter = _transformDataProteomicsPTMApdapter;
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
@@ -47,6 +49,7 @@ const adapters = {
   'protvista-proteomics-adapter': transformDataProteomicsAdapter,
   'protvista-structure-adapter': transformDataStructureAdapter,
   'protvista-variation-adapter': transformDataVariationAdapter,
+  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter
 };
 
 type TrackType =
