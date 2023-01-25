@@ -107,7 +107,9 @@ const convertPtmExchangePtms = (
       ? `<h5>Evidence</h5><ul>${evidences
           .map(
             (id) =>
-              `<li title='${id}' style="padding: .25rem 0">${id}&nbsp;(<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" style="color:#FFF" target="_blank">PRIDE</a>)</li>`
+              `<li title='${id}' style="padding: .25rem 0">${id}&nbsp;
+              ${id.startsWith('PXD') ? `(<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" style="color:#FFF" target="_blank">PRIDE</a>)` : ''}
+              </li>`
           )
           .join('')}</ul>`
       : ''
@@ -126,43 +128,45 @@ const convertPtmExchangePtms = (
 };
 
 export const transformData = (data: ProteomicsPtm) => {
-  const { features } = data;
+  if (data) {
+    const { features } = data;
 
-  const absolutePositionToPtms: Record<number, { ptms: PTM[]; aa: string }> =
-    {};
-
-  if (features) {
-    for (const feature of features) {
-      for (const ptm of feature.ptms) {
-        const absolutePosition = +feature.begin + ptm.position - 1;
-        if (!Number.isFinite(absolutePosition)) {
-          console.error(
-            `Encountered infinite number: +feature.begin + ptm.position - 1 = ${+feature.begin} + ${
-              ptm.position
-            } - 1`
-          );
-          // eslint-disable-next-line no-continue
-          continue;
-        }
-        const aa = feature.peptide[ptm.position - 1];
-        if (absolutePosition in absolutePositionToPtms) {
-          if (absolutePositionToPtms[absolutePosition].aa !== aa) {
+    const absolutePositionToPtms: Record<number, { ptms: PTM[]; aa: string }> =
+      {};
+  
+    if (features) {
+      for (const feature of features) {
+        for (const ptm of feature.ptms) {
+          const absolutePosition = +feature.begin + ptm.position - 1;
+          if (!Number.isFinite(absolutePosition)) {
             console.error(
-              `One PTM has different amino acid values: [${absolutePositionToPtms[absolutePosition].aa}, ${aa}]`
+              `Encountered infinite number: +feature.begin + ptm.position - 1 = ${+feature.begin} + ${
+                ptm.position
+              } - 1`
             );
-          } else {
-            absolutePositionToPtms[absolutePosition].ptms.push(ptm);
+            // eslint-disable-next-line no-continue
+            continue;
           }
-        } else {
-          absolutePositionToPtms[absolutePosition] = { ptms: [ptm], aa };
+          const aa = feature.peptide[ptm.position - 1];
+          if (absolutePosition in absolutePositionToPtms) {
+            if (absolutePositionToPtms[absolutePosition].aa !== aa) {
+              console.error(
+                `One PTM has different amino acid values: [${absolutePositionToPtms[absolutePosition].aa}, ${aa}]`
+              );
+            } else {
+              absolutePositionToPtms[absolutePosition].ptms.push(ptm);
+            }
+          } else {
+            absolutePositionToPtms[absolutePosition] = { ptms: [ptm], aa };
+          }
         }
       }
-    }
-  
-    return Object.entries(absolutePositionToPtms).map(
-      ([absolutePosition, { ptms, aa }]) =>
-        convertPtmExchangePtms(ptms, aa, +absolutePosition)
-    );
-  } 
+   
+      return Object.entries(absolutePositionToPtms).map(
+        ([absolutePosition, { ptms, aa }]) =>
+          convertPtmExchangePtms(ptms, aa, +absolutePosition)
+      );
+    } 
+  }
   return []; 
 };
