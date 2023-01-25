@@ -131,35 +131,38 @@ export const transformData = (data: ProteomicsPtm) => {
   const absolutePositionToPtms: Record<number, { ptms: PTM[]; aa: string }> =
     {};
 
-  for (const feature of features) {
-    for (const ptm of feature.ptms) {
-      const absolutePosition = +feature.begin + ptm.position - 1;
-      if (!Number.isFinite(absolutePosition)) {
-        console.error(
-          `Encountered infinite number: +feature.begin + ptm.position - 1 = ${+feature.begin} + ${
-            ptm.position
-          } - 1`
-        );
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      const aa = feature.peptide[ptm.position - 1];
-      if (absolutePosition in absolutePositionToPtms) {
-        if (absolutePositionToPtms[absolutePosition].aa !== aa) {
+  if (features) {
+    for (const feature of features) {
+      for (const ptm of feature.ptms) {
+        const absolutePosition = +feature.begin + ptm.position - 1;
+        if (!Number.isFinite(absolutePosition)) {
           console.error(
-            `One PTM has different amino acid values: [${absolutePositionToPtms[absolutePosition].aa}, ${aa}]`
+            `Encountered infinite number: +feature.begin + ptm.position - 1 = ${+feature.begin} + ${
+              ptm.position
+            } - 1`
           );
-        } else {
-          absolutePositionToPtms[absolutePosition].ptms.push(ptm);
+          // eslint-disable-next-line no-continue
+          continue;
         }
-      } else {
-        absolutePositionToPtms[absolutePosition] = { ptms: [ptm], aa };
+        const aa = feature.peptide[ptm.position - 1];
+        if (absolutePosition in absolutePositionToPtms) {
+          if (absolutePositionToPtms[absolutePosition].aa !== aa) {
+            console.error(
+              `One PTM has different amino acid values: [${absolutePositionToPtms[absolutePosition].aa}, ${aa}]`
+            );
+          } else {
+            absolutePositionToPtms[absolutePosition].ptms.push(ptm);
+          }
+        } else {
+          absolutePositionToPtms[absolutePosition] = { ptms: [ptm], aa };
+        }
       }
     }
-  }
-
-  return Object.entries(absolutePositionToPtms).map(
-    ([absolutePosition, { ptms, aa }]) =>
-      convertPtmExchangePtms(ptms, aa, +absolutePosition)
-  );
+  
+    return Object.entries(absolutePositionToPtms).map(
+      ([absolutePosition, { ptms, aa }]) =>
+        convertPtmExchangePtms(ptms, aa, +absolutePosition)
+    );
+  } 
+  return []; 
 };
