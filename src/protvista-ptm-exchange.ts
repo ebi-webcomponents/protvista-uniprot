@@ -82,16 +82,16 @@ const convertPtmExchangePtms = (
   ];
   const confidenceScores = new Set(
     ptms.flatMap(({ dbReferences }) =>
-      dbReferences.map(({ properties }) => properties['Confidence score'])
+      dbReferences?.map(({ properties }) => properties['Confidence score'])
     )
   );
   let confidenceScore: string;
 
   if (!confidenceScores.size) {
-    console.error('PTMeXchange PTM has no confidence score');
+    console.log('PTM has no confidence score');
   } else if (confidenceScores.size > 1) {
     console.error(
-      `PTMeXchange PTM has a mixture of confidence scores: ${Array.from(
+      `PTM has a mixture of confidence scores: ${Array.from(
         confidenceScores
       )}`
     );
@@ -101,15 +101,21 @@ const convertPtmExchangePtms = (
 
   const tooltip = `
   <h5>Description</h5><p>${phosphorylate(aa)}</p>
-  ${confidenceScore ? `<h5>Confidence Score</h5><p>${confidenceScore}</p>` : ''}
+  ${confidenceScore ? `<h5 data-article-id="mod_res_large_scale#confidence-score">Confidence Score</h5><p>${confidenceScore}</p>` : ''}
   ${
     evidences
       ? `<h5>Evidence</h5><ul>${evidences
           .map(
-            (id) =>
-              `<li title='${id}' style="padding: .25rem 0">${id}&nbsp;
-              ${id.startsWith('PXD') ? `(<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" style="color:#FFF" target="_blank">PRIDE</a>)` : ''}
-              </li>`
+            (id) => {
+              const datasetID = id === 'Glue project' ? 'PXD012174' : id;
+              return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;
+              (<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" style="color:#FFF" target="_blank">PRIDE</a>)
+              </li>
+              ${id === 'Glue project' ?  
+              `<li title="publication" style="padding: .25rem 0">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" style="color:#FFF" target="_blank">PubMed</a>)</li>`
+              : ''}
+              `
+            }
           )
           .join('')}</ul>`
       : ''
