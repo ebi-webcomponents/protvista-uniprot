@@ -269,7 +269,7 @@
         },
         {
           "name": "mod_res_ls",
-          "label": "Modified residue (large scale)",
+          "label": "Modified residue (large scale data)",
           "filter": "MOD_RES_LS",
           "trackType": "protvista-track",
           "data": [
