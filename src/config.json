@@ -613,7 +613,7 @@
         },
         {
           "name": "proteomics-ptm",
-          "label": "PTM",
+          "label": "PTM-containing peptide",
           "trackType": "protvista-track",
           "data": [
             {
