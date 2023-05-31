@@ -128,7 +128,7 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['ClinVar reviewed'],
+      labels: ['ClinVar'],
       colors: ['#9f9f9f'],
     },
     filterData: (variants: ProtvistaVariationData) =>
