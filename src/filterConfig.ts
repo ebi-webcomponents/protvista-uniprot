@@ -41,7 +41,7 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely disease'],
+      labels: ['Likely pathogenic or pathogenic'],
       colors: [scaleColors.UPDiseaseColor],
     },
     filterData: (variants: ProtvistaVariationData) =>
@@ -69,7 +69,7 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely benign'],
+      labels: ['Likely benign or benign'],
       colors: [scaleColors.UPNonDiseaseColor],
     },
     filterData: (variants: ProtvistaVariationData) =>
@@ -86,7 +86,7 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Uncertain'],
+      labels: ['Uncertain significance'],
       colors: [scaleColors.othersColor],
     },
     filterData: (variants: ProtvistaVariationData) =>
