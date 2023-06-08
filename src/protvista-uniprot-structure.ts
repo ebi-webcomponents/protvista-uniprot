@@ -21,6 +21,7 @@ const PDBLinks = [
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
+const foldseekLink = `https://search.foldseek.com/search`;
 
 type ProcessedStructureData = {
   id: string;
@@ -108,6 +109,10 @@ const AFMetaInfo = html`
     Some regions with low pLDDT may be unstructured in isolation.
   </p>
 `;
+
+const foldseekURL = (accession, sourceDB) => {
+  return html`<a href="${foldseekLink}?accession=${accession}&source=${sourceDB}">Foldseek</a>`;
+};
 
 const styleId = 'protvista-styles';
 class ProtvistaUniprotStructure extends LitElement {
@@ -335,7 +340,7 @@ class ProtvistaUniprotStructure extends LitElement {
                         ${downloadLink
                           ? html`<a href="${downloadLink}" class="download-link"
                               >${svg`${unsafeHTML(downloadIcon)}`}</a
-                            >`
+                            > · ${foldseekURL(source === 'PDB' ? id: this.accession, source === 'PDB' ? 'PDB' : 'AlphaFoldDB')}`
                           : ''}
                       </td>
                     </tr>`
