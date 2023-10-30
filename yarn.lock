@@ -6915,7 +6915,15 @@ protvista-datatable@3.8.10:
     type-fest "^1.2.1"
     uuid "^8.3.1"
 
-protvista-feature-adapter@3.8.11, protvista-feature-adapter@^3.8.11:
+protvista-feature-adapter@3.8.12, protvista-feature-adapter@^3.8.12:
+  version "3.8.12"
+  resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-3.8.12.tgz#e79d72eaac4f66a0e499bb50d1bda32ec8ce0c33"
+  integrity sha512-WVbOvheQb7NSXt7hJwF5XSeRbyKKaqC6qHlCJV28I8c767U+iUzofG+yrD4P9ji/7lFzEo9rERGPRbAslBnpaQ==
+  dependencies:
+    protvista-track "^3.8.10"
+    uuid "^8.3.1"
+
+protvista-feature-adapter@^3.8.11:
   version "3.8.11"
   resolved "https://registry.yarnpkg.com/protvista-feature-adapter/-/protvista-feature-adapter-3.8.11.tgz#cacb89f5ace5d03e36c72ac9f9242dbb801e5fd6"
   integrity sha512-yYvG7j/fE/pKU8k4oE2Nth/shHnnm/M1x8HDm96w+oKjawJaACNIRieg5A0bAke13ojM+4h7V+iFFf7/Cn+jOw==
@@ -6959,12 +6967,12 @@ protvista-navigation@3.8.10:
     lodash-es "^4.17.11"
     protvista-utils "^3.8.10"
 
-protvista-proteomics-adapter@3.8.11:
-  version "3.8.11"
-  resolved "https://registry.yarnpkg.com/protvista-proteomics-adapter/-/protvista-proteomics-adapter-3.8.11.tgz#15f470e1b9e2d21ff104b558e00b719f9a290423"
-  integrity sha512-vLOYfsUddq/plqBZmpZivg8ouxrIY9twcf75GEF9sqaHNDXdINDRENZsrWY3s7pcV4Y6IidCGk8BS+Gq2t+4fA==
+protvista-proteomics-adapter@3.8.12:
+  version "3.8.12"
+  resolved "https://registry.yarnpkg.com/protvista-proteomics-adapter/-/protvista-proteomics-adapter-3.8.12.tgz#3ff675294addb5c409e1df56f9a9601e6a8ebb0c"
+  integrity sha512-Wvf3bIP9qJL/bhNtujbTrbjTsaFF8fKZ84WnpjRg1wwGCoa0Dme26PMGdPutudyLxRY8B2bFoqmWDH/sd+WicQ==
   dependencies:
-    protvista-feature-adapter "^3.8.11"
+    protvista-feature-adapter "^3.8.12"
     uuid "^8.3.1"
 
 protvista-sequence@3.8.10:
