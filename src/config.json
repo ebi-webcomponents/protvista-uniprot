@@ -19,6 +19,18 @@
           "tooltip": "Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold"
         },
         {
+          "name": "representative domain",
+          "label": "Representative Domain",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-interpro-adapter",
+              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain"
+            }
+          ],
+          "tooltip": "InterPro representative domains"
+        },
+        {
           "name": "region",
           "label": "Region",
           "filter": "REGION",

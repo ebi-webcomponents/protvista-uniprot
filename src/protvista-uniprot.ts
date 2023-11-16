@@ -37,7 +37,8 @@ export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
-export const transformDataProteomicsPTMApdapter = _transformDataProteomicsPTMApdapter;
+export const transformDataProteomicsPTMApdapter =
+  _transformDataProteomicsPTMApdapter;
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
@@ -49,7 +50,7 @@ const adapters = {
   'protvista-proteomics-adapter': transformDataProteomicsAdapter,
   'protvista-structure-adapter': transformDataStructureAdapter,
   'protvista-variation-adapter': transformDataVariationAdapter,
-  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter
+  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
 };
 
 type TrackType =
@@ -69,7 +70,8 @@ type ProtvistaTrackConfig = {
       | 'protvista-feature-adapter'
       | 'protvista-structure-adapter'
       | 'protvista-proteomics-adapter'
-      | 'protvista-variation-adapter';
+      | 'protvista-variation-adapter'
+      | 'protvista-interpro-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -204,11 +206,21 @@ class ProtvistaUniprot extends LitElement {
               ) {
                 return;
               }
+
               // 1. Convert data
-              const transformedData = adapter
+              let transformedData = adapter
                 ? adapters[adapter](trackData)
                 : trackData;
 
+              if (adapter === 'protvista-interpro-adapter') {
+                transformedData = transformedData.filter(feature => {
+                  const [representative] = feature.locations.flatMap(loc => loc.fragments).flatMap(fragment => fragment.representative);
+                  if (representative) {
+                    return feature;
+                  }
+                });
+              }
+              
               // 2. Filter raw data if filter is specified
               const filteredData =
                 Array.isArray(transformedData) && filter
