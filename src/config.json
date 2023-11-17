@@ -25,7 +25,7 @@
           "data": [
             {
               "adapter": "protvista-interpro-adapter",
-              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain"
+              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain&page_size=100"
             }
           ],
           "tooltip": "InterPro representative domains"
