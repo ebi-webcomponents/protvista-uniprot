@@ -214,27 +214,22 @@ class ProtvistaUniprot extends LitElement {
 
               if (adapter === 'protvista-interpro-adapter') {
                 const representativeDomains = [];
-                transformedData.forEach(feature => {
-                  const fragments = feature.locations.flatMap(loc => loc.fragments).filter(fragment => fragment.representative);
-                  if (fragments.length) {
-                    fragments.forEach(fragment => {
-                      representativeDomains.push({...feature, start: fragment.start, end: fragment.end});
-                    });
+                for (const feature of transformedData) {
+                  for (const location of feature.locations) {
+                    for (const fragment of location.fragments) {
+                      if (fragment.representative) {
+                        representativeDomains.push({
+                          ...feature,
+                          start: fragment.start,
+                          end: fragment.end,
+                        });
+                      }
+                    }
                   }
-                });
+                }
                 transformedData = representativeDomains;
               }
-              // if (adapter === 'protvista-interpro-adapter') {
-              //   transformedData = transformedData.filter((feature) =>
-              //     feature.locations.some((location) =>
-              //       location.fragments.some(
-              //         (fragment) => fragment.representative
-              //       )
-              //     )
-              //   );
-              //   debugger
-              //   }
-              
+
               // 2. Filter raw data if filter is specified
               const filteredData =
                 Array.isArray(transformedData) && filter
