@@ -214,15 +214,18 @@ class ProtvistaUniprot extends LitElement {
 
               if (adapter === 'protvista-interpro-adapter') {
                 const representativeDomains = [];
-                for (const feature of transformedData) {
-                  for (const location of feature.locations) {
-                    for (const fragment of location.fragments) {
-                      if (fragment.representative) {
-                        representativeDomains.push({
-                          ...feature,
-                          start: fragment.start,
-                          end: fragment.end,
-                        });
+                if (transformedData) {
+                  for (const feature of transformedData) {
+                    for (const location of feature.locations) {
+                      for (const fragment of location.fragments) {
+                        if (fragment.representative) {
+                          representativeDomains.push({
+                            ...feature,
+                            type: 'InterPro Representative Domain',
+                            start: fragment.start,
+                            end: fragment.end,
+                          });
+                        }
                       }
                     }
                   }

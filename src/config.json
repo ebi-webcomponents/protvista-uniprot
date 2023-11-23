@@ -19,8 +19,8 @@
           "tooltip": "Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold"
         },
         {
-          "name": "representative domain",
-          "label": "Representative Domain",
+          "name": "InterPro representative domain",
+          "label": "InterPro Representative Domain",
           "trackType": "protvista-track",
           "data": [
             {
