@@ -556,38 +556,6 @@
       ]
     },
     {
-      "name": "MUTAGENESIS",
-      "label": "Mutagenesis",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "mutagen",
-          "label": "Mutagenesis",
-          "filter": "MUTAGEN",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        },
-        {
-          "name": "othermutagen",
-          "label": "Other Mutagenesis",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        }
-      ]
-    },
-    {
       "name": "PROTEOMICS",
       "label": "Proteomics",
       "trackType": "protvista-track",
@@ -653,6 +621,38 @@
             }
           ],
           "tooltip": ""
+        }
+      ]
+    },
+    {
+      "name": "MUTAGENESIS",
+      "label": "Mutagenesis",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "mutagen",
+          "label": "Mutagenesis",
+          "filter": "MUTAGEN",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
+        },
+        {
+          "name": "othermutagen",
+          "label": "Other Mutagenesis",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
         }
       ]
     },
