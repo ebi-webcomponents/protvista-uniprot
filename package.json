@@ -29,6 +29,7 @@
     "data-loader": "^2.9.1",
     "file-saver": "^2.0.2",
     "lit-element": "^2.2.0",
+    "protvista-coloured-sequence": "3.8.10",
     "protvista-datatable": "3.8.10",
     "protvista-feature-adapter": "3.8.12",
     "protvista-filter": "3.8.4",

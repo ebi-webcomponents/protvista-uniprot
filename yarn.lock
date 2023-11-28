@@ -6904,6 +6904,14 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
+protvista-coloured-sequence@3.8.10:
+  version "3.8.10"
+  resolved "https://registry.yarnpkg.com/protvista-coloured-sequence/-/protvista-coloured-sequence-3.8.10.tgz#22cf5f2fab4f424ca9637c3f4d4f468e819e9766"
+  integrity sha512-DeYHun64sjWDSCwo9s9LUGKS+qEIbuDRu/WLti5o+D5O3T+hWLZQ3dacFnuMoOw6n40Or2Ode0sjSq1mI4/Kjw==
+  dependencies:
+    protvista-sequence "^3.8.10"
+    protvista-utils "^3.8.10"
+
 protvista-datatable@3.8.10:
   version "3.8.10"
   resolved "https://registry.yarnpkg.com/protvista-datatable/-/protvista-datatable-3.8.10.tgz#6f3f2885f55c8cb8e6609728dd4a000a1105916f"
@@ -6975,7 +6983,7 @@ protvista-proteomics-adapter@3.8.12:
     protvista-feature-adapter "^3.8.12"
     uuid "^8.3.1"
 
-protvista-sequence@3.8.10:
+protvista-sequence@3.8.10, protvista-sequence@^3.8.10:
   version "3.8.10"
   resolved "https://registry.yarnpkg.com/protvista-sequence/-/protvista-sequence-3.8.10.tgz#d9ab87f0abe4b1d5cb138e90febc242e879af238"
   integrity sha512-5B7ef0KkXXN4y6j9yeAdPvbpPKB3Cc85vo5y+yS8u2dt21mcLqKGxEnEhZsP0GhKwH4kuCP511BTLww30h/lXw==
