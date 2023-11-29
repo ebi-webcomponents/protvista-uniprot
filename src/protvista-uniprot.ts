@@ -83,7 +83,9 @@ type ProtvistaTrackConfig = {
   tooltip: string;
   color?: string;
   shape?: string; //TODO: eventually replace with list
+  scale?: string;
   filterComponent?: 'protvista-filter';
+  'color-range'?: string;
 };
 
 type ProtvistaCategory = {
@@ -93,6 +95,8 @@ type ProtvistaCategory = {
   tracks: ProtvistaTrackConfig[];
   color?: string;
   shape?: string; //TODO: eventually replace with list
+  scale?: string;
+  'color-range'?: string;
 };
 
 export type DownloadConfig = {
@@ -470,15 +474,13 @@ class ProtvistaUniprot extends LitElement {
                 </div>
                 <div
                   data-id="category_${category.name}"
-                  class="aggregate-track-content track-content"
-                  .style="${[
-                    this.openCategories.includes(category.name)
-                      ? 'opacity:0'
-                      : 'opacity:1',
-                    category.trackType === 'protvista-coloured-sequence'
-                      ? 'display:flex;align-items:center'
-                      : '',
-                  ].join(';')}"
+                  class="aggregate-track-content track-content ${category.trackType ===
+                  'protvista-coloured-sequence'
+                    ? 'track-content__coloured-sequence'
+                    : ''}"
+                  .style="${this.openCategories.includes(category.name)
+                    ? 'opacity:0'
+                    : 'opacity:1'}"
                 >
                   ${this.data[category.name] &&
                   this.getTrack(
@@ -512,11 +514,11 @@ class ProtvistaUniprot extends LitElement {
                           </div>
                           <div
                             class="track-content"
-                            data-id="track_${track.name}"
-                            .style="${category.trackType ===
+                            class="track-content ${category.trackType ===
                             'protvista-coloured-sequence'
-                              ? 'display:flex;align-items:center'
+                              ? 'track-content__coloured-sequence'
                               : ''}"
+                            data-id="track_${track.name}"
                           >
                             ${this.getTrack(
                               track.trackType,
