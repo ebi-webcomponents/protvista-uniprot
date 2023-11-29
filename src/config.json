@@ -10,6 +10,7 @@
         {
           "name": "alphafold_confidence",
           "label": "AlphaFold Confidence",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
           "trackType": "protvista-coloured-sequence",
           "data": [
             {

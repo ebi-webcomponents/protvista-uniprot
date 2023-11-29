@@ -70,6 +70,7 @@ type TrackType =
 type ProtvistaTrackConfig = {
   name: string;
   label: string;
+  labelUrl?: string;
   filter: string;
   trackType: TrackType;
   data: {
@@ -506,11 +507,20 @@ class ProtvistaUniprot extends LitElement {
                     ? html`
                         <div class="category__track" id="track_${track.name}">
                           <div class="track-label" title="${track.tooltip}">
-                            ${track.filterComponent
-                              ? this.getFilterComponent(
-                                  `${category.name}-${track.name}`
-                                )
-                              : track.label}
+                            ${(track.filterComponent &&
+                              this.getFilterComponent(
+                                `${category.name}-${track.name}`
+                              )) ||
+                            (track.labelUrl &&
+                              html`<a
+                                target="_blank"
+                                href="${track.labelUrl.replace(
+                                  '{accession}',
+                                  this.accession
+                                )}"
+                                >${track.label}</a
+                              >`) ||
+                            track.label}
                           </div>
                           <div
                             class="track-content"
