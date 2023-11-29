@@ -239,7 +239,8 @@ class ProtvistaUniprot extends LitElement {
           })
         );
         this.data[categoryName] =
-          trackType === 'protvista-variation-graph'
+          trackType === 'protvista-variation-graph' ||
+          trackType === 'protvista-coloured-sequence'
             ? categoryData[0]
             : categoryData.flat();
       }
@@ -431,7 +432,6 @@ class ProtvistaUniprot extends LitElement {
         No feature data available for ${this.accession}
       </div>`;
     }
-
     return html`
       <protvista-manager
         attributes="length displaystart displayend highlight activefilters filters"
@@ -471,9 +471,14 @@ class ProtvistaUniprot extends LitElement {
                 <div
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content"
-                  .style="${this.openCategories.includes(category.name)
-                    ? 'opacity:0'
-                    : 'opacity:1'}"
+                  .style="${[
+                    this.openCategories.includes(category.name)
+                      ? 'opacity:0'
+                      : 'opacity:1',
+                    category.trackType === 'protvista-coloured-sequence'
+                      ? 'display:flex;align-items:center'
+                      : '',
+                  ].join(';')}"
                 >
                   ${this.data[category.name] &&
                   this.getTrack(
@@ -508,6 +513,10 @@ class ProtvistaUniprot extends LitElement {
                           <div
                             class="track-content"
                             data-id="track_${track.name}"
+                            .style="${category.trackType ===
+                            'protvista-coloured-sequence'
+                              ? 'display:flex;align-items:center'
+                              : ''}"
                           >
                             ${this.getTrack(
                               track.trackType,
@@ -698,7 +707,7 @@ class ProtvistaUniprot extends LitElement {
             id="track-${id}"
             scale="${scale}"
             color_range="${colorRange}"
-            height="12.666"
+            height="13"
           >
           </protvista-coloured-sequence>
         `;
