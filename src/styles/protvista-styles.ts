@@ -9,6 +9,11 @@ export default css`
     width: 80vw;
   }
 
+  .track-content__coloured-sequence {
+    display: flex;
+    align-items: center;
+  }
+
   .nav-container,
   .category__track {
     display: flex;
