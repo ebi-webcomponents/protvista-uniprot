@@ -5,6 +5,7 @@ import { frame } from 'timing-functions';
 import ProtvistaNavigation from 'protvista-navigation';
 import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
+import ProtvistaColouredSequenceConfig from 'protvista-coloured-sequence';
 import ProtvistaInterproTrack from 'protvista-interpro-track';
 import ProtvistaSequence from 'protvista-sequence';
 import ProtvistaVariation from 'protvista-variation';
@@ -20,6 +21,7 @@ import { transformData as _transformDataStructureAdapter } from 'protvista-struc
 import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
+import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
@@ -37,7 +39,11 @@ export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
-export const transformDataProteomicsPTMApdapter = _transformDataProteomicsPTMApdapter;
+export const transformDataProteomicsPTMApdapter =
+  _transformDataProteomicsPTMApdapter;
+export const transformDataAlphaFoldConfidenceAdapter =
+  _transformDataAlphaFoldConfidenceAdapter;
+
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
@@ -49,18 +55,22 @@ const adapters = {
   'protvista-proteomics-adapter': transformDataProteomicsAdapter,
   'protvista-structure-adapter': transformDataStructureAdapter,
   'protvista-variation-adapter': transformDataVariationAdapter,
-  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter
+  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
+  'protvista-alphafold-confidence-adapter':
+    transformDataAlphaFoldConfidenceAdapter,
 };
 
 type TrackType =
   | 'protvista-track'
   | 'protvista-variation'
   | 'protvista-variation-graph'
-  | 'protvista-interpro-track';
+  | 'protvista-interpro-track'
+  | 'protvista-coloured-sequence';
 
 type ProtvistaTrackConfig = {
   name: string;
   label: string;
+  labelUrl?: string;
   filter: string;
   trackType: TrackType;
   data: {
@@ -74,7 +84,9 @@ type ProtvistaTrackConfig = {
   tooltip: string;
   color?: string;
   shape?: string; //TODO: eventually replace with list
+  scale?: string;
   filterComponent?: 'protvista-filter';
+  'color-range'?: string;
 };
 
 type ProtvistaCategory = {
@@ -84,6 +96,8 @@ type ProtvistaCategory = {
   tracks: ProtvistaTrackConfig[];
   color?: string;
   shape?: string; //TODO: eventually replace with list
+  scale?: string;
+  'color-range'?: string;
 };
 
 export type DownloadConfig = {
@@ -149,6 +163,10 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('protvista-navigation', ProtvistaNavigation);
     loadComponent('protvista-tooltip', ProtvistaTooltip);
     loadComponent('protvista-track', ProtvistaTrackConfig);
+    loadComponent(
+      'protvista-coloured-sequence',
+      ProtvistaColouredSequenceConfig
+    );
     loadComponent('protvista-interpro-track', ProtvistaInterproTrack);
     loadComponent('protvista-sequence', ProtvistaSequence);
     loadComponent('protvista-variation', ProtvistaVariation);
@@ -189,49 +207,48 @@ class ProtvistaUniprot extends LitElement {
 
       // Now iterate over tracks and categories, transforming the data
       // and assigning it as adequate
-      this.config.categories.map(
-        ({ name: categoryName, tracks, trackType }) => {
-          // const categoryData: any = [];
-          const categoryData = tracks.map(
-            ({ data: dataConfig, name: trackName, filter }) => {
-              const { url, adapter } = dataConfig[0]; // TODO handle array
-              const trackData = this.rawData[url] || [];
+      for (const { name: categoryName, tracks, trackType } of this.config
+        .categories) {
+        const categoryData = await Promise.all(
+          tracks.map(async ({ data: dataConfig, name: trackName, filter }) => {
+            const { url, adapter } = dataConfig[0]; // TODO handle array
+            const trackData = this.rawData[url] || [];
 
-              if (
-                !trackData ||
-                (adapter === 'protvista-variation-adapter' &&
-                  trackData.length === 0)
-              ) {
-                return;
-              }
-              // 1. Convert data
-              const transformedData = adapter
-                ? adapters[adapter](trackData)
-                : trackData;
-
-              // 2. Filter raw data if filter is specified
-              const filteredData =
-                Array.isArray(transformedData) && filter
-                  ? transformedData.filter(
-                      ({ type }: { type?: string }) => type === filter
-                    )
-                  : transformedData;
-              if (!filteredData) {
-                return;
-              }
-
-              // 3. Assign track data
-              this.data[`${categoryName}-${trackName}`] = filteredData;
-
-              return filteredData;
+            if (
+              !trackData ||
+              (adapter === 'protvista-variation-adapter' &&
+                trackData.length === 0)
+            ) {
+              return;
             }
-          );
-          this.data[categoryName] =
-            trackType === 'protvista-variation-graph'
-              ? categoryData[0]
-              : categoryData.flat();
-        }
-      );
+            // 1. Convert data
+            const transformedData = adapter
+              ? await adapters[adapter](trackData)
+              : trackData;
+
+            // 2. Filter raw data if filter is specified
+            const filteredData =
+              Array.isArray(transformedData) && filter
+                ? transformedData.filter(
+                    ({ type }: { type?: string }) => type === filter
+                  )
+                : transformedData;
+            if (!filteredData) {
+              return;
+            }
+
+            // 3. Assign track data
+            this.data[`${categoryName}-${trackName}`] = filteredData;
+
+            return filteredData;
+          })
+        );
+        this.data[categoryName] =
+          trackType === 'protvista-variation-graph' ||
+          trackType === 'protvista-coloured-sequence'
+            ? categoryData[0]
+            : categoryData.flat();
+      }
     }
     this.loading = false;
     this.requestUpdate(); // Why?
@@ -244,7 +261,9 @@ class ProtvistaUniprot extends LitElement {
         `track-${id}`
       );
       // set data if it hasn't changed
-      if (element && element.data !== data) element.data = data;
+      if (element && element.data !== data) {
+        element.data = data;
+      }
       const currentCategory = this.config?.categories.find(
         ({ name }) => name === id
       );
@@ -454,10 +473,12 @@ class ProtvistaUniprot extends LitElement {
                 >
                   ${category.label}
                 </div>
-
                 <div
                   data-id="category_${category.name}"
-                  class="aggregate-track-content track-content"
+                  class="aggregate-track-content track-content ${category.trackType ===
+                  'protvista-coloured-sequence'
+                    ? 'track-content__coloured-sequence'
+                    : ''}"
                   .style="${this.openCategories.includes(category.name)
                     ? 'opacity:0'
                     : 'opacity:1'}"
@@ -468,7 +489,9 @@ class ProtvistaUniprot extends LitElement {
                     'non-overlapping',
                     category.color,
                     category.shape,
-                    category.name
+                    category.name,
+                    category.scale,
+                    category['color-range']
                   )}
                 </div>
               </div>
@@ -484,14 +507,27 @@ class ProtvistaUniprot extends LitElement {
                     ? html`
                         <div class="category__track" id="track_${track.name}">
                           <div class="track-label" title="${track.tooltip}">
-                            ${track.filterComponent
-                              ? this.getFilterComponent(
-                                  `${category.name}-${track.name}`
-                                )
-                              : track.label}
+                            ${(track.filterComponent &&
+                              this.getFilterComponent(
+                                `${category.name}-${track.name}`
+                              )) ||
+                            (track.labelUrl &&
+                              html`<a
+                                target="_blank"
+                                href="${track.labelUrl.replace(
+                                  '{accession}',
+                                  this.accession
+                                )}"
+                                >${track.label}</a
+                              >`) ||
+                            track.label}
                           </div>
                           <div
                             class="track-content"
+                            class="track-content ${category.trackType ===
+                            'protvista-coloured-sequence'
+                              ? 'track-content__coloured-sequence'
+                              : ''}"
                             data-id="track_${track.name}"
                           >
                             ${this.getTrack(
@@ -499,7 +535,9 @@ class ProtvistaUniprot extends LitElement {
                               'non-overlapping',
                               track.color || category.color,
                               track.shape || category.shape,
-                              `${category.name}-${track.name}`
+                              `${category.name}-${track.name}`,
+                              track.scale || category.scale,
+                              track['color-range'] || category['color-range']
                             )}
                           </div>
                         </div>
@@ -529,7 +567,9 @@ class ProtvistaUniprot extends LitElement {
                                 'non-overlapping',
                                 category.color,
                                 category.shape,
-                                `${category.name}-${item.accession}`
+                                `${category.name}-${item.accession}`,
+                                category.scale,
+                                category['color-range']
                               )}
                             </div>
                           </div>
@@ -613,7 +653,15 @@ class ProtvistaUniprot extends LitElement {
     `;
   }
 
-  getTrack(trackType: TrackType, layout = '', color = '', shape = '', id = '') {
+  getTrack(
+    trackType: TrackType,
+    layout = '',
+    color = '',
+    shape = '',
+    id = '',
+    scale = '',
+    colorRange = ''
+  ) {
     // lit-html doesn't allow to have dynamic tag names, hence the switch/case
     // with repeated code
     switch (trackType) {
@@ -661,6 +709,19 @@ class ProtvistaUniprot extends LitElement {
             id="track-${id}"
           >
           </protvista-variation-graph>
+        `;
+      case 'protvista-coloured-sequence':
+        return html`
+          <protvista-coloured-sequence
+            length="${this.sequence?.length}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
+            id="track-${id}"
+            scale="${scale}"
+            color_range="${colorRange}"
+            height="13"
+          >
+          </protvista-coloured-sequence>
         `;
       default:
         console.warn('No Matching ProtvistaTrack Found.');

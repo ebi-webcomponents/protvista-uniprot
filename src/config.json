@@ -1,6 +1,28 @@
 {
   "categories": [
     {
+      "name": "ALPHAFOLD_CONFIDENCE",
+      "label": "AlphaFold",
+      "trackType": "protvista-coloured-sequence",
+      "scale": "H:90,M:70,L:50,D:0",
+      "color-range": "#ff7d45:0,#ffdb13:50,#65cbf3:70,#0053d6:90,#0053d6:100",
+      "tracks": [
+        {
+          "name": "alphafold_confidence",
+          "label": "AlphaFold Confidence",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "trackType": "protvista-coloured-sequence",
+          "data": [
+            {
+              "adapter": "protvista-alphafold-confidence-adapter",
+              "url": "https://alphafold.ebi.ac.uk/api/prediction/{accession}"
+            }
+          ],
+          "tooltip": "AlphaFold prediction confidence"
+        }
+      ]
+    },
+    {
       "name": "DOMAINS_AND_SITES",
       "label": "Domains & sites",
       "trackType": "protvista-track",
