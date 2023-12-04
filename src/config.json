@@ -41,6 +41,18 @@
           "tooltip": "Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold"
         },
         {
+          "name": "InterPro representative domain",
+          "label": "InterPro Representative Domain",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-interpro-adapter",
+              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain&page_size=100"
+            }
+          ],
+          "tooltip": "InterPro representative domains"
+        },
+        {
           "name": "region",
           "label": "Region",
           "filter": "REGION",
@@ -566,38 +578,6 @@
       ]
     },
     {
-      "name": "MUTAGENESIS",
-      "label": "Mutagenesis",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "mutagen",
-          "label": "Mutagenesis",
-          "filter": "MUTAGEN",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        },
-        {
-          "name": "othermutagen",
-          "label": "Other Mutagenesis",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        }
-      ]
-    },
-    {
       "name": "PROTEOMICS",
       "label": "Proteomics",
       "trackType": "protvista-track",
@@ -663,6 +643,38 @@
             }
           ],
           "tooltip": ""
+        }
+      ]
+    },
+    {
+      "name": "MUTAGENESIS",
+      "label": "Mutagenesis",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "mutagen",
+          "label": "Mutagenesis",
+          "filter": "MUTAGEN",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
+        },
+        {
+          "name": "othermutagen",
+          "label": "Other Mutagenesis",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
         }
       ]
     },

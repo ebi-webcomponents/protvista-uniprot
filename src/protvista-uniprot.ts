@@ -79,7 +79,8 @@ type ProtvistaTrackConfig = {
       | 'protvista-feature-adapter'
       | 'protvista-structure-adapter'
       | 'protvista-proteomics-adapter'
-      | 'protvista-variation-adapter';
+      | 'protvista-variation-adapter'
+      | 'protvista-interpro-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -221,10 +222,32 @@ class ProtvistaUniprot extends LitElement {
             ) {
               return;
             }
+
             // 1. Convert data
-            const transformedData = adapter
+            let transformedData = adapter
               ? await adapters[adapter](trackData)
               : trackData;
+
+            if (adapter === 'protvista-interpro-adapter') {
+              const representativeDomains = [];
+              if (transformedData) {
+                for (const feature of transformedData) {
+                  for (const location of feature.locations) {
+                    for (const fragment of location.fragments) {
+                      if (fragment.representative) {
+                        representativeDomains.push({
+                          ...feature,
+                          type: 'InterPro Representative Domain',
+                          start: fragment.start,
+                          end: fragment.end,
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+              transformedData = representativeDomains;
+            }
 
             // 2. Filter raw data if filter is specified
             const filteredData =
