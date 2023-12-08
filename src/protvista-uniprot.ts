@@ -481,6 +481,7 @@ class ProtvistaUniprot extends LitElement {
               sequence="${this.sequence}"
               displaystart=${this.displayCoordinates?.start}
               displayend="${this.displayCoordinates?.end}"
+              no-scroll
             ></protvista-sequence>
           </div>
         </div>
@@ -611,6 +612,7 @@ class ProtvistaUniprot extends LitElement {
               sequence="${this.sequence}"
               displaystart=${this.displayCoordinates.start}
               displayend="${this.displayCoordinates.end}"
+              no-scroll
             ></protvista-sequence>
           </div>
         </div>
@@ -698,6 +700,7 @@ class ProtvistaUniprot extends LitElement {
             displaystart="${this.displayCoordinates?.start}"
             displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
+            no-scroll
           >
           </protvista-track>
         `;
@@ -710,6 +713,8 @@ class ProtvistaUniprot extends LitElement {
             displaystart="${this.displayCoordinates?.start}"
             displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
+            no-scroll
+
           >
           </protvista-interpro-track>
         `;
@@ -720,6 +725,7 @@ class ProtvistaUniprot extends LitElement {
             displaystart="${this.displayCoordinates?.start}"
             displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
+            no-scroll
           >
           </protvista-variation>
         `;
@@ -730,6 +736,7 @@ class ProtvistaUniprot extends LitElement {
             displaystart="${this.displayCoordinates?.start}"
             displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
+            no-scroll
           >
           </protvista-variation-graph>
         `;
@@ -743,6 +750,7 @@ class ProtvistaUniprot extends LitElement {
             scale="${scale}"
             color_range="${colorRange}"
             height="13"
+            no-scroll
           >
           </protvista-coloured-sequence>
         `;

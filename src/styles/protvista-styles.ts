@@ -78,6 +78,15 @@ export default css`
     border-top: 1px solid #d9faff;
   }
 
+  protvista-navigation {
+    .handle {
+      fill: darkgrey;
+      stroke: black;
+      stroke-width: 0.5px;
+      height: 19px;
+    }
+  }
+
   .feature {
     cursor: pointer;
   }
