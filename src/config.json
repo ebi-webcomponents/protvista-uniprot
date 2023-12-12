@@ -1,203 +1,6 @@
 {
   "categories": [
     {
-      "name": "ALPHAFOLD_CONFIDENCE",
-      "label": "AlphaFold",
-      "trackType": "protvista-coloured-sequence",
-      "scale": "H:90,M:70,L:50,D:0",
-      "color-range": "#ff7d45:0,#ffdb13:50,#65cbf3:70,#0053d6:90,#0053d6:100",
-      "tracks": [
-        {
-          "name": "alphafold_confidence",
-          "label": "AlphaFold Confidence",
-          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
-          "trackType": "protvista-coloured-sequence",
-          "data": [
-            {
-              "adapter": "protvista-alphafold-confidence-adapter",
-              "url": "https://alphafold.ebi.ac.uk/api/prediction/{accession}"
-            }
-          ],
-          "tooltip": "AlphaFold prediction confidence"
-        }
-      ]
-    },
-    {
-      "name": "DOMAINS_AND_SITES",
-      "label": "Domains & sites",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "domain",
-          "label": "Domain",
-          "filter": "DOMAIN",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold"
-        },
-        {
-          "name": "InterPro representative domain",
-          "label": "InterPro Representative Domain",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-interpro-adapter",
-              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain&page_size=100"
-            }
-          ],
-          "tooltip": "InterPro representative domains"
-        },
-        {
-          "name": "region",
-          "label": "Region",
-          "filter": "REGION",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Regions in multifunctional enzymes or fusion proteins, or characteristics of a region, e.g., protein-protein interactions mediation"
-        },
-        {
-          "name": "motif",
-          "label": "Motif",
-          "filter": "MOTIF",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Short conserved sequence motif of biological significance"
-        },
-        {
-          "name": "metal",
-          "label": "Metal binding",
-          "filter": "METAL",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Binding site for a metal ion"
-        },
-        {
-          "name": "site",
-          "label": "Site",
-          "filter": "SITE",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Any interesting single amino acid site on the sequence"
-        },
-        {
-          "name": "repeat",
-          "label": "Repeat",
-          "filter": "REPEAT",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Repeated sequence motifs or repeated domains within the protein"
-        },
-        {
-          "name": "ca_bind",
-          "label": "Calcium binding",
-          "filter": "CA_BIND",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Calcium-binding regions, such as the EF-hand motif"
-        },
-        {
-          "name": "dna_bind",
-          "label": "DNA binding",
-          "filter": "DNA_BIND",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "DNA-binding domains such as AP2/ERF domain, the ETS domain, the Fork-Head domain, the HMG box and the Myb domain"
-        },
-        {
-          "name": "zn_fing",
-          "label": "Zinc finger",
-          "filter": "ZN_FING",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Small, functional, independently folded domain that coordinates one or more zinc ions"
-        },
-        {
-          "name": "np_bind",
-          "label": "Nucleotide binding",
-          "filter": "NP_BIND",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "(aka flavin-binding). Region in the protein which binds nucleotide phosphates"
-        },
-        {
-          "name": "binding",
-          "label": "Binding site",
-          "filter": "BINDING",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Binding site for any chemical group (co-enzyme, prosthetic group, etc.)"
-        },
-        {
-          "name": "act_site",
-          "label": "Active site",
-          "filter": "ACT_SITE",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Amino acid(s) directly involved in the activity of an enzyme"
-        }
-      ]
-    },
-    {
       "name": "MOLECULE_PROCESSING",
       "label": "Molecule processing",
       "trackType": "protvista-track",
@@ -280,91 +83,6 @@
             }
           ],
           "tooltip": "The position and length of an active peptide in the mature protein"
-        }
-      ]
-    },
-    {
-      "name": "PTM",
-      "label": "PTM",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "mod_res",
-          "label": "Modified residue",
-          "filter": "MOD_RES",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Modified residues such as phosphorylation, acetylation, acylation, methylation"
-        },
-        {
-          "name": "mod_res_ls",
-          "label": "Modified residue (large scale data)",
-          "filter": "MOD_RES_LS",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-proteomics-ptm-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
-            }
-          ],
-          "tooltip": "Modified residues from Large scale studies"
-        },
-        {
-          "name": "carbohyd",
-          "label": "Glycosylation",
-          "filter": "CARBOHYD",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Covalently attached glycan group(s)"
-        },
-        {
-          "name": "disulfid",
-          "label": "Disulfide bond",
-          "filter": "DISULFID",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "The positions of cysteine residues participating in disulphide bonds"
-        },
-        {
-          "name": "crosslnk",
-          "label": "Cross-link",
-          "filter": "CROSSLNK",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Covalent linkages of various types formed between two proteins or between two parts of the same protein"
-        },
-        {
-          "name": "lipid",
-          "label": "Lipidation",
-          "filter": "LIPID",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Covalently attached lipid group(s)"
         }
       ]
     },
@@ -454,6 +172,481 @@
       ]
     },
     {
+      "name": "TOPOLOGY",
+      "label": "Topology",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "topo_dom",
+          "label": "Topological domain",
+          "filter": "TOPO_DOM",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Location of non-membrane regions of membrane-spanning proteins"
+        },
+        {
+          "name": "transmem",
+          "label": "Transmembrane",
+          "filter": "TRANSMEM",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Extent of a membrane-spanning region"
+        },
+        {
+          "name": "intramem",
+          "label": "Intramembrane",
+          "filter": "INTRAMEM",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Extent of a region located in a membrane without crossing it"
+        }
+      ]
+    },  
+    {
+      "name": "DOMAINS",
+      "label": "Domains",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "domain",
+          "label": "Domain",
+          "filter": "DOMAIN",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold"
+        },
+        {
+          "name": "InterPro representative domain",
+          "label": "InterPro Representative Domain",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-interpro-adapter",
+              "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain&page_size=100"
+            }
+          ],
+          "tooltip": "InterPro representative domains"
+        },
+        {
+          "name": "region",
+          "label": "Region",
+          "filter": "REGION",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Regions in multifunctional enzymes or fusion proteins, or characteristics of a region, e.g., protein-protein interactions mediation"
+        },
+        {
+          "name": "repeat",
+          "label": "Repeat",
+          "filter": "REPEAT",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Repeated sequence motifs or repeated domains within the protein"
+        },
+        {
+          "name": "motif",
+          "label": "Motif",
+          "filter": "MOTIF",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Short conserved sequence motif of biological significance"
+        }
+      ]
+    },
+    {
+      "name": "SITES",
+      "label": "Sites",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "metal",
+          "label": "Metal binding",
+          "filter": "METAL",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Binding site for a metal ion"
+        },
+        {
+          "name": "site",
+          "label": "Site",
+          "filter": "SITE",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Any interesting single amino acid site on the sequence"
+        },
+        
+        {
+          "name": "ca_bind",
+          "label": "Calcium binding",
+          "filter": "CA_BIND",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Calcium-binding regions, such as the EF-hand motif"
+        },
+        {
+          "name": "dna_bind",
+          "label": "DNA binding",
+          "filter": "DNA_BIND",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "DNA-binding domains such as AP2/ERF domain, the ETS domain, the Fork-Head domain, the HMG box and the Myb domain"
+        },
+        {
+          "name": "zn_fing",
+          "label": "Zinc finger",
+          "filter": "ZN_FING",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Small, functional, independently folded domain that coordinates one or more zinc ions"
+        },
+        {
+          "name": "np_bind",
+          "label": "Nucleotide binding",
+          "filter": "NP_BIND",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "(aka flavin-binding). Region in the protein which binds nucleotide phosphates"
+        },
+        {
+          "name": "binding",
+          "label": "Binding site",
+          "filter": "BINDING",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Binding site for any chemical group (co-enzyme, prosthetic group, etc.)"
+        },
+        {
+          "name": "act_site",
+          "label": "Active site",
+          "filter": "ACT_SITE",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Amino acid(s) directly involved in the activity of an enzyme"
+        }
+      ]
+    },
+    {
+      "name": "PTM",
+      "label": "PTM",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "mod_res",
+          "label": "Modified residue",
+          "filter": "MOD_RES",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Modified residues such as phosphorylation, acetylation, acylation, methylation"
+        },
+        {
+          "name": "mod_res_ls",
+          "label": "Modified residue (large scale data)",
+          "filter": "MOD_RES_LS",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-ptm-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+            }
+          ],
+          "tooltip": "Modified residues from Large scale studies"
+        },
+        {
+          "name": "carbohyd",
+          "label": "Glycosylation",
+          "filter": "CARBOHYD",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Covalently attached glycan group(s)"
+        },
+        {
+          "name": "disulfid",
+          "label": "Disulfide bond",
+          "filter": "DISULFID",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "The positions of cysteine residues participating in disulphide bonds"
+        },
+        {
+          "name": "crosslnk",
+          "label": "Cross-link",
+          "filter": "CROSSLNK",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Covalent linkages of various types formed between two proteins or between two parts of the same protein"
+        },
+        {
+          "name": "lipid",
+          "label": "Lipidation",
+          "filter": "LIPID",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Covalently attached lipid group(s)"
+        }
+      ]
+    },
+    {
+      "name": "ANTIGEN",
+      "label": "Antigenic sequences",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "antigen",
+          "label": "Antibody binding sequences",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/antigen/{accession}"
+            }
+          ],
+          "tooltip": ""
+        }
+      ]
+    },
+    {
+      "name": "MUTAGENESIS",
+      "label": "Mutagenesis",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "mutagen",
+          "label": "Mutagenesis",
+          "filter": "MUTAGEN",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
+        },
+        {
+          "name": "othermutagen",
+          "label": "Mutagenesis (large scale data)",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
+            }
+          ],
+          "tooltip": "Site which has been experimentally altered by mutagenesis"
+        }
+      ]
+    },
+    {
+      "name": "VARIATION",
+      "label": "Variants",
+      "trackType": "protvista-variation-graph",
+      "tracks": [
+        {
+          "name": "variation",
+          "filterComponent": "protvista-filter",
+          "trackType": "protvista-variation",
+          "data": [
+            {
+              "adapter": "protvista-variation-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
+            }
+          ],
+          "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
+        }
+      ]
+    },
+    {
+      "name": "PROTEOMICS",
+      "label": "Proteomics",
+      "trackType": "protvista-track",
+      "adapter": "protvista-proteomics-adapter",
+      "urls": [
+        "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
+        "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+      ],
+      "tracks": [
+        {
+          "name": "unique",
+          "label": "Unique peptide",
+          "filter": "unique",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+            }
+          ],
+          "tooltip": ""
+        },
+        {
+          "name": "non_unique",
+          "label": "Non-unique peptide",
+          "filter": "non_unique",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+            }
+          ],
+          "tooltip": ""
+        },
+        {
+          "name": "proteomics-ptm",
+          "label": "PTM-containing peptide",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+            }
+          ],
+          "tooltip": ""
+        }
+      ]
+    },
+    {
+      "name": "STRUCTURE_COVERAGE",
+      "label": "PDBe 3D structure coverage",
+      "trackType": "protvista-track",
+      "tracks": [
+        {
+          "name": "pdbe_cover",
+          "label": "PDBe coverage",
+          "trackType": "protvista-track",
+          "tooltip": "PDBe 3D structure coverage",
+          "data": [
+            {
+              "adapter": "protvista-structure-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ALPHAFOLD_CONFIDENCE",
+      "label": "AlphaFold",
+      "trackType": "protvista-coloured-sequence",
+      "scale": "H:90,M:70,L:50,D:0",
+      "color-range": "#ff7d45:0,#ffdb13:50,#65cbf3:70,#0053d6:90,#0053d6:100",
+      "tracks": [
+        {
+          "name": "alphafold_confidence",
+          "label": "AlphaFold Confidence",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "trackType": "protvista-coloured-sequence",
+          "data": [
+            {
+              "adapter": "protvista-alphafold-confidence-adapter",
+              "url": "https://alphafold.ebi.ac.uk/api/prediction/{accession}"
+            }
+          ],
+          "tooltip": "AlphaFold prediction confidence"
+        }
+      ]
+    },
+    {
       "name": "STRUCTURAL",
       "label": "Structural features",
       "trackType": "protvista-track",
@@ -509,191 +702,6 @@
             }
           ],
           "tooltip": "Coiled coils are built by two or more alpha-helices that wind around each other to form a supercoil"
-        }
-      ]
-    },
-    {
-      "name": "STRUCTURE_COVERAGE",
-      "label": "PDBe 3D structure coverage",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "pdbe_cover",
-          "label": "PDBe coverage",
-          "trackType": "protvista-track",
-          "tooltip": "PDBe 3D structure coverage",
-          "data": [
-            {
-              "adapter": "protvista-structure-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "TOPOLOGY",
-      "label": "Topology",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "topo_dom",
-          "label": "Topological domain",
-          "filter": "TOPO_DOM",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Location of non-membrane regions of membrane-spanning proteins"
-        },
-        {
-          "name": "transmem",
-          "label": "Transmembrane",
-          "filter": "TRANSMEM",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Extent of a membrane-spanning region"
-        },
-        {
-          "name": "intramem",
-          "label": "Intramembrane",
-          "filter": "INTRAMEM",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Extent of a region located in a membrane without crossing it"
-        }
-      ]
-    },
-    {
-      "name": "PROTEOMICS",
-      "label": "Proteomics",
-      "trackType": "protvista-track",
-      "adapter": "protvista-proteomics-adapter",
-      "urls": [
-        "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
-        "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
-      ],
-      "tracks": [
-        {
-          "name": "unique",
-          "label": "Unique peptide",
-          "filter": "unique",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
-            }
-          ],
-          "tooltip": ""
-        },
-        {
-          "name": "non_unique",
-          "label": "Non-unique peptide",
-          "filter": "non_unique",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
-            }
-          ],
-          "tooltip": ""
-        },
-        {
-          "name": "proteomics-ptm",
-          "label": "PTM-containing peptide",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
-            }
-          ],
-          "tooltip": ""
-        }
-      ]
-    },
-    {
-      "name": "ANTIGEN",
-      "label": "Antigenic sequences",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "antigen",
-          "label": "Antibody binding sequences",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/antigen/{accession}"
-            }
-          ],
-          "tooltip": ""
-        }
-      ]
-    },
-    {
-      "name": "MUTAGENESIS",
-      "label": "Mutagenesis",
-      "trackType": "protvista-track",
-      "tracks": [
-        {
-          "name": "mutagen",
-          "label": "Mutagenesis",
-          "filter": "MUTAGEN",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        },
-        {
-          "name": "othermutagen",
-          "label": "Other Mutagenesis",
-          "trackType": "protvista-track",
-          "data": [
-            {
-              "adapter": "protvista-feature-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
-            }
-          ],
-          "tooltip": "Site which has been experimentally altered by mutagenesis"
-        }
-      ]
-    },
-    {
-      "name": "VARIATION",
-      "label": "Variants",
-      "trackType": "protvista-variation-graph",
-      "tracks": [
-        {
-          "name": "variation",
-          "filterComponent": "protvista-filter",
-          "trackType": "protvista-variation",
-          "data": [
-            {
-              "adapter": "protvista-variation-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
-            }
-          ],
-          "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
         }
       ]
     }
