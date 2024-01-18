@@ -37,14 +37,16 @@ const loadConfidence = async (
 ): Promise<AlphafoldConfidencePayload> => {
   try {
     const payload = await fetch(url);
-    return payload.ok ? payload.json() : null;
+    return payload.json();
   } catch (e) {
-    console.error(`Couldn't load AlphaFold confidence`, e);
+    console.error('Could not load AlphaFold confidence', e);
   }
 };
 
 export const transformData = async (data: AlphafoldPayload) => {
   const confidenceUrl = getConfidenceURLFromPayload(data);
-  const confidenceData = await loadConfidence(confidenceUrl);
-  return confidenceData?.confidenceCategory.join('');
+  if (confidenceUrl) {
+    const confidenceData = await loadConfidence(confidenceUrl);
+    return confidenceData?.confidenceCategory.join('');
+  }
 };
