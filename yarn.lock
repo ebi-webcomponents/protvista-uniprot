@@ -6944,10 +6944,10 @@ protvista-filter@3.8.4:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
 
-protvista-interpro-adapter@3.8.13:
-  version "3.8.13"
-  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-3.8.13.tgz#efc7ef11229f634dcbc5d7765586a19f078d5912"
-  integrity sha512-t2hzzH56ZZld+E8GOXq2OIJtNLp5ZFaa/XuHgaS7fmpmh2QW6KgsaaEAi8AQ8XrmtggGnV3g7ZKnFsqwTzv0nA==
+protvista-interpro-adapter@3.8.14:
+  version "3.8.14"
+  resolved "https://registry.yarnpkg.com/protvista-interpro-adapter/-/protvista-interpro-adapter-3.8.14.tgz#de4b70d6934a3455758d89316184a0505f0167b8"
+  integrity sha512-aH5vakgC3axZ9wSbHZD6IO3PYvNhq1/T5AoNxnBjezVSU6Q65G4SmEJGPadDjVbhf2hrOieL2NdiMyZw1ftiEQ==
   dependencies:
     color-hash "2.0.2"
 

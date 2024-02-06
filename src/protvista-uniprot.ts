@@ -230,22 +230,20 @@ class ProtvistaUniprot extends LitElement {
 
             if (adapter === 'protvista-interpro-adapter') {
               const representativeDomains = [];
-              if (transformedData) {
-                for (const feature of transformedData) {
-                  for (const location of feature.locations) {
-                    for (const fragment of location.fragments) {
-                      if (fragment.representative) {
-                        representativeDomains.push({
-                          ...feature,
-                          type: 'InterPro Representative Domain',
-                          start: fragment.start,
-                          end: fragment.end,
-                        });
-                      }
+              transformedData?.forEach(feature => {
+                feature.locations?.forEach(location => {
+                  location.fragments?.forEach(fragment => {
+                    if (fragment.representative) {
+                      representativeDomains.push({
+                        ...feature,
+                        type: 'InterPro Representative Domain',
+                        start: fragment.start,
+                        end: fragment.end,
+                      });
                     }
-                  }
-                }
-              }
+                  });
+                });
+              });
               transformedData = representativeDomains;
             }
 
@@ -714,7 +712,6 @@ class ProtvistaUniprot extends LitElement {
             displayend="${this.displayCoordinates?.end}"
             id="track-${id}"
             no-scroll
-
           >
           </protvista-interpro-track>
         `;
