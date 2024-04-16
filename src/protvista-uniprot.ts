@@ -22,6 +22,7 @@ import { transformData as _transformDataVariationAdapter } from 'protvista-varia
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
 import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
+import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './protvista-alphamissense-pathogenicity';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
@@ -44,6 +45,9 @@ export const transformDataProteomicsPTMApdapter =
 export const transformDataAlphaFoldConfidenceAdapter =
   _transformDataAlphaFoldConfidenceAdapter;
 
+export const transformDataAlphaMissensePathogenicityAdapter =
+  _transformDataAlphaMissensePathogenicityAdapter;
+
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
@@ -58,6 +62,8 @@ const adapters = {
   'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
   'protvista-alphafold-confidence-adapter':
     transformDataAlphaFoldConfidenceAdapter,
+  'protvista-alphamissense-pathogenicity-adapter':
+    transformDataAlphaMissensePathogenicityAdapter,
 };
 
 type TrackType =
@@ -74,7 +80,7 @@ type ProtvistaTrackConfig = {
   filter: string;
   trackType: TrackType;
   data: {
-    url: string;
+    url: string | string[];
     adapter?:
       | 'protvista-feature-adapter'
       | 'protvista-structure-adapter'
@@ -181,9 +187,9 @@ class ProtvistaUniprot extends LitElement {
     const accession = this.accession;
     if (accession && this.config) {
       // Get the list of unique urls
-      const urls = this.config.categories
-        .map(({ tracks }) => tracks.map(({ data }) => data[0].url))
-        .flat();
+      const urls = this.config.categories.flatMap(({ tracks }) =>
+        tracks.flatMap(({ data }) => data[0].url)
+      );
       const uniqueUrls = [...new Set(urls)];
       // Get the data for all urls and store it
       await Promise.all(
@@ -213,26 +219,28 @@ class ProtvistaUniprot extends LitElement {
         const categoryData = await Promise.all(
           tracks.map(async ({ data: dataConfig, name: trackName, filter }) => {
             const { url, adapter } = dataConfig[0]; // TODO handle array
-            const trackData = this.rawData[url] || [];
+            const trackData = (Array.isArray(url) ? url : [url]).map(
+              (url) => this.rawData[url] || []
+            );
 
             if (
               !trackData ||
               (adapter === 'protvista-variation-adapter' &&
-                trackData.length === 0)
+                trackData[0].length === 0)
             ) {
               return;
             }
 
             // 1. Convert data
             let transformedData = adapter
-              ? await adapters[adapter](trackData)
+              ? await adapters[adapter](...trackData)
               : trackData;
 
             if (adapter === 'protvista-interpro-adapter') {
               const representativeDomains = [];
-              transformedData?.forEach(feature => {
-                feature.locations?.forEach(location => {
-                  location.fragments?.forEach(fragment => {
+              transformedData?.forEach((feature) => {
+                feature.locations?.forEach((location) => {
+                  location.fragments?.forEach((fragment) => {
                     if (fragment.representative) {
                       representativeDomains.push({
                         ...feature,

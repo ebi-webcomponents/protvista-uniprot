@@ -216,7 +216,7 @@
           "tooltip": "Extent of a region located in a membrane without crossing it"
         }
       ]
-    },  
+    },
     {
       "name": "DOMAINS",
       "label": "Domains",
@@ -332,7 +332,6 @@
           ],
           "tooltip": "Any interesting single amino acid site on the sequence"
         },
-        
         {
           "name": "ca_bind",
           "label": "Calcium binding",
@@ -639,10 +638,38 @@
           "data": [
             {
               "adapter": "protvista-alphafold-confidence-adapter",
-              "url": "https://alphafold.ebi.ac.uk/api/prediction/{accession}"
+              "url": [
+                "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
+                "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+              ]
             }
           ],
           "tooltip": "AlphaFold prediction confidence"
+        }
+      ]
+    },
+    {
+      "name": "ALPHAMISSENSE_PATHOGENICITY",
+      "label": "AlphaMissense",
+      "trackType": "protvista-coloured-sequence",
+      "scale": "P:100,A:50,B:0",
+      "color-range": "#9a131a:100,#a8a9ad:50,#3d5493:0",
+      "tracks": [
+        {
+          "name": "alphamissense_pathogenicity",
+          "label": "AlphaMissense Pathogenicity",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "trackType": "protvista-coloured-sequence",
+          "data": [
+            {
+              "adapter": "protvista-alphamissense-pathogenicity-adapter",
+              "url": [
+                "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
+                "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+              ]
+            }
+          ],
+          "tooltip": "AlphaMissense prediction pathogenicity"
         }
       ]
     },

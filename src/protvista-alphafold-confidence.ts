@@ -12,8 +12,9 @@ type AlphafoldPayload = Array<{
   modelCreatedDate: string;
   latestVersion: number;
   allVersions: number[];
-  cifUrl: string;
-  bcifUrl: string;
+  cifUrl?: string;
+  bcifUrl?: string;
+  amAnnotationsUrl?: string;
   pdbUrl: string;
   paeImageUrl: string;
   paeDocUrl: string;
@@ -43,9 +44,19 @@ const loadConfidence = async (
   }
 };
 
-export const transformData = async (data: AlphafoldPayload) => {
+type PartialProtein = {
+  sequence: {
+    sequence: string;
+  };
+};
+
+export const transformData = async (
+  data: AlphafoldPayload,
+  protein: PartialProtein
+) => {
   const confidenceUrl = getConfidenceURLFromPayload(data);
-  if (confidenceUrl) {
+  const { uniprotSequence } = data?.[0] || {};
+  if (confidenceUrl && uniprotSequence === protein.sequence.sequence) {
     const confidenceData = await loadConfidence(confidenceUrl);
     return confidenceData?.confidenceCategory.join('');
   }
