@@ -1,5 +1,3 @@
-import mockData from './AF-P07550-F1-aa-substitutions';
-
 type AlphafoldPayload = Array<{
   entryId: string;
   gene: string;
@@ -121,7 +119,5 @@ export const transformData = async (
     const variationData = await loadAndParseAnnotations(amAnnotationsUrl);
     // return confidenceData?.confidenceCategory.join('');
     return variationData;
-  } else {
-    return parseCSV(mockData);
   }
 };
