@@ -1,24 +1,4 @@
-type AlphafoldPayload = Array<{
-  entryId: string;
-  gene: string;
-  uniprotAccession: string;
-  uniprotId: string;
-  uniprotDescription: string;
-  taxId: number;
-  organismScientificName: string;
-  uniprotStart: number;
-  uniprotEnd: number;
-  uniprotSequence: string;
-  modelCreatedDate: string;
-  latestVersion: number;
-  allVersions: number[];
-  cifUrl?: string;
-  bcifUrl?: string;
-  amAnnotationsUrl?: string;
-  pdbUrl: string;
-  paeImageUrl: string;
-  paeDocUrl: string;
-}>;
+import { AlphafoldPayload } from './commonTypes';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;

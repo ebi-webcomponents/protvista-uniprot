@@ -1,24 +1,4 @@
-type AlphafoldPayload = Array<{
-  entryId: string;
-  gene: string;
-  uniprotAccession: string;
-  uniprotId: string;
-  uniprotDescription: string;
-  taxId: number;
-  organismScientificName: string;
-  uniprotStart: number;
-  uniprotEnd: number;
-  uniprotSequence: string;
-  modelCreatedDate: string;
-  latestVersion: number;
-  allVersions: number[];
-  cifUrl?: string;
-  bcifUrl?: string;
-  amAnnotationsUrl?: string;
-  pdbUrl: string;
-  paeImageUrl: string;
-  paeDocUrl: string;
-}>;
+import { AlphafoldPayload } from './commonTypes';
 
 // from example data
 // benign: [0.0448,0.3397]: x < 0.34
@@ -93,10 +73,7 @@ const parseCSV = (rawText: string): string => {
 // Load and parse
 const loadAndParseAnnotations = async (url: string): Promise<string> => {
   try {
-    const payload = await fetch(
-      // Temporary, to cope with test data endpoint, remove after PR review
-      `https://corsproxy.io?${encodeURIComponent(url)}`
-    );
+    const payload = await fetch(url);
     const rawCSV = await payload.text();
     return parseCSV(rawCSV);
   } catch (e) {
