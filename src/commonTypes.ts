@@ -17,6 +17,8 @@ export type AlphafoldPayload = Array<{
   cifUrl?: string;
   bcifUrl?: string;
   amAnnotationsUrl?: string;
+  amAnnotationsHg19Url?: string;
+  amAnnotationsHg38Url?: string;
   pdbUrl: string;
   paeImageUrl: string;
   paeDocUrl: string;
