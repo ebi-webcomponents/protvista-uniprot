@@ -12,6 +12,8 @@ import ProtvistaVariation from 'protvista-variation';
 import ProtvistaVariationGraph from 'protvista-variation-graph';
 import ProtvistaFilter from 'protvista-filter';
 import ProtvistaManager from 'protvista-manager';
+// Nightingale
+// import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
 
 import { load } from 'data-loader';
@@ -786,8 +788,8 @@ class ProtvistaUniprot extends LitElement {
             id="track-${id}"
             heatmap-id="seq-heatmap"
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             highlight-event="onmouseover"
             highlight-color="#EB3BFF66"
             height="200"
