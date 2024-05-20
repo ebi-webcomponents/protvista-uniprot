@@ -654,15 +654,20 @@
       "trackType": "protvista-coloured-sequence",
       "scale": "P:100,A:50,B:0",
       "color-range": "#9a131a:100,#a8a9ad:50,#3d5493:0",
+      "adapter": "protvista-alphamissense-pathogenicity-adapter",
+      "urls": [
+        "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
+        "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+      ],
       "tracks": [
         {
-          "name": "alphamissense_pathogenicity",
+          "name": "alphamissense_pathogenicity_heatmap",
           "label": "AlphaMissense Pathogenicity",
           "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
-          "trackType": "protvista-coloured-sequence",
+          "trackType": "nightingale-sequence-heatmap",
           "data": [
             {
-              "adapter": "protvista-alphamissense-pathogenicity-adapter",
+              "adapter": "protvista-alphamissense-heatmap-adapter",
               "url": [
                 "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
                 "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"

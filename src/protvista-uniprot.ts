@@ -12,6 +12,7 @@ import ProtvistaVariation from 'protvista-variation';
 import ProtvistaVariationGraph from 'protvista-variation-graph';
 import ProtvistaFilter from 'protvista-filter';
 import ProtvistaManager from 'protvista-manager';
+import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
 
 import { load } from 'data-loader';
 // adapters
@@ -23,6 +24,7 @@ import { transformData as _transformDataInterproAdapter } from 'protvista-interp
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
 import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
 import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './protvista-alphamissense-pathogenicity';
+import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './protvista-alphamissense-heatmap';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
@@ -48,6 +50,9 @@ export const transformDataAlphaFoldConfidenceAdapter =
 export const transformDataAlphaMissensePathogenicityAdapter =
   _transformDataAlphaMissensePathogenicityAdapter;
 
+export const transformDataAlphaMissenseHeatmapAdapter =
+  _transformDataAlphaMissenseHeatmapAdapter;
+
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
@@ -64,6 +69,8 @@ const adapters = {
     transformDataAlphaFoldConfidenceAdapter,
   'protvista-alphamissense-pathogenicity-adapter':
     transformDataAlphaMissensePathogenicityAdapter,
+  'protvista-alphamissense-heatmap-adapter':
+    transformDataAlphaMissenseHeatmapAdapter,
 };
 
 type TrackType =
@@ -71,7 +78,8 @@ type TrackType =
   | 'protvista-variation'
   | 'protvista-variation-graph'
   | 'protvista-interpro-track'
-  | 'protvista-coloured-sequence';
+  | 'protvista-coloured-sequence'
+  | 'nightingale-sequence-heatmap';
 
 type ProtvistaTrackConfig = {
   name: string;
@@ -181,6 +189,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('protvista-filter', ProtvistaFilter);
     loadComponent('protvista-manager', ProtvistaManager);
     loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
+    loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
   }
 
   async _loadData() {
@@ -320,6 +329,17 @@ class ProtvistaUniprot extends LitElement {
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
+        }
+      }
+     
+      if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY') {
+        const heatmapComponent = this.querySelector(
+          'nightingale-sequence-heatmap'
+        );
+        if (heatmapComponent) {
+          const xDomain = Array.from({length: this.sequence.length}, (_, i) => i+1);
+          const yDomain = [...new Set(data.map((hotMapItem) => hotMapItem.yValue))];
+          heatmapComponent.setHeatmapData(xDomain, yDomain, data);
         }
       }
     });
@@ -758,6 +778,21 @@ class ProtvistaUniprot extends LitElement {
             no-scroll
           >
           </protvista-coloured-sequence>
+        `;
+
+      case 'nightingale-sequence-heatmap':
+        return html`
+          <nightingale-sequence-heatmap
+            id="track-${id}"
+            heatmap-id="seq-heatmap"
+            length="${this.sequence?.length}"
+            displaystart="${this.displayCoordinates?.start}"
+            displayend="${this.displayCoordinates?.end}"
+            highlight-event="onmouseover"
+            highlight-color="#EB3BFF66"
+            height="200"
+          >
+          </nightingale-sequence-heatmap>
         `;
       default:
         console.warn('No Matching ProtvistaTrack Found.');

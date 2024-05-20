@@ -7,8 +7,8 @@ import { AlphafoldPayload } from './commonTypes';
 const benign = 0.34;
 const pathogenic = 0.564;
 
-const rowSplitter = /\s*\n\s*/;
-const cellSplitter = /^(.)(\d+)(.),(.+),(\w+)$/;
+export const rowSplitter = /\s*\n\s*/;
+export const cellSplitter = /^(.)(\d+)(.),(.+),(\w+)$/;
 
 type Row = {
   wildType: string;

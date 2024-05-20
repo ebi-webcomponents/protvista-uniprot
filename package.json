@@ -25,6 +25,7 @@
   "author": "Xavier Watkins &lt;xwatkins@ebi.ac.uk&gt;",
   "license": "MIT",
   "dependencies": {
+    "@nightingale-elements/nightingale-sequence-heatmap": "file:.yalc/@nightingale-elements/nightingale-sequence-heatmap",
     "core-js": "^3.13.0",
     "data-loader": "^2.9.1",
     "file-saver": "^2.0.2",
