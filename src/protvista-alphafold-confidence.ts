@@ -1,23 +1,4 @@
-type AlphafoldPayload = Array<{
-  entryId: string;
-  gene: string;
-  uniprotAccession: string;
-  uniprotId: string;
-  uniprotDescription: string;
-  taxId: number;
-  organismScientificName: string;
-  uniprotStart: number;
-  uniprotEnd: number;
-  uniprotSequence: string;
-  modelCreatedDate: string;
-  latestVersion: number;
-  allVersions: number[];
-  cifUrl: string;
-  bcifUrl: string;
-  pdbUrl: string;
-  paeImageUrl: string;
-  paeDocUrl: string;
-}>;
+import { AlphafoldPayload } from './commonTypes';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;
@@ -43,9 +24,19 @@ const loadConfidence = async (
   }
 };
 
-export const transformData = async (data: AlphafoldPayload) => {
+type PartialProtein = {
+  sequence: {
+    sequence: string;
+  };
+};
+
+export const transformData = async (
+  data: AlphafoldPayload,
+  protein: PartialProtein
+) => {
   const confidenceUrl = getConfidenceURLFromPayload(data);
-  if (confidenceUrl) {
+  const { uniprotSequence } = data?.[0] || {};
+  if (confidenceUrl && uniprotSequence === protein.sequence.sequence) {
     const confidenceData = await loadConfidence(confidenceUrl);
     return confidenceData?.confidenceCategory.join('');
   }
