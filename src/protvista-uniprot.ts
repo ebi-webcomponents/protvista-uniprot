@@ -2,18 +2,19 @@ import { LitElement, html, svg } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
 // components
-import ProtvistaNavigation from 'protvista-navigation';
 import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
-import ProtvistaColouredSequenceConfig from 'protvista-coloured-sequence';
-import ProtvistaInterproTrack from 'protvista-interpro-track';
-import ProtvistaSequence from 'protvista-sequence';
-import ProtvistaVariation from 'protvista-variation';
 import ProtvistaVariationGraph from 'protvista-variation-graph';
 import ProtvistaFilter from 'protvista-filter';
-import ProtvistaManager from 'protvista-manager';
 // Nightingale
-// import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
+import NightingaleManager from "@nightingale-elements/nightingale-manager";
+import NightingaleNavigation from "@nightingale-elements/nightingale-navigation";
+import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
+import NightingaleColoredSequence from '@nightingale-elements/nightingale-colored-sequence';
+import NightingaleTrack from '@nightingale-elements/nightingale-track';
+import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro-track';
+import NightingaleVariation from '@nightingale-elements/nightingale-variation';
+import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegraph-track';
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
 
 import { load } from 'data-loader';
@@ -76,11 +77,11 @@ const adapters = {
 };
 
 type TrackType =
-  | 'protvista-track'
-  | 'protvista-variation'
   | 'protvista-variation-graph'
-  | 'protvista-interpro-track'
-  | 'protvista-coloured-sequence'
+  | 'nightingale-track'
+  | 'nightingale-interpro-track'
+  | 'nightingale-colored-sequence'
+  | 'nightingale-variation'
   | 'nightingale-sequence-heatmap';
 
 type ProtvistaTrackConfig = {
@@ -177,19 +178,20 @@ class ProtvistaUniprot extends LitElement {
   }
 
   registerWebComponents() {
-    loadComponent('protvista-navigation', ProtvistaNavigation);
+    loadComponent('nightingale-navigation', NightingaleNavigation);
     loadComponent('protvista-tooltip', ProtvistaTooltip);
-    loadComponent('protvista-track', ProtvistaTrackConfig);
+    loadComponent('nightingale-track', NightingaleTrack);
     loadComponent(
-      'protvista-coloured-sequence',
-      ProtvistaColouredSequenceConfig
+      'nightingale-colored-sequence',
+      NightingaleColoredSequence
     );
-    loadComponent('protvista-interpro-track', ProtvistaInterproTrack);
-    loadComponent('protvista-sequence', ProtvistaSequence);
-    loadComponent('protvista-variation', ProtvistaVariation);
+    loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
+    loadComponent('nightingale-sequence', NightingaleSequence);
+    loadComponent('nightingale-variation', NightingaleVariation);
     loadComponent('protvista-variation-graph', ProtvistaVariationGraph);
+    loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
     loadComponent('protvista-filter', ProtvistaFilter);
-    loadComponent('protvista-manager', ProtvistaManager);
+    loadComponent('nightingale-manager', NightingaleManager);
     loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
     loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
   }
@@ -285,7 +287,7 @@ class ProtvistaUniprot extends LitElement {
         );
         this.data[categoryName] =
           trackType === 'protvista-variation-graph' ||
-          trackType === 'protvista-coloured-sequence'
+          trackType === 'nightingale-colored-sequence'
             ? categoryData[0]
             : categoryData.flat();
       }
@@ -297,7 +299,7 @@ class ProtvistaUniprot extends LitElement {
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element: ProtvistaTrack | null = document.getElementById(
+      const element: NightingaleTrack | null = document.getElementById(
         `track-${id}`
       );
       // set data if it hasn't changed
@@ -325,9 +327,9 @@ class ProtvistaUniprot extends LitElement {
           categoryElt.style.display = 'flex';
         }
         for (const track of currentCategory.tracks) {
-          const elementTrack: ProtvistaTrack | null = document.getElementById(
+          const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
-          );
+          ) as (NightingaleTrack | null);
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
@@ -335,7 +337,7 @@ class ProtvistaUniprot extends LitElement {
       }
      
       if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY') {
-        const heatmapComponent = this.querySelector(
+        const heatmapComponent = this.querySelector<typeof NightingaleSequenceHeatmap>(
           'nightingale-sequence-heatmap'
         );
         if (heatmapComponent) {
@@ -356,8 +358,8 @@ class ProtvistaUniprot extends LitElement {
       filterComponent.filters = filterConfig;
     }
 
-    const variationComponent = this.querySelector<ProtvistaVariation>(
-      'protvista-variation'
+    const variationComponent = this.querySelector<NightingaleVariation>(
+      'nightingale-variation'
     );
     if (variationComponent && variationComponent.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
@@ -489,8 +491,8 @@ class ProtvistaUniprot extends LitElement {
       </div>`;
     }
     return html`
-      <protvista-manager
-        attributes="length displaystart displayend highlight activefilters filters"
+      <nightingale-manager
+        attributes="length display-start display-end highlight activefilters filters"
         additionalsubscribers="protvista-structure"
       >
         <div class="nav-container">
@@ -501,16 +503,17 @@ class ProtvistaUniprot extends LitElement {
             />
           </div>
           <div class="track-content">
-            <protvista-navigation
+            <nightingale-navigation
               length="${this.sequence.length}"
-            ></protvista-navigation>
-            <protvista-sequence
+              height="40"
+            ></nightingale-navigation>
+            <nightingale-sequence
               length="${this.sequence.length}"
+              height="40"
               sequence="${this.sequence}"
-              displaystart=${this.displayCoordinates?.start}
-              displayend="${this.displayCoordinates?.end}"
-              no-scroll
-            ></protvista-sequence>
+              display-start=${this.displayCoordinates?.start}
+              display-end="${this.displayCoordinates?.end}"
+            ></nightingale-sequence>
           </div>
         </div>
         ${this.config.categories.map(
@@ -528,7 +531,7 @@ class ProtvistaUniprot extends LitElement {
                 <div
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content ${category.trackType ===
-                  'protvista-coloured-sequence'
+                  'nightingale-colored-sequence'
                     ? 'track-content__coloured-sequence'
                     : ''}"
                   .style="${this.openCategories.includes(category.name)
@@ -577,7 +580,7 @@ class ProtvistaUniprot extends LitElement {
                           <div
                             class="track-content"
                             class="track-content ${category.trackType ===
-                            'protvista-coloured-sequence'
+                            'nightingale-colored-sequence'
                               ? 'track-content__coloured-sequence'
                               : ''}"
                             data-id="track_${track.name}"
@@ -635,13 +638,13 @@ class ProtvistaUniprot extends LitElement {
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
-            <protvista-sequence
+            <nightingale-sequence
               length="${this.sequence.length}"
+              height="40"
               sequence="${this.sequence}"
-              displaystart=${this.displayCoordinates.start}
-              displayend="${this.displayCoordinates.end}"
-              no-scroll
-            ></protvista-sequence>
+              display-start=${this.displayCoordinates.start}
+              display-end="${this.displayCoordinates.end}"
+            ></nightingale-sequence>
           </div>
         </div>
         ${!this.nostructure
@@ -652,7 +655,7 @@ class ProtvistaUniprot extends LitElement {
             `
           : ''}
         <protvista-tooltip />
-      </protvista-manager>
+      </nightingale-manager>
     `;
   }
 
@@ -718,43 +721,43 @@ class ProtvistaUniprot extends LitElement {
     // lit-html doesn't allow to have dynamic tag names, hence the switch/case
     // with repeated code
     switch (trackType) {
-      case 'protvista-track':
+      case 'nightingale-track':
         return html`
-          <protvista-track
+          <nightingale-track
             length="${this.sequence?.length}"
+            height="40"
             layout="${layout}"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
           >
-          </protvista-track>
+          </nightingale-track>
         `;
-      case 'protvista-interpro-track':
+      case 'nightingale-interpro-track':
         return html`
-          <protvista-interpro-track
+          <nightingale-interpro-track
             length="${this.sequence?.length}"
+            height="40"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
           >
-          </protvista-interpro-track>
+          </nightingale-interpro-track>
         `;
-      case 'protvista-variation':
+      case 'nightingale-variation':
         return html`
-          <protvista-variation
+          <nightingale-variation
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            height="500"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
           >
-          </protvista-variation>
+          </nightingale-variation>
         `;
       case 'protvista-variation-graph':
         return html`
@@ -767,19 +770,18 @@ class ProtvistaUniprot extends LitElement {
           >
           </protvista-variation-graph>
         `;
-      case 'protvista-coloured-sequence':
+      case 'nightingale-colored-sequence':
         return html`
-          <protvista-coloured-sequence
+          <nightingale-colored-sequence
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             scale="${scale}"
             color_range="${colorRange}"
             height="13"
-            no-scroll
           >
-          </protvista-coloured-sequence>
+          </nightingale-colored-sequence>
         `;
 
       case 'nightingale-sequence-heatmap':
@@ -792,7 +794,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             highlight-event="onmouseover"
             highlight-color="#EB3BFF66"
-            height="200"
+            height="250"
           >
           </nightingale-sequence-heatmap>
         `;
