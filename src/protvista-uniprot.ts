@@ -4,7 +4,6 @@ import { frame } from 'timing-functions';
 // components
 import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
-import ProtvistaVariationGraph from 'protvista-variation-graph';
 import ProtvistaFilter from 'protvista-filter';
 // Nightingale
 import NightingaleManager from "@nightingale-elements/nightingale-manager";
@@ -23,6 +22,7 @@ import { transformData as _transformDataFeatureAdapter } from 'protvista-feature
 import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
 import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
 import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
+import { transformData as _transformDataVariationGraphAdapter } from './protvista-variation-graph-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
 import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
@@ -44,6 +44,7 @@ export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
+export const transformDataVariationGraphAdapter = _transformDataVariationGraphAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
 export const transformDataProteomicsPTMApdapter =
   _transformDataProteomicsPTMApdapter;
@@ -67,6 +68,7 @@ const adapters = {
   'protvista-proteomics-adapter': transformDataProteomicsAdapter,
   'protvista-structure-adapter': transformDataStructureAdapter,
   'protvista-variation-adapter': transformDataVariationAdapter,
+  'protvista-variation-graph-adapter': transformDataVariationGraphAdapter,
   'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
   'protvista-alphafold-confidence-adapter':
     transformDataAlphaFoldConfidenceAdapter,
@@ -97,6 +99,7 @@ type ProtvistaTrackConfig = {
       | 'protvista-structure-adapter'
       | 'protvista-proteomics-adapter'
       | 'protvista-variation-adapter'
+      | 'protvista-variation-graph-adapter'
       | 'protvista-interpro-adapter';
   }[];
   tooltip: string;
@@ -188,7 +191,6 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
     loadComponent('nightingale-sequence', NightingaleSequence);
     loadComponent('nightingale-variation', NightingaleVariation);
-    loadComponent('protvista-variation-graph', ProtvistaVariationGraph);
     loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
     loadComponent('protvista-filter', ProtvistaFilter);
     loadComponent('nightingale-manager', NightingaleManager);
@@ -286,7 +288,7 @@ class ProtvistaUniprot extends LitElement {
           })
         );
         this.data[categoryName] =
-          trackType === 'protvista-variation-graph' ||
+          // trackType === 'protvista-variation-graph' ||
           trackType === 'nightingale-colored-sequence'
             ? categoryData[0]
             : categoryData.flat();
@@ -759,16 +761,16 @@ class ProtvistaUniprot extends LitElement {
           >
           </nightingale-variation>
         `;
-      case 'protvista-variation-graph':
+      case 'nightingale-linegraph-track':
         return html`
-          <protvista-variation-graph
+          <nightingale-linegraph-track
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            height="50"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
           >
-          </protvista-variation-graph>
+          </nightingale-linegraph-track>
         `;
       case 'nightingale-colored-sequence':
         return html`

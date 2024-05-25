@@ -538,8 +538,18 @@
     {
       "name": "VARIATION",
       "label": "Variants",
-      "trackType": "protvista-variation-graph",
       "tracks": [
+        {
+          "name": "variation graph",
+          "trackType": "nightingale-linegraph-track",
+          "data": [
+            {
+              "adapter": "protvista-variation-graph-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
+            }
+          ],
+          "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
+        },
         {
           "name": "variation",
           "filterComponent": "protvista-filter",
