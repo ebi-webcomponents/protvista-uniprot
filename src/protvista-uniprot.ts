@@ -6,9 +6,9 @@ import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
 import ProtvistaFilter from 'protvista-filter';
 // Nightingale
-import NightingaleManager from "@nightingale-elements/nightingale-manager";
-import NightingaleNavigation from "@nightingale-elements/nightingale-navigation";
-import NightingaleSequence from "@nightingale-elements/nightingale-sequence";
+import NightingaleManager from '@nightingale-elements/nightingale-manager';
+import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';
+import NightingaleSequence from '@nightingale-elements/nightingale-sequence';
 import NightingaleColoredSequence from '@nightingale-elements/nightingale-colored-sequence';
 import NightingaleTrack from '@nightingale-elements/nightingale-track';
 import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro-track';
@@ -44,7 +44,8 @@ export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
-export const transformDataVariationGraphAdapter = _transformDataVariationGraphAdapter;
+export const transformDataVariationGraphAdapter =
+  _transformDataVariationGraphAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
 export const transformDataProteomicsPTMApdapter =
   _transformDataProteomicsPTMApdapter;
@@ -184,10 +185,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('nightingale-navigation', NightingaleNavigation);
     loadComponent('protvista-tooltip', ProtvistaTooltip);
     loadComponent('nightingale-track', NightingaleTrack);
-    loadComponent(
-      'nightingale-colored-sequence',
-      NightingaleColoredSequence
-    );
+    loadComponent('nightingale-colored-sequence', NightingaleColoredSequence);
     loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
     loadComponent('nightingale-sequence', NightingaleSequence);
     loadComponent('nightingale-variation', NightingaleVariation);
@@ -331,20 +329,25 @@ class ProtvistaUniprot extends LitElement {
         for (const track of currentCategory.tracks) {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
-          ) as (NightingaleTrack | null);
+          ) as NightingaleTrack | null;
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
         }
       }
-     
+
       if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY') {
-        const heatmapComponent = this.querySelector<typeof NightingaleSequenceHeatmap>(
-          'nightingale-sequence-heatmap'
-        );
+        const heatmapComponent = this.querySelector<
+          typeof NightingaleSequenceHeatmap
+        >('nightingale-sequence-heatmap');
         if (heatmapComponent) {
-          const xDomain = Array.from({length: this.sequence.length}, (_, i) => i+1);
-          const yDomain = [...new Set(data.map((hotMapItem) => hotMapItem.yValue))];
+          const xDomain = Array.from(
+            { length: this.sequence.length },
+            (_, i) => i + 1
+          );
+          const yDomain = [
+            ...new Set(data.map((hotMapItem) => hotMapItem.yValue)),
+          ];
           heatmapComponent.setHeatmapData(xDomain, yDomain, data);
         }
       }
@@ -404,9 +407,9 @@ class ProtvistaUniprot extends LitElement {
       }
 
       if (!this.notooltip) {
-        if (!e.detail?.eventtype) {
+        if (!e.detail?.eventType) {
           this._resetTooltip();
-        } else if (e.detail.eventtype === 'click') {
+        } else if (e.detail.eventType === 'click') {
           this.updateTooltip(e);
         }
       }
