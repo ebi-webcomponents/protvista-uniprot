@@ -541,6 +541,7 @@
       "tracks": [
         {
           "name": "variation graph",
+          "label": "Variants",
           "trackType": "nightingale-linegraph-track",
           "data": [
             {
