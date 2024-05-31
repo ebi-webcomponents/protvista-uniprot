@@ -31,6 +31,7 @@ export default css`
   .credits {
     width: 20vw;
     padding: 0.5em;
+    line-height: normal;
   }
 
   .action-buttons {
@@ -74,11 +75,11 @@ export default css`
     background-color: #d9faff;
   }
 
-  protvista-track {
+  nightingale-track {
     border-top: 1px solid #d9faff;
   }
 
-  protvista-navigation {
+  nightingale-navigation {
     .handle {
       fill: darkgrey;
       stroke: black;

@@ -80,11 +80,11 @@ const adapters = {
 };
 
 type TrackType =
-  | 'protvista-variation-graph'
   | 'nightingale-track'
   | 'nightingale-interpro-track'
   | 'nightingale-colored-sequence'
   | 'nightingale-variation'
+  | 'nightingale-linegraph-track'
   | 'nightingale-sequence-heatmap';
 
 type ProtvistaTrackConfig = {
@@ -497,7 +497,7 @@ class ProtvistaUniprot extends LitElement {
     }
     return html`
       <nightingale-manager
-        attributes="length display-start display-end highlight activefilters filters"
+        reflected-attributes="length display-start display-end highlight activefilters filters"
         additionalsubscribers="protvista-structure"
       >
         <div class="nav-container">
