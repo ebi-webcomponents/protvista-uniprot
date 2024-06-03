@@ -286,7 +286,7 @@ class ProtvistaUniprot extends LitElement {
           })
         );
         this.data[categoryName] =
-          // trackType === 'protvista-variation-graph' ||
+          trackType === 'nightingale-linegraph-track' ||
           trackType === 'nightingale-colored-sequence'
             ? categoryData[0]
             : categoryData.flat();

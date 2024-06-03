@@ -32,7 +32,7 @@
     "@nightingale-elements/nightingale-navigation": "^5.0.0",
     "@nightingale-elements/nightingale-sequence": "^5.0.0",
     "@nightingale-elements/nightingale-sequence-heatmap": "^5.0.0",
-    "@nightingale-elements/nightingale-track": "^5.0.0",
+    "@nightingale-elements/nightingale-track": "file:.yalc/@nightingale-elements/nightingale-track",
     "@nightingale-elements/nightingale-variation": "^5.0.0",
     "core-js": "^3.13.0",
     "data-loader": "^2.9.1",

@@ -1752,6 +1752,13 @@
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
+"@nightingale-elements/nightingale-track@file:.yalc/@nightingale-elements/nightingale-track":
+  version "5.0.0"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.0.0"
+    d3 "7.9.0"
+    lodash-es "^4.17.15"
+
 "@nightingale-elements/nightingale-variation@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-variation/-/nightingale-variation-5.0.0.tgz#27055ffc07aa146d16f6fb263ea5b6165f63b31e"
