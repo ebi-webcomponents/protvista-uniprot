@@ -541,7 +541,7 @@
       "trackType": "nightingale-linegraph-track",
       "tracks": [
         {
-          "name": "variation graph",
+          "name": "variation_graph",
           "label": "Variants",
           "trackType": "nightingale-linegraph-track",
           "data": [
@@ -666,12 +666,23 @@
       "trackType": "nightingale-colored-sequence",
       "scale": "P:100,A:50,B:0",
       "color-range": "#9a131a:100,#a8a9ad:50,#3d5493:0",
-      "adapter": "protvista-alphamissense-pathogenicity-adapter",
-      "urls": [
-        "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
-        "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
-      ],
       "tracks": [
+        {
+          "name": "alphamissense_pathogenicity",
+          "label": "AlphaMissense Pathogenicity",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "trackType": "nightingale-colored-sequence",
+          "data": [
+            {
+              "adapter": "protvista-alphamissense-pathogenicity-adapter",
+              "url": [
+                "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
+                "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+              ]
+            }
+          ],
+          "tooltip": "AlphaFold prediction confidence"
+        },
         {
           "name": "alphamissense_pathogenicity_heatmap",
           "label": "AlphaMissense Pathogenicity",

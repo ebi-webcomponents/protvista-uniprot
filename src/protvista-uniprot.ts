@@ -101,7 +101,10 @@ type ProtvistaTrackConfig = {
       | 'protvista-proteomics-adapter'
       | 'protvista-variation-adapter'
       | 'protvista-variation-graph-adapter'
-      | 'protvista-interpro-adapter';
+      | 'protvista-interpro-adapter'
+      | 'protvista-alphafold-confidence-adapter'
+      | 'protvista-alphamissense-pathogenicity-adapter'
+      | 'protvista-alphamissense-heatmap-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -285,6 +288,7 @@ class ProtvistaUniprot extends LitElement {
             return filteredData;
           })
         );
+      
         this.data[categoryName] =
           trackType === 'nightingale-linegraph-track' ||
           trackType === 'nightingale-colored-sequence'
@@ -336,19 +340,24 @@ class ProtvistaUniprot extends LitElement {
         }
       }
 
-      if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY') {
-        const heatmapComponent = this.querySelector<
-          typeof NightingaleSequenceHeatmap
-        >('nightingale-sequence-heatmap');
-        if (heatmapComponent) {
-          const xDomain = Array.from(
-            { length: this.sequence.length },
-            (_, i) => i + 1
-          );
-          const yDomain = [
-            ...new Set(data.map((hotMapItem) => hotMapItem.yValue)),
-          ];
-          heatmapComponent.setHeatmapData(xDomain, yDomain, data);
+      if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY' && currentCategory.tracks) {
+        for (const track of currentCategory.tracks) {
+          if (track.trackType === 'nightingale-sequence-heatmap') {
+            const heatmapComponent = this.querySelector<
+            typeof NightingaleSequenceHeatmap
+          >('nightingale-sequence-heatmap');
+          if (heatmapComponent) {
+            const heatmapData = this.data[`${id}-${track.name}`];
+            const xDomain = Array.from(
+              { length: this.sequence.length },
+              (_, i) => i + 1
+            );
+            const yDomain = [
+              ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
+            ];
+            heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
+          }
+          }
         }
       }
     });
