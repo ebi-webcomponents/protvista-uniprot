@@ -792,7 +792,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             scale="${scale}"
-            color_range="${colorRange}"
+            color-range="${colorRange}"
             height="13"
           >
           </nightingale-colored-sequence>
