@@ -1,6 +1,7 @@
 import { LitElement, html, svg } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
+
 // components
 import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
@@ -21,7 +22,10 @@ import { load } from 'data-loader';
 import { transformData as _transformDataFeatureAdapter } from 'protvista-feature-adapter';
 import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
 import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
-import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
+import {
+  transformData as _transformDataVariationAdapter,
+  TransformedVariant,
+} from 'protvista-variation-adapter';
 import { transformData as _transformDataVariationGraphAdapter } from './protvista-variation-graph-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
@@ -147,6 +151,10 @@ class ProtvistaUniprot extends LitElement {
   private suspend?: boolean;
   private accession?: string;
   private sequence?: string;
+  private transformedVariants?: {
+    sequence: string;
+    variants: TransformedVariant[];
+  };
   private config?: ProtvistaConfig;
 
   constructor() {
@@ -159,7 +167,8 @@ class ProtvistaUniprot extends LitElement {
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
-    this.addStyles();
+    (this.transformedVariants = { sequence: '', variants: [] }),
+      this.addStyles();
   }
 
   static get properties() {
@@ -285,10 +294,13 @@ class ProtvistaUniprot extends LitElement {
             // 3. Assign track data
             this.data[`${categoryName}-${trackName}`] = filteredData;
 
+            if (trackName === 'variation') {
+              this.transformedVariants = filteredData;
+            }
             return filteredData;
           })
         );
-      
+
         this.data[categoryName] =
           trackType === 'nightingale-linegraph-track' ||
           trackType === 'nightingale-colored-sequence'
@@ -340,23 +352,26 @@ class ProtvistaUniprot extends LitElement {
         }
       }
 
-      if (currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY' && currentCategory.tracks) {
+      if (
+        currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY' &&
+        currentCategory.tracks
+      ) {
         for (const track of currentCategory.tracks) {
           if (track.trackType === 'nightingale-sequence-heatmap') {
             const heatmapComponent = this.querySelector<
-            typeof NightingaleSequenceHeatmap
-          >('nightingale-sequence-heatmap');
-          if (heatmapComponent) {
-            const heatmapData = this.data[`${id}-${track.name}`];
-            const xDomain = Array.from(
-              { length: this.sequence.length },
-              (_, i) => i + 1
-            );
-            const yDomain = [
-              ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
-            ];
-            heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
-          }
+              typeof NightingaleSequenceHeatmap
+            >('nightingale-sequence-heatmap');
+            if (heatmapComponent) {
+              const heatmapData = this.data[`${id}-${track.name}`];
+              const xDomain = Array.from(
+                { length: this.sequence.length },
+                (_, i) => i + 1
+              );
+              const yDomain = [
+                ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
+              ];
+              heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
+            }
           }
         }
       }
@@ -710,6 +725,64 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
+  groupByCategory(filters, category) {
+    return filters.filter((f) => f.type.name === category);
+  }
+
+  getFilter(filters, filterName) {
+    return filters.filter((f) => f.name === filterName)?.[0];
+  }
+  handleFilterClick(e: MouseEvent) {
+    const target = e.target as Element;
+
+    const consequenceFilters = this.groupByCategory(
+      target.filters,
+      'consequence'
+    );
+    const provenanceFilters = this.groupByCategory(
+      target.filters,
+      'provenance'
+    );
+
+    const selectedFilters = Array.from(target.selectedFilters);
+
+    let selectedConsequenceFilters = selectedFilters
+      .map((f) => this.getFilter(consequenceFilters, f))
+      .filter(Boolean);
+    let selectedProvenanceFilters = selectedFilters
+      .map((f) => this.getFilter(provenanceFilters, f))
+      .filter(Boolean);
+
+    // If nothing is selected, apply all filters
+    if (!selectedConsequenceFilters.length) {
+      selectedConsequenceFilters = [...consequenceFilters];
+    }
+    if (!selectedProvenanceFilters.length) {
+      selectedProvenanceFilters = [...provenanceFilters];
+    }
+
+    console.log(selectedConsequenceFilters, selectedProvenanceFilters);
+
+    const filteredVariants = this.transformedVariants.variants
+      ?.filter((variant) =>
+        selectedConsequenceFilters.some(
+          (filter) => filter.filterPredicate(variant)
+        )
+      )
+      .filter((variant) =>
+        selectedProvenanceFilters.some(
+          (filter) => filter.filterPredicate(variant)
+        )
+      );
+
+    this.data['VARIATION-variation'] = {
+      ...this.data['VARIATION-variation'],
+      variants: filteredVariants,
+    };
+
+    this._loadDataInComponents();
+  }
+
   getCategoryTypesAsString(tracks: ProtvistaTrackConfig[]) {
     return tracks.map((t) => t.filter).join(',');
   }
@@ -719,6 +792,7 @@ class ProtvistaUniprot extends LitElement {
       <protvista-filter
         style="minWidth: 20%"
         for="track-${forId}"
+        @change="${this.handleFilterClick}"
       ></protvista-filter>
     `;
   }

@@ -41,7 +41,7 @@
     "protvista-coloured-sequence": "3.8.13",
     "protvista-datatable": "3.8.10",
     "protvista-feature-adapter": "3.8.13",
-    "protvista-filter": "3.8.4",
+    "protvista-filter": "file:.yalc/protvista-filter",
     "protvista-interpro-adapter": "3.8.14",
     "protvista-interpro-track": "3.8.13",
     "protvista-manager": "3.8.4",

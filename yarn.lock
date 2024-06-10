@@ -7525,10 +7525,8 @@ protvista-feature-adapter@3.8.13, protvista-feature-adapter@^3.8.13:
     protvista-track "^3.8.13"
     uuid "^8.3.1"
 
-protvista-filter@3.8.4:
+"protvista-filter@file:.yalc/protvista-filter":
   version "3.8.4"
-  resolved "https://registry.yarnpkg.com/protvista-filter/-/protvista-filter-3.8.4.tgz#a6db7596133f50a39f26d9594eac14823cf555e6"
-  integrity sha512-A1iBZN3Gbt+D3Ou7KmPrOHT+H2TFmBJWPAjfjibXYGC50HArIuk/hEpAk+e2CwE9nv13jjcURpaONc/go7KP/g==
   dependencies:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
