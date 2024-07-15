@@ -1,18 +1,16 @@
 import { LitElement, html, svg, TemplateResult, css } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { load } from 'data-loader';
-import ProtvistaStructure from 'protvista-structure';
+import NightingaleStructure, {
+  PredictionData,
+  StructureData,
+} from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { loadComponent } from './loadComponents';
 
 import loaderIcon from './icons/spinner.svg';
 import downloadIcon from './icons/download.svg';
 import loaderStyles from './styles/loader-styles';
-
-import {
-  PredictionData,
-  StructureData,
-} from 'protvista-structure/dist/es/protvista-structure';
 
 const PDBLinks = [
   { name: 'PDBe', link: 'https://www.ebi.ac.uk/pdbe-srv/view/entry/' },
@@ -124,7 +122,7 @@ class ProtvistaUniprotStructure extends LitElement {
 
   constructor() {
     super();
-    loadComponent('protvista-structure', ProtvistaStructure);
+    loadComponent('nightingale-structure', NightingaleStructure);
     loadComponent('protvista-datatable', ProtvistaDatatable);
     this.loading = true;
     this.onTableRowClick = this.onTableRowClick.bind(this);
@@ -219,6 +217,9 @@ class ProtvistaUniprotStructure extends LitElement {
 
   get cssStyle() {
     return css`
+      .protvista-uniprot-structure {
+        line-height: normal;
+      }
       .protvista-uniprot-structure__structure {
         display: flex;
       }
@@ -226,7 +227,7 @@ class ProtvistaUniprotStructure extends LitElement {
         flex: 1;
         padding: 1rem;
       }
-      .protvista-uniprot-structure__structure protvista-structure {
+      .protvista-uniprot-structure__structure nightingale-structure {
         z-index: 40000;
         width: 100%;
         flex: 4;
@@ -273,13 +274,13 @@ class ProtvistaUniprotStructure extends LitElement {
               </div>`
             : html``}
           ${this.structureId
-            ? html`<protvista-structure
-                structureid=${this.structureId}
-                accession=${this.accession}
-              ></protvista-structure>`
+            ? html`<nightingale-structure
+                structure-id=${this.structureId}
+                protein-accession=${this.accession}
+              ></nightingale-structure>`
             : html``}
         </div>
-        <div class="class="protvista-uniprot-structure__table">
+        <div class="protvista-uniprot-structure__table">
         ${this.data && this.data.length
           ? html`<protvista-datatable noScrollToRow noDeselect filter-scroll>
               <table>

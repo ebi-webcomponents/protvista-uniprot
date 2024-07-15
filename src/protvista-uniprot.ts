@@ -317,7 +317,7 @@ class ProtvistaUniprot extends LitElement {
     Object.entries(this.data).forEach(([id, data]) => {
       const element: NightingaleTrack | null = document.getElementById(
         `track-${id}`
-      );
+      ) as NightingaleTrack;
       // set data if it hasn't changed
       if (element && element.data !== data) {
         element.data = data;
@@ -390,7 +390,8 @@ class ProtvistaUniprot extends LitElement {
     const variationComponent = this.querySelector<NightingaleVariation>(
       'nightingale-variation'
     );
-    if (variationComponent && variationComponent.colorConfig !== colorConfig) {
+    
+    if (variationComponent && variationComponent?.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
 
@@ -733,7 +734,7 @@ class ProtvistaUniprot extends LitElement {
     return filters.filter((f) => f.name === filterName)?.[0];
   }
   handleFilterClick(e: MouseEvent) {
-    const target = e.target as Element;
+    const target = e.target as Element as ProtvistaFilter;
 
     const consequenceFilters = this.groupByCategory(
       target.filters,
@@ -882,7 +883,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             highlight-event="onmouseover"
             highlight-color="#EB3BFF66"
-            height="250"
+            height="300"
           >
           </nightingale-sequence-heatmap>
         `;

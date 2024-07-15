@@ -669,8 +669,7 @@
       "tracks": [
         {
           "name": "alphamissense_pathogenicity",
-          "label": "AlphaMissense Pathogenicity",
-          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "label": "Average AlphaMissense Pathogenicity Score",
           "trackType": "nightingale-colored-sequence",
           "data": [
             {
@@ -681,7 +680,7 @@
               ]
             }
           ],
-          "tooltip": "AlphaFold prediction confidence"
+          "tooltip": "AlphaMissense pathogenicity"
         },
         {
           "name": "alphamissense_pathogenicity_heatmap",
@@ -697,7 +696,7 @@
               ]
             }
           ],
-          "tooltip": "AlphaMissense prediction pathogenicity"
+          "tooltip": "AlphaMissense pathogenicity"
         }
       ]
     },
