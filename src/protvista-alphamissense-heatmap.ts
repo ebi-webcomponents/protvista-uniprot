@@ -7,7 +7,7 @@ import { AlphafoldPayload } from './commonTypes';
 // const rowSplitter = /\s*\n\s*/;
 // const cellSplitter = /^(.)(\d+)(.),(.+),(\w+)$/;
 
-const parseCSV = (rawText: string): Array<Object> => {
+const parseCSV = (rawText: string): Array<Record<string, string>> => {
   const data = [];
 
   for (const [i, row] of rawText.split(rowSplitter).entries()) {
@@ -27,7 +27,7 @@ const parseCSV = (rawText: string): Array<Object> => {
 };
 
 // Load and parse
-const loadAndParseAnnotations = async (url: string): Promise<Array<Object>> => {
+const loadAndParseAnnotations = async (url: string): Promise<Array<Record<string, string>>> => {
   try {
     const payload = await fetch(url);
     const rawCSV = await payload.text();
