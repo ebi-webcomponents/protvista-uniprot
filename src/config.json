@@ -592,8 +592,7 @@
         },
         {
           "name": "hpp",
-          "label": "Human Proteomics Project",
-          "filter": "hpp",
+          "label": "Human proteome project",
           "trackType": "protvista-track",
           "data": [
             {
