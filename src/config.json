@@ -591,6 +591,19 @@
           "tooltip": ""
         },
         {
+          "name": "hpp",
+          "label": "Human Proteomics Project",
+          "filter": "hpp",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+            }
+          ],
+          "tooltip": ""
+        },
+        {
           "name": "proteomics-ptm",
           "label": "PTM-containing peptide",
           "trackType": "protvista-track",
