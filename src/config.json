@@ -597,7 +597,7 @@
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
-              "url": "https://wwwdev.ebi.ac.uk/proteins/api/hpp/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/hpp/{accession}"
             }
           ],
           "tooltip": ""
