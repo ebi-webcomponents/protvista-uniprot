@@ -108,8 +108,30 @@ const AFMetaInfo = html`
   </p>
 `;
 
+const AMMetaInfo = html`<strong>Model Pathogenicity:</strong>
+  <ul class="no-bullet">
+    <li>
+      <span class="af-legend" style="background-color: rgb(154, 19, 26)"></span>
+      Likely pathogenic (score > 0.564)
+    </li>
+    <li>
+      <span
+        class="af-legend"
+        style="background-color: rgb(168, 169, 173)"
+      ></span>
+      Uncertain (0.564 >= score >= 0.34)
+    </li>
+    <li>
+      <span class="af-legend" style="background-color: rgb(61, 84, 147)"></span>
+      Likely benign (score < 0.34)
+    </li>
+  </ul>`;
+  
 const foldseekURL = (accession, sourceDB) => {
-  return html`<a href="${foldseekLink}?accession=${accession}&source=${sourceDB}">Foldseek</a>`;
+  return html`<a
+    href="${foldseekLink}?accession=${accession}&source=${sourceDB}"
+    >Foldseek</a
+  >`;
 };
 
 const styleId = 'protvista-styles';
@@ -118,6 +140,7 @@ class ProtvistaUniprotStructure extends LitElement {
   data?: ProcessedStructureData[];
   structureId?: string;
   metaInfo?: TemplateResult;
+  colorTheme?: string;
   private loading?: boolean;
 
   constructor() {
@@ -127,6 +150,7 @@ class ProtvistaUniprotStructure extends LitElement {
     this.loading = true;
     this.onTableRowClick = this.onTableRowClick.bind(this);
     this.addStyles();
+    this.colorTheme = 'alphafold';
   }
 
   static get properties() {
@@ -135,6 +159,7 @@ class ProtvistaUniprotStructure extends LitElement {
       structureId: { type: String },
       data: { type: Object },
       loading: { type: Boolean },
+      colorTheme: {type: String},
     };
   }
 
@@ -264,12 +289,28 @@ class ProtvistaUniprotStructure extends LitElement {
     return this;
   }
 
+  toggleColorTheme() {
+    if (this.colorTheme === 'alphafold') {
+      this.colorTheme = 'alphamissense';
+      this.metaInfo = AMMetaInfo;
+    } else {
+      this.colorTheme = 'alphafold';
+      this.metaInfo = AFMetaInfo;
+    }
+  }
+
   render() {
     return html`
       <div class="protvista-uniprot-structure">
+        ${this.structureId?.startsWith('AF-')
+          ? html`<button @click="${() => this.toggleColorTheme()}">
+              Colour model by
+              ${this.colorTheme === 'alphafold' ? 'Pathogenicity' : 'Confidence'}
+            </button>`
+          : html``}
         <div class="protvista-uniprot-structure__structure">
           ${this.metaInfo
-            ? html`<div class="protvista-uniprot-structure__meta">
+            ? html` <div class="protvista-uniprot-structure__meta">
                 ${this.metaInfo}
               </div>`
             : html``}
@@ -277,89 +318,100 @@ class ProtvistaUniprotStructure extends LitElement {
             ? html`<nightingale-structure
                 structure-id=${this.structureId}
                 protein-accession=${this.accession}
+                color-theme=${this.colorTheme}
               ></nightingale-structure>`
             : html``}
         </div>
         <div class="protvista-uniprot-structure__table">
-        ${this.data && this.data.length
-          ? html`<protvista-datatable noScrollToRow noDeselect filter-scroll>
-              <table>
-                <thead>
-                  <tr>
-                    <th data-filter="source">Source</th>
-                    <th>Identifier</th>
-                    <th data-filter="method">Method</th>
-                    <th>Resolution</th>
-                    <th>Chain</th>
-                    <th>Positions</th>
-                    <th>Links</th>
-                    <th><!--Download--></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${this.data?.map(
-                    ({
-                      source,
-                      id,
-                      method,
-                      resolution,
-                      chain,
-                      positions,
-                      downloadLink,
-                    }) => html`<tr
-                      data-id="${id}"
-                      @click="${() => this.onTableRowClick({ id })}"
-                    >
-                      <td data-filter="source" data-filter-value="${source}">
-                        <strong>${source}</strong>
-                      </td>
-                      <td>${id}</td>
-                      <td data-filter="method" data-filter-value="${method}">
-                        ${method}
-                      </td>
-                      <td>${resolution ? resolution.replace('A', 'Å') : ''}</td>
-                      <td>${chain || ''}</td>
-                      <td>${positions || ''}</td>
-                      <td>
-                        ${source === 'PDB'
-                          ? html`
-                              ${PDBLinks.map((pdbLink) => {
-                                return html`
-                                  <a href="${pdbLink.link}${id}"
-                                    >${pdbLink.name}</a
-                                  >
-                                `;
-                              }).reduce(
-                                (prev, curr) => html` ${prev} · ${curr} `
-                              )}
-                            `
-                          : html`<a href="${alphaFoldLink}${this.accession}"
-                              >AlphaFold</a
-                            >`}
-                      </td>
-                      <td>
-                        ${downloadLink
-                          ? html`<a href="${downloadLink}" class="download-link"
-                              >${svg`${unsafeHTML(downloadIcon)}`}</a
-                            > · ${foldseekURL(source === 'PDB' ? id: this.accession, source === 'PDB' ? 'PDB' : 'AlphaFoldDB')}`
-                          : ''}
-                      </td>
-                    </tr>`
-                  )}
-                </tbody>
-              </table>
-            </protvista-datatable>`
-          : html``}
-        ${this.loading
-          ? html`<div class="protvista-loader">
-              ${svg`${unsafeHTML(loaderIcon)}`}
-            </div>`
-          : html``}
-        ${!this.data && !this.loading
-          ? html`<div class="protvista-no-results">
-              No structure information available for ${this.accession}
-            </div>`
-          : html``}
+          ${this.data && this.data.length
+            ? html`<protvista-datatable noScrollToRow noDeselect filter-scroll>
+                <table>
+                  <thead>
+                    <tr>
+                      <th data-filter="source">Source</th>
+                      <th>Identifier</th>
+                      <th data-filter="method">Method</th>
+                      <th>Resolution</th>
+                      <th>Chain</th>
+                      <th>Positions</th>
+                      <th>Links</th>
+                      <th><!--Download--></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${this.data?.map(
+                      ({
+                        source,
+                        id,
+                        method,
+                        resolution,
+                        chain,
+                        positions,
+                        downloadLink,
+                      }) => html`<tr
+                        data-id="${id}"
+                        @click="${() => this.onTableRowClick({ id })}"
+                      >
+                        <td data-filter="source" data-filter-value="${source}">
+                          <strong>${source}</strong>
+                        </td>
+                        <td>${id}</td>
+                        <td data-filter="method" data-filter-value="${method}">
+                          ${method}
+                        </td>
+                        <td>
+                          ${resolution ? resolution.replace('A', 'Å') : ''}
+                        </td>
+                        <td>${chain || ''}</td>
+                        <td>${positions || ''}</td>
+                        <td>
+                          ${source === 'PDB'
+                            ? html`
+                                ${PDBLinks.map((pdbLink) => {
+                                  return html`
+                                    <a href="${pdbLink.link}${id}"
+                                      >${pdbLink.name}</a
+                                    >
+                                  `;
+                                }).reduce(
+                                  (prev, curr) => html` ${prev} · ${curr} `
+                                )}
+                              `
+                            : html`<a href="${alphaFoldLink}${this.accession}"
+                                >AlphaFold</a
+                              >`}
+                        </td>
+                        <td>
+                          ${downloadLink
+                            ? html`<a
+                                  href="${downloadLink}"
+                                  class="download-link"
+                                  >${svg`${unsafeHTML(downloadIcon)}`}</a
+                                >
+                                ·
+                                ${foldseekURL(
+                                  source === 'PDB' ? id : this.accession,
+                                  source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
+                                )}`
+                            : ''}
+                        </td>
+                      </tr>`
+                    )}
+                  </tbody>
+                </table>
+              </protvista-datatable>`
+            : html``}
+          ${this.loading
+            ? html`<div class="protvista-loader">
+                ${svg`${unsafeHTML(loaderIcon)}`}
+              </div>`
+            : html``}
+          ${!this.data && !this.loading
+            ? html`<div class="protvista-no-results">
+                No structure information available for ${this.accession}
+              </div>`
+            : html``}
+        </div>
       </div>
     `;
   }
