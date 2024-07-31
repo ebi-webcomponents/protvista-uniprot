@@ -762,8 +762,6 @@ class ProtvistaUniprot extends LitElement {
       selectedProvenanceFilters = [...provenanceFilters];
     }
 
-    console.log(selectedConsequenceFilters, selectedProvenanceFilters);
-
     const filteredVariants = this.transformedVariants.variants
       ?.filter((variant) =>
         selectedConsequenceFilters.some(

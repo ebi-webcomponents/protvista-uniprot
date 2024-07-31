@@ -125,7 +125,10 @@ const AMMetaInfo = html`<strong>Model Pathogenicity:</strong>
       <span class="af-legend" style="background-color: rgb(61, 84, 147)"></span>
       Likely benign (score < 0.34)
     </li>
-  </ul>`;
+  </ul>
+  <p class="small">
+    The displayed colour for each residue is the average AlphaMissense pathogenicity score across all possible amino acid substitutions at that position.
+  </p>`;
   
 const foldseekURL = (accession, sourceDB) => {
   return html`<a
