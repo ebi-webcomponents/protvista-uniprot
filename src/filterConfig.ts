@@ -175,7 +175,7 @@ const countVariantsForFilter = (
   return false;
 };
 
-export const colorConfig = (variant: ProtvistaVariant) => {
+export const colorConfig = (variant: any) => {
   if (countVariantsForFilter('disease', variant)) {
     return scaleColors.UPDiseaseColor;
   } else if (countVariantsForFilter('nonDisease', variant)) {
