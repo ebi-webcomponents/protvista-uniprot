@@ -732,6 +732,7 @@ class ProtvistaUniprot extends LitElement {
   getFilter(filters, filterName) {
     return filters.filter((f) => f.name === filterName)?.[0];
   }
+  
   handleFilterClick(e: MouseEvent) {
     const target = e.target as Element as ProtvistaFilter;
 
@@ -744,7 +745,7 @@ class ProtvistaUniprot extends LitElement {
       'provenance'
     );
 
-    const selectedFilters = Array.from(target.selectedFilters);
+    const selectedFilters = target.selectedFilters;
 
     let selectedConsequenceFilters = selectedFilters
       .map((f) => this.getFilter(consequenceFilters, f))
@@ -752,14 +753,6 @@ class ProtvistaUniprot extends LitElement {
     let selectedProvenanceFilters = selectedFilters
       .map((f) => this.getFilter(provenanceFilters, f))
       .filter(Boolean);
-
-    // If nothing is selected, apply all filters
-    if (!selectedConsequenceFilters.length) {
-      selectedConsequenceFilters = [...consequenceFilters];
-    }
-    if (!selectedProvenanceFilters.length) {
-      selectedProvenanceFilters = [...provenanceFilters];
-    }
 
     const filteredVariants = this.transformedVariants.variants
       ?.filter((variant) =>

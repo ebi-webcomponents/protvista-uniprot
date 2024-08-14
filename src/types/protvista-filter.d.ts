@@ -13,5 +13,5 @@ declare class ProtvistaFilter extends HTMLElement {
     };
     filterData: (data: any) => any;
   }[];
-  selectedFilters: Set<string>;
+  selectedFilters: string[];
 }
