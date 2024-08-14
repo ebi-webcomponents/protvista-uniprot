@@ -523,7 +523,6 @@ class ProtvistaUniprot extends LitElement {
     return html`
       <nightingale-manager
         reflected-attributes="length display-start display-end highlight activefilters filters"
-        additionalsubscribers="protvista-structure"
       >
         <div class="nav-container">
           <div class="action-buttons">

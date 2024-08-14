@@ -1,1 +1,0 @@
-declare module 'protvista-navigation';
