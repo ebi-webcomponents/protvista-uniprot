@@ -4,7 +4,6 @@ import { frame } from 'timing-functions';
 
 // components
 import ProtvistaTooltip from 'protvista-tooltip';
-import ProtvistaTrackConfig from 'protvista-track';
 // Nightingale
 import NightingaleManager from '@nightingale-elements/nightingale-manager';
 import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';

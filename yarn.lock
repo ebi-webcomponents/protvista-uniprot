@@ -1747,7 +1747,7 @@
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^4.5.0"
     d3 "7.8.5"
-    heatmap-component "^0.9.0"
+    heatmap-component "^1.0.1"
 
 "@nightingale-elements/nightingale-sequence@^5.0.0":
   version "5.0.0"
@@ -4081,14 +4081,6 @@ d3-scale@^3.2.3:
     d3-time "^2.1.1"
     d3-time-format "2 - 3"
 
-d3-selection-multi@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/d3-selection-multi/-/d3-selection-multi-1.0.1.tgz#cd6c25413d04a2cb97470e786f2cd877f3e34f58"
-  integrity sha512-mEnRkJ6A+Otd1LuRPV3az+s/RLDmIEhuz/MnT21O2nPcWNH7wZotdIlRjMA4Wpr+n7AESQ5fD8v1J3nL2Mnw9g==
-  dependencies:
-    d3-selection "1"
-    d3-transition "1"
-
 d3-selection@1, d3-selection@^1.1.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/d3-selection/-/d3-selection-1.4.1.tgz#98eedbbe085fbda5bafa2f9e3f3a2f4d7d622a98"
@@ -4286,7 +4278,7 @@ d3@7.8.5:
     d3-transition "3"
     d3-zoom "3"
 
-d3@7.9.0, d3@^7.8.5:
+d3@7.9.0, d3@^7.9.0:
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/d3/-/d3-7.9.0.tgz#579e7acb3d749caf8860bd1741ae8d371070cd5d"
   integrity sha512-e1U46jVP+w7Iut8Jt8ri1YsPOvFpg46k+K8TpCb0P+zjCkjkPnV7WzfDJzMHy1LnA+wj5pLT1wjO901gLXeEhA==
@@ -5997,13 +5989,12 @@ hast-util-whitespace@^3.0.0:
   dependencies:
     "@types/hast" "^3.0.0"
 
-heatmap-component@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/heatmap-component/-/heatmap-component-0.9.0.tgz#53726cb56b886f65885a14e8840d20370f937f4d"
-  integrity sha512-RUvymuHcxJLqdTcQjv5rHh76svh1HDF51OXAWCkjrDUJnK0xuaa9NOW5UZhlsr59fNOmlWXjT3ugcH3fcUiMPA==
+heatmap-component@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/heatmap-component/-/heatmap-component-1.0.1.tgz#1bec0546b8f85912d59bffb297172372e4c87256"
+  integrity sha512-FftYefBTv6Dbw4f5gMj6OqtpZrzDVWLQvxti9VjbPJhoP2VGkTWYvSO/kiBORrFelR8HA22UjRtm0kLxVx+k7w==
   dependencies:
-    d3 "^7.8.5"
-    d3-selection-multi "^1.0.1"
+    d3 "^7.9.0"
     lodash "^4.17.21"
     rxjs "^7.8.1"
     tslib "^2.6.2"
@@ -9155,7 +9146,7 @@ protvista-tooltip@3.8.4:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
 
-protvista-track@3.8.13, protvista-track@^3.8.13:
+protvista-track@^3.8.13:
   version "3.8.13"
   resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.8.13.tgz#ea6770b3b6f8c2359f83527450a9c4efccbd5ead"
   integrity sha512-EJtWecb7g+ZWItWT40pa9zBW03vVlVwda3d+j6qV3+OMENOfFxB3tinqAtMV9AD3mcfIR2IpETv5Kj6mcmwgag==
