@@ -603,6 +603,18 @@
           "tooltip": ""
         },
         {
+          "name": "hpp",
+          "label": "Human proteome project",
+          "trackType": "protvista-track",
+          "data": [
+            {
+              "adapter": "protvista-proteomics-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/hpp/{accession}"
+            }
+          ],
+          "tooltip": ""
+        },
+        {
           "name": "proteomics-ptm",
           "label": "PTM-containing peptide",
           "trackType": "nightingale-track",

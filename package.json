@@ -1,7 +1,7 @@
 {
   "name": "protvista-uniprot",
   "description": "ProtVista tool for the UniProt website",
-  "version": "2.11.2",
+  "version": "2.12.1",
   "files": [
     "dist",
     "src"
@@ -41,9 +41,9 @@
     "file-saver": "^2.0.2",
     "lit-element": "^2.2.0",
     "protvista-datatable": "3.8.10",
-    "protvista-feature-adapter": "3.8.13",
+    "protvista-feature-adapter": "3.8.15",
     "protvista-interpro-adapter": "3.8.14",
-    "protvista-proteomics-adapter": "3.8.13",
+    "protvista-proteomics-adapter": "3.8.15",
     "protvista-structure-adapter": "3.8.13",
     "protvista-tooltip": "3.8.4",
     "protvista-variation-adapter": "3.8.13",
