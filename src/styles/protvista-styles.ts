@@ -88,6 +88,10 @@ export default css`
     }
   }
 
+  nightingale-filter {
+    font-size: 0.8rem;
+  }
+
   .feature {
     cursor: pointer;
   }

@@ -26,6 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@nightingale-elements/nightingale-colored-sequence": "^5.0.0",
+    "@nightingale-elements/nightingale-filter": "file:.yalc/@nightingale-elements/nightingale-filter",
     "@nightingale-elements/nightingale-interpro-track": "^5.0.0",
     "@nightingale-elements/nightingale-linegraph-track": "^5.0.0",
     "@nightingale-elements/nightingale-manager": "^5.0.0",
@@ -41,7 +42,6 @@
     "lit-element": "^2.2.0",
     "protvista-datatable": "3.8.10",
     "protvista-feature-adapter": "3.8.13",
-    "protvista-filter": "file:.yalc/protvista-filter",
     "protvista-interpro-adapter": "3.8.14",
     "protvista-proteomics-adapter": "3.8.13",
     "protvista-structure-adapter": "3.8.13",

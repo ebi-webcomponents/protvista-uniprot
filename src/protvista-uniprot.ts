@@ -5,7 +5,6 @@ import { frame } from 'timing-functions';
 // components
 import ProtvistaTooltip from 'protvista-tooltip';
 import ProtvistaTrackConfig from 'protvista-track';
-import ProtvistaFilter from 'protvista-filter';
 // Nightingale
 import NightingaleManager from '@nightingale-elements/nightingale-manager';
 import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';
@@ -16,6 +15,7 @@ import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro
 import NightingaleVariation from '@nightingale-elements/nightingale-variation';
 import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegraph-track';
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
+import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 
 import { load } from 'data-loader';
 // adapters
@@ -114,7 +114,7 @@ type ProtvistaTrackConfig = {
   color?: string;
   shape?: string; //TODO: eventually replace with list
   scale?: string;
-  filterComponent?: 'protvista-filter';
+  filterComponent?: 'nightingale-filter';
   'color-range'?: string;
 };
 
@@ -202,7 +202,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('nightingale-sequence', NightingaleSequence);
     loadComponent('nightingale-variation', NightingaleVariation);
     loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
-    loadComponent('protvista-filter', ProtvistaFilter);
+    loadComponent('nightingale-filter', NightingaleFilter);
     loadComponent('nightingale-manager', NightingaleManager);
     loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
     loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
@@ -382,7 +382,7 @@ class ProtvistaUniprot extends LitElement {
     super.updated(changedProperties);
 
     const filterComponent =
-      this.querySelector<ProtvistaFilter>('protvista-filter');
+      this.querySelector<NightingaleFilter>('nightingale-filter');
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
@@ -726,16 +726,15 @@ class ProtvistaUniprot extends LitElement {
   }
 
   groupByCategory(filters, category) {
-    return filters.filter((f) => f.type.name === category);
+    return filters?.filter((f) => f.type.name === category);
   }
 
   getFilter(filters, filterName) {
-    return filters.filter((f) => f.name === filterName)?.[0];
+    return filters?.filter((f) => f.name === filterName)?.[0];
   }
   
   handleFilterClick(e: MouseEvent) {
-    const target = e.target as Element as ProtvistaFilter;
-
+    const target = e.target as Element as NightingaleFilter;
     const consequenceFilters = this.groupByCategory(
       target.filters,
       'consequence'
@@ -747,31 +746,33 @@ class ProtvistaUniprot extends LitElement {
 
     const selectedFilters = target.selectedFilters;
 
-    let selectedConsequenceFilters = selectedFilters
-      .map((f) => this.getFilter(consequenceFilters, f))
-      .filter(Boolean);
-    let selectedProvenanceFilters = selectedFilters
-      .map((f) => this.getFilter(provenanceFilters, f))
-      .filter(Boolean);
-
-    const filteredVariants = this.transformedVariants.variants
-      ?.filter((variant) =>
-        selectedConsequenceFilters.some(
-          (filter) => filter.filterPredicate(variant)
+    if (selectedFilters) {
+      const selectedConsequenceFilters = selectedFilters
+        .map((f) => this.getFilter(consequenceFilters, f))
+        .filter(Boolean);
+      const selectedProvenanceFilters = selectedFilters
+        .map((f) => this.getFilter(provenanceFilters, f))
+        .filter(Boolean);
+  
+      const filteredVariants = this.transformedVariants.variants
+        ?.filter((variant) =>
+          selectedConsequenceFilters.some(
+            (filter) => filter.filterPredicate(variant)
+          )
         )
-      )
-      .filter((variant) =>
-        selectedProvenanceFilters.some(
-          (filter) => filter.filterPredicate(variant)
-        )
-      );
-
-    this.data['VARIATION-variation'] = {
-      ...this.data['VARIATION-variation'],
-      variants: filteredVariants,
-    };
-
-    this._loadDataInComponents();
+        .filter((variant) =>
+          selectedProvenanceFilters.some(
+            (filter) => filter.filterPredicate(variant)
+          )
+        );
+  
+      this.data['VARIATION-variation'] = {
+        ...this.data['VARIATION-variation'],
+        variants: filteredVariants,
+      };
+  
+      this._loadDataInComponents();
+    }
   }
 
   getCategoryTypesAsString(tracks: ProtvistaTrackConfig[]) {
@@ -780,11 +781,11 @@ class ProtvistaUniprot extends LitElement {
 
   getFilterComponent(forId: string) {
     return html`
-      <protvista-filter
+      <nightingale-filter
         style="minWidth: 20%"
         for="track-${forId}"
         @change="${this.handleFilterClick}"
-      ></protvista-filter>
+      ></nightingale-filter>
     `;
   }
 

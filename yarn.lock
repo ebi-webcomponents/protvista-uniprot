@@ -1686,6 +1686,13 @@
     "@nightingale-elements/nightingale-sequence" "^5.0.0"
     d3 "7.9.0"
 
+"@nightingale-elements/nightingale-filter@file:.yalc/@nightingale-elements/nightingale-filter":
+  version "5.0.0"
+  dependencies:
+    "@nightingale-elements/nightingale-manager" "^5.0.0"
+    "@nightingale-elements/nightingale-new-core" "^5.0.0"
+    lodash-es "^4.17.11"
+
 "@nightingale-elements/nightingale-interpro-track@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-interpro-track/-/nightingale-interpro-track-5.0.0.tgz#6a0b1f13ae3110f4296f26193e37427d44e302d8"
@@ -9116,12 +9123,6 @@ protvista-feature-adapter@3.8.13, protvista-feature-adapter@^3.8.13:
   dependencies:
     protvista-track "^3.8.13"
     uuid "^8.3.1"
-
-"protvista-filter@file:.yalc/protvista-filter":
-  version "3.8.4"
-  dependencies:
-    lit-element "^2.4.0"
-    lodash-es "^4.17.11"
 
 protvista-interpro-adapter@3.8.14:
   version "3.8.14"
