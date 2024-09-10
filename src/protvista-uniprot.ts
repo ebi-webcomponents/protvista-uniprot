@@ -541,6 +541,7 @@ class ProtvistaUniprot extends LitElement {
               sequence="${this.sequence}"
               display-start=${this.displayCoordinates?.start}
               display-end="${this.displayCoordinates?.end}"
+              highlight-event="onclick"
             ></nightingale-sequence>
           </div>
         </div>
@@ -672,6 +673,7 @@ class ProtvistaUniprot extends LitElement {
               sequence="${this.sequence}"
               display-start=${this.displayCoordinates.start}
               display-end="${this.displayCoordinates.end}"
+              highlight-event="onclick"
             ></nightingale-sequence>
           </div>
         </div>
@@ -811,6 +813,7 @@ class ProtvistaUniprot extends LitElement {
             display-start="${this.displayCoordinates?.start}"
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
+            highlight-event="onclick"
           >
           </nightingale-track>
         `;
@@ -824,6 +827,7 @@ class ProtvistaUniprot extends LitElement {
             display-start="${this.displayCoordinates?.start}"
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
+            highlight-event="onclick"
           >
           </nightingale-interpro-track>
         `;
@@ -835,6 +839,7 @@ class ProtvistaUniprot extends LitElement {
             display-start="${this.displayCoordinates?.start}"
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
+            highlight-event="onclick"
           >
           </nightingale-variation>
         `;
