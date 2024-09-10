@@ -307,7 +307,7 @@ class ProtvistaUniprotStructure extends LitElement {
       <div class="protvista-uniprot-structure">
         ${this.structureId?.startsWith('AF-')
           ? html`<button @click="${() => this.toggleColorTheme()}">
-              Colour model by
+              Color model by
               ${this.colorTheme === 'alphafold' ? 'Pathogenicity' : 'Confidence'}
             </button>`
           : html``}
