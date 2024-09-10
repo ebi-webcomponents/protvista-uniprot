@@ -127,9 +127,11 @@ const AMMetaInfo = html`<strong>Model Pathogenicity:</strong>
     </li>
   </ul>
   <p class="small">
-    The displayed colour for each residue is the average AlphaMissense pathogenicity score across all possible amino acid substitutions at that position.
+    The displayed colour for each residue is the average AlphaMissense
+    pathogenicity score across all possible amino acid substitutions at that
+    position.
   </p>`;
-  
+
 const foldseekURL = (accession, sourceDB) => {
   return html`<a
     href="${foldseekLink}?accession=${accession}&source=${sourceDB}"
@@ -162,7 +164,7 @@ class ProtvistaUniprotStructure extends LitElement {
       structureId: { type: String },
       data: { type: Object },
       loading: { type: Boolean },
-      colorTheme: {type: String},
+      colorTheme: { type: String },
     };
   }
 
@@ -292,13 +294,12 @@ class ProtvistaUniprotStructure extends LitElement {
     return this;
   }
 
-  toggleColorTheme() {
-    if (this.colorTheme === 'alphafold') {
-      this.colorTheme = 'alphamissense';
-      this.metaInfo = AMMetaInfo;
-    } else {
-      this.colorTheme = 'alphafold';
+  toggleColorTheme(e) {
+    this.colorTheme = e.target.value;
+    if (e.target.value === 'alphafold') {
       this.metaInfo = AFMetaInfo;
+    } else {
+      this.metaInfo = AMMetaInfo;
     }
   }
 
@@ -306,10 +307,25 @@ class ProtvistaUniprotStructure extends LitElement {
     return html`
       <div class="protvista-uniprot-structure">
         ${this.structureId?.startsWith('AF-')
-          ? html`<button @click="${() => this.toggleColorTheme()}">
-              Color model by
-              ${this.colorTheme === 'alphafold' ? 'Pathogenicity' : 'Confidence'}
-            </button>`
+          ? html` Color model by
+              <input
+                type="radio"
+                id="alphafold"
+                name="colorScheme"
+                value="alphafold"
+                @click=${(e) => this.toggleColorTheme(e)}
+                checked
+              />
+              <label for="alphafold">Confidence</label>
+
+              <input
+                type="radio"
+                id="alphamissense"
+                name="colorScheme"
+                value="alphamissense"
+                @click=${(e) => this.toggleColorTheme(e)}
+              />
+              <label for="alphamissense">Pathogenecity</label><br />`
           : html``}
         <div class="protvista-uniprot-structure__structure">
           ${this.metaInfo
