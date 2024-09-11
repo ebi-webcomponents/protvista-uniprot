@@ -70,8 +70,8 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely pathogenic or pathogenic'],
-      colors: [scaleColors.UPDiseaseColor],
+      label: 'Likely pathogenic or pathogenic',
+      color: scaleColors.UPDiseaseColor,
     },
     filterPredicate: filterPredicates['disease'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -84,8 +84,8 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Predicted consequence'],
-      colors: [scaleColors.predictedColor],
+      label: 'Predicted consequence',
+      color: scaleColors.predictedColor,
     },
     filterPredicate: filterPredicates['predicted'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -98,8 +98,8 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely benign or benign'],
-      colors: [scaleColors.UPNonDiseaseColor],
+      label: 'Likely benign or benign',
+      color: scaleColors.UPNonDiseaseColor,
     },
     filterPredicate: filterPredicates['nonDisease'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -112,8 +112,8 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Uncertain significance'],
-      colors: [scaleColors.othersColor],
+      label: 'Uncertain significance',
+      color: scaleColors.othersColor,
     },
     filterPredicate: filterPredicates['uncertain'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -126,8 +126,8 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['UniProt reviewed'],
-      colors: ['#9f9f9f'],
+      label: 'UniProt reviewed',
+      color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['UniProt'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -140,8 +140,8 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['ClinVar'],
-      colors: ['#9f9f9f'],
+      label: 'ClinVar',
+      color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['ClinVar'],
     filterData: (variants: ProtvistaVariationData) =>
@@ -154,8 +154,8 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['Large scale studies'],
-      colors: ['#9f9f9f'],
+      label: 'Large scale studies',
+      color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['LSS'],
     filterData: (variants: ProtvistaVariationData) =>

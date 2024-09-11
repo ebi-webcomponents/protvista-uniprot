@@ -734,7 +734,7 @@ class ProtvistaUniprot extends LitElement {
     return filters?.filter((f) => f.name === filterName)?.[0];
   }
   
-  handleFilterClick(e: MouseEvent) {
+  handleFilterClick(e: CustomEvent) {
     const target = e.target as Element as NightingaleFilter;
     const consequenceFilters = this.groupByCategory(
       target.filters,
@@ -745,7 +745,7 @@ class ProtvistaUniprot extends LitElement {
       'provenance'
     );
 
-    const selectedFilters = target.selectedFilters;
+    const selectedFilters = e.detail?.value;
 
     if (selectedFilters) {
       const selectedConsequenceFilters = selectedFilters
