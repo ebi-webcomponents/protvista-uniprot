@@ -7024,7 +7024,15 @@ protvista-tooltip@3.8.4:
     lit-element "^2.4.0"
     lodash-es "^4.17.11"
 
-protvista-track@3.8.13, protvista-track@^3.8.13:
+protvista-track@3.8.16:
+  version "3.8.16"
+  resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.8.16.tgz#f97d08078f727565a83e4b8094d9ebae5322f12e"
+  integrity sha512-ymd8NGaJr5wf3gStf2T/GTnOh46oLPu0aIlP6UVQfAiXVuzORcIld32532G64g40+U4K5JCTHUUvYQh8LsvwkA==
+  dependencies:
+    lodash-es "^4.17.11"
+    protvista-zoomable "^3.8.13"
+
+protvista-track@^3.8.13:
   version "3.8.13"
   resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.8.13.tgz#ea6770b3b6f8c2359f83527450a9c4efccbd5ead"
   integrity sha512-EJtWecb7g+ZWItWT40pa9zBW03vVlVwda3d+j6qV3+OMENOfFxB3tinqAtMV9AD3mcfIR2IpETv5Kj6mcmwgag==
