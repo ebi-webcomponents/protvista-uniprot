@@ -485,6 +485,25 @@
       ]
     },
     {
+      "name": "EPITOPE",
+      "label": "Epitopes",
+      "trackType": "nightingale-track",
+      "tracks": [
+        {
+          "name": "epitope",
+          "label": "Epitope",
+          "trackType": "nightingale-track",
+          "data": [
+            {
+              "adapter": "protvista-feature-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/epitope/{accession}"
+            }
+          ],
+          "tooltip": ""
+        }
+      ]
+    },
+    {
       "name": "ANTIGEN",
       "label": "Antigenic sequences",
       "trackType": "nightingale-track",
@@ -605,7 +624,7 @@
         {
           "name": "hpp",
           "label": "Human proteome project",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
