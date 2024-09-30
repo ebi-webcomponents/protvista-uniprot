@@ -1,11 +1,6 @@
 import { css } from 'lit-element';
 
 export default css`
-  protvista-tooltip a {
-    text-decoration: underline;
-    color: #fff;
-  }
-
   .track-content {
     width: 80vw;
   }

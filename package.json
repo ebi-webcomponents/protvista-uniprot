@@ -10,8 +10,8 @@
     "build:es": "tsc",
     "build": "webpack --mode=production && yarn build:es",
     "watch": "webpack --mode=development -w",
-    "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter protvista-tooltip nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
-    "add-all": "yarn add protvista-feature-adapter nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter protvista-tooltip nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
+    "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
+    "add-all": "yarn add protvista-feature-adapter nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
     "start": "webpack serve --mode=development",
     "test:lint": "eslint src --ext .ts ",
     "test:types": "tsc",
@@ -45,7 +45,6 @@
     "protvista-interpro-adapter": "3.8.14",
     "protvista-proteomics-adapter": "3.8.15",
     "protvista-structure-adapter": "3.8.13",
-    "protvista-tooltip": "3.8.4",
     "protvista-variation-adapter": "3.8.13",
     "timing-functions": "^2.0.1",
     "url-join": "^4.0.1"

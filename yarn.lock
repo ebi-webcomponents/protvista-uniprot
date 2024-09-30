@@ -9146,14 +9146,6 @@ protvista-structure-adapter@3.8.13:
     protvista-feature-adapter "^3.8.13"
     uuid "^8.3.1"
 
-protvista-tooltip@3.8.4:
-  version "3.8.4"
-  resolved "https://registry.yarnpkg.com/protvista-tooltip/-/protvista-tooltip-3.8.4.tgz#56d6c41208c8066f1fa9b8e5b1514f94e7ea2120"
-  integrity sha512-yFWFbVjZ8gp44x9bsDd3/iBSvTCLKUorFb0+yJ4nAspFJNfTjU5WUBnUzqajJbf2x0I7qeL8W6R3rO3NuK+rpQ==
-  dependencies:
-    lit-element "^2.4.0"
-    lodash-es "^4.17.11"
-
 protvista-track@^3.8.13:
   version "3.8.13"
   resolved "https://registry.yarnpkg.com/protvista-track/-/protvista-track-3.8.13.tgz#ea6770b3b6f8c2359f83527450a9c4efccbd5ead"

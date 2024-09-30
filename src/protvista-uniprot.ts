@@ -2,8 +2,6 @@ import { LitElement, html, svg } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
 
-// components
-import ProtvistaTooltip from 'protvista-tooltip';
 // Nightingale
 import NightingaleManager from '@nightingale-elements/nightingale-manager';
 import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';
@@ -138,7 +136,6 @@ type ProtvistaConfig = {
 
 class ProtvistaUniprot extends LitElement {
   private openCategories: string[];
-  private notooltip: boolean;
   private nostructure: boolean;
   private hasData: boolean;
   private loading: boolean;
@@ -192,7 +189,6 @@ class ProtvistaUniprot extends LitElement {
 
   registerWebComponents() {
     loadComponent('nightingale-navigation', NightingaleNavigation);
-    loadComponent('protvista-tooltip', ProtvistaTooltip);
     loadComponent('nightingale-track', NightingaleTrack);
     loadComponent('nightingale-colored-sequence', NightingaleColoredSequence);
     loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
@@ -427,32 +423,7 @@ class ProtvistaUniprot extends LitElement {
       if (e.detail?.displayend) {
         this.displayCoordinates.end = e.detail.displayend;
       }
-
-      if (!this.notooltip) {
-        if (!e.detail?.eventType) {
-          this._resetTooltip();
-        } else if (e.detail.eventType === 'click') {
-          this.updateTooltip(e);
-        }
-      }
     });
-
-    if (!this.notooltip) {
-      this.addEventListener('click', (e) => {
-        const target = e.target as Element;
-        if (
-          !target.closest('.feature') &&
-          !target.closest('protvista-tooltip')
-        ) {
-          const tooltip =
-            this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-          if (tooltip) {
-            tooltip.visible = false;
-          }
-        }
-      });
-      document.addEventListener('click', this._resetTooltip);
-    }
 
     // Note: this doesn't seem to work
     this.addEventListener('load', () => {
@@ -468,21 +439,6 @@ class ProtvistaUniprot extends LitElement {
         this.hasData = true;
       }
     });
-  }
-
-  disconnectedCallback() {
-    if (!this.notooltip) {
-      document.removeEventListener('click', this._resetTooltip);
-    }
-  }
-
-  _resetTooltip(e?: MouseEvent) {
-    if (this && (!e || !(e.target as Element)?.closest('protvista-uniprot'))) {
-      const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-      if (tooltip) {
-        tooltip.visible = false;
-      }
-    }
   }
 
   async loadEntry(accession: string) {
@@ -678,32 +634,8 @@ class ProtvistaUniprot extends LitElement {
               ></protvista-uniprot-structure>
             `
           : ''}
-        <protvista-tooltip />
       </nightingale-manager>
     `;
-  }
-
-  async updateTooltip(e: NightingaleEvent) {
-    const d = e.detail?.feature;
-
-    if (!d.tooltipContent) {
-      return;
-    }
-
-    const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-    if (!tooltip) {
-      return;
-    }
-
-    tooltip.title = `${d.type} ${d.start}-${d.end}`;
-    tooltip.innerHTML = d.tooltipContent;
-    tooltip.visible = true;
-
-    if (e.detail?.coords) {
-      const [x, y] = e.detail.coords;
-      tooltip.x = x;
-      tooltip.y = y;
-    }
   }
 
   handleCategoryClick(e: MouseEvent) {
