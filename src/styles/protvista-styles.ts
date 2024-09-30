@@ -5,6 +5,7 @@ export default css`
     text-decoration: underline;
     color: #fff;
   }
+
   .track-content {
     width: 80vw;
   }
@@ -27,17 +28,11 @@ export default css`
 
   .category-label,
   .track-label,
-  .action-buttons,
+  .nav-track-label,
   .credits {
     width: 20vw;
     padding: 0.5em;
     line-height: normal;
-  }
-
-  .action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
   }
 
   .category-label {

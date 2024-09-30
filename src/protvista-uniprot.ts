@@ -34,7 +34,6 @@ import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './pr
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
-import _DownloadPanel from './download-panel';
 import { loadComponent } from './loadComponents';
 import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
 import { NightingaleEvent } from './types/nightingale-components';
@@ -64,7 +63,6 @@ export const transformDataAlphaMissenseHeatmapAdapter =
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
-export const DownloadPanel = _DownloadPanel;
 
 const adapters = {
   'protvista-feature-adapter': transformDataFeatureAdapter,
@@ -524,11 +522,7 @@ class ProtvistaUniprot extends LitElement {
         reflected-attributes="length display-start display-end highlight activefilters filters"
       >
         <div class="nav-container">
-          <div class="action-buttons">
-            <download-panel
-              accession="${this.accession}"
-              config="${JSON.stringify(this.config.download)}"
-            />
+          <div class="nav-track-label">
           </div>
           <div class="track-content">
             <nightingale-navigation
