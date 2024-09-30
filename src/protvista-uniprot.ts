@@ -802,7 +802,7 @@ class ProtvistaUniprot extends LitElement {
             length="${this.sequence?.length}"
             display-start="${this.displayCoordinates?.start}"
             display-end="${this.displayCoordinates?.end}"
-            highlight-event="onmouseover"
+            highlight-event="onclick"
             highlight-color="#EB3BFF66"
             height="300"
           >

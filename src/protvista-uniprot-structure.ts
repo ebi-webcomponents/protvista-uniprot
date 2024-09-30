@@ -250,6 +250,9 @@ class ProtvistaUniprotStructure extends LitElement {
       .protvista-uniprot-structure {
         line-height: normal;
       }
+      .theme-selection {
+        padding-bottom: 1rem;
+      }
       .protvista-uniprot-structure__structure {
         display: flex;
       }
@@ -306,30 +309,29 @@ class ProtvistaUniprotStructure extends LitElement {
   render() {
     return html`
       <div class="protvista-uniprot-structure">
-        ${this.structureId?.startsWith('AF-')
-          ? html` Color model by
-              <input
-                type="radio"
-                id="alphafold"
-                name="colorScheme"
-                value="alphafold"
-                @click=${(e) => this.toggleColorTheme(e)}
-                checked
-              />
-              <label for="alphafold">Confidence</label>
-
-              <input
-                type="radio"
-                id="alphamissense"
-                name="colorScheme"
-                value="alphamissense"
-                @click=${(e) => this.toggleColorTheme(e)}
-              />
-              <label for="alphamissense">Pathogenecity</label><br />`
-          : html``}
         <div class="protvista-uniprot-structure__structure">
           ${this.metaInfo
             ? html` <div class="protvista-uniprot-structure__meta">
+                <div class="theme-selection">
+                  Select color scale <br />
+                  <input
+                    type="radio"
+                    id="alphafold"
+                    name="colorScheme"
+                    value="alphafold"
+                    @click=${(e) => this.toggleColorTheme(e)}
+                    checked
+                  />
+                  <label for="alphafold">Confidence</label><br />
+                  <input
+                    type="radio"
+                    id="alphamissense"
+                    name="colorScheme"
+                    value="alphamissense"
+                    @click=${(e) => this.toggleColorTheme(e)}
+                  />
+                  <label for="alphamissense">Pathogenecity</label><br />
+                </div>
                 ${this.metaInfo}
               </div>`
             : html``}
