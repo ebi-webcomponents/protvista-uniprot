@@ -4,9 +4,6 @@ import {
 } from './protvista-alphamissense-pathogenicity';
 import { AlphafoldPayload } from './commonTypes';
 
-// const rowSplitter = /\s*\n\s*/;
-// const cellSplitter = /^(.)(\d+)(.),(.+),(\w+)$/;
-
 const parseCSV = (rawText: string): Array<Record<string, string>> => {
   const data = [];
 

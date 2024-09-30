@@ -1677,7 +1677,7 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@nightingale-elements/nightingale-colored-sequence@^5.0.0":
+"@nightingale-elements/nightingale-colored-sequence@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-colored-sequence/-/nightingale-colored-sequence-5.0.0.tgz#343a39f6fe8e181c2c2add6f1cf9b52b2ddb69dc"
   integrity sha512-PvsAsmkUyZcBdgEy4eCL81wmTxD8D9X+aAAobaErOYtq5ozRXbECvGMlCqFJkWcGj8Jon81lBS792U/olflEAA==
@@ -1693,7 +1693,7 @@
     "@nightingale-elements/nightingale-new-core" "^5.0.0"
     lodash-es "^4.17.11"
 
-"@nightingale-elements/nightingale-interpro-track@^5.0.0":
+"@nightingale-elements/nightingale-interpro-track@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-interpro-track/-/nightingale-interpro-track-5.0.0.tgz#6a0b1f13ae3110f4296f26193e37427d44e302d8"
   integrity sha512-UDCZ41yDIeu5yZnCfJlgzONPBiZLADup9ko9vC3LGcArXc3l+4Y5ylgxsF5FfNKD9vcQhAfAFgCT2Nw8kfBkig==
@@ -1703,7 +1703,7 @@
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
-"@nightingale-elements/nightingale-linegraph-track@^5.0.0":
+"@nightingale-elements/nightingale-linegraph-track@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-linegraph-track/-/nightingale-linegraph-track-5.0.0.tgz#a86e375ecce0d753c817517288b8aac1987803b7"
   integrity sha512-Q2KWQWwFbxGItE66EBN30OhBEIisFd7NCBSDBKu73zJ3Ln0DPjgIP9xjxgOehWMPoV/C5GtX8ndhvF/fK/BKQA==
@@ -1711,14 +1711,14 @@
     "@nightingale-elements/nightingale-new-core" "^5.0.0"
     d3 "7.9.0"
 
-"@nightingale-elements/nightingale-manager@^5.0.0":
+"@nightingale-elements/nightingale-manager@5.0.0", "@nightingale-elements/nightingale-manager@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-manager/-/nightingale-manager-5.0.0.tgz#a86faa46901999a44676a44cf78083e6025082b5"
   integrity sha512-JS9boai2dXWvnhqSsiKQeqJz+dvJN++hLP9Wpoy/B/q6lOPtwJcUacAvtKmx+DeSh0mhKemABCH0AeQ2ymPdhg==
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.0.0"
 
-"@nightingale-elements/nightingale-navigation@^5.0.0":
+"@nightingale-elements/nightingale-navigation@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-navigation/-/nightingale-navigation-5.0.0.tgz#138034384c85e62658c9a15ccb4c251170ef3ac3"
   integrity sha512-Ynv0LvMHQF7xg6RQNaTXfadAe67MqnI9xiquEZ6fAF/VRKtaemZFeNSKx+e3A8Qg2HXBN5sp/4nmNwHdz3NbSQ==
@@ -1749,7 +1749,7 @@
     d3 "7.8.5"
     heatmap-component "^1.0.1"
 
-"@nightingale-elements/nightingale-sequence@^5.0.0":
+"@nightingale-elements/nightingale-sequence@5.0.0", "@nightingale-elements/nightingale-sequence@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-sequence/-/nightingale-sequence-5.0.0.tgz#d116d4b6eee2d9c08bb2afed11b1e8405a2eade4"
   integrity sha512-VhGJN1gGdjfu0F9sUg6MBHBwEFKYZLNPncgZ1dvXhvp4+lKu9m1xFKToCihVuMbqicFeQGjEu4y1OoMbZywtQQ==
@@ -1780,7 +1780,7 @@
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
-"@nightingale-elements/nightingale-variation@^5.0.0":
+"@nightingale-elements/nightingale-variation@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-variation/-/nightingale-variation-5.0.0.tgz#27055ffc07aa146d16f6fb263ea5b6165f63b31e"
   integrity sha512-WG0+maRXWyOpZ4/Ltonyfp8KoA7a2vfRkjQ/UaIOTxJhXhy1ymxghtU9FMkRZdoKCaeycJmOysRVixaLStYA6Q==

@@ -561,7 +561,7 @@
       "tracks": [
         {
           "name": "variation_graph",
-          "label": "Variants",
+          "label": "Counts",
           "trackType": "nightingale-linegraph-track",
           "data": [
             {
@@ -700,7 +700,7 @@
       "tracks": [
         {
           "name": "alphamissense_pathogenicity",
-          "label": "Average AlphaMissense Pathogenicity Score",
+          "label": "Average Pathogenicity Score",
           "trackType": "nightingale-colored-sequence",
           "data": [
             {

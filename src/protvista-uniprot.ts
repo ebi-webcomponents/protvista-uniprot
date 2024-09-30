@@ -154,7 +154,6 @@ class ProtvistaUniprot extends LitElement {
   constructor() {
     super();
     this.openCategories = [];
-    this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
     this.loading = true;
@@ -790,6 +789,7 @@ class ProtvistaUniprot extends LitElement {
             scale="${scale}"
             color-range="${colorRange}"
             height="13"
+            highlight-event="onclick"
           >
           </nightingale-colored-sequence>
         `;
