@@ -29,13 +29,13 @@ export const transformData = (data) => {
 
     const graphData = [
         {
-          name: 'Total variants',
+          name: 'variant',
           range: [0, Math.max(Math.max(...total), Math.max(...diseaseTotal))],
           color: 'darkgrey',
           values: [...total].map((value, index) => ({ position: index, value: value })),
         },
         {
-          name: 'Total disease variants',
+          name: 'disease causing variant',
           range: [0, Math.max(Math.max(...total), Math.max(...diseaseTotal))],
           color: 'red',
           values: [...diseaseTotal].map((value, index) => ({ position: index, value: value })),

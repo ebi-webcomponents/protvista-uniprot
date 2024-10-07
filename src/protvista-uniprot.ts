@@ -477,8 +477,7 @@ class ProtvistaUniprot extends LitElement {
         reflected-attributes="length display-start display-end highlight activefilters filters"
       >
         <div class="nav-container">
-          <div class="nav-track-label">
-          </div>
+          <div class="nav-track-label"></div>
           <div class="track-content">
             <nightingale-navigation
               length="${this.sequence.length}"
@@ -491,6 +490,7 @@ class ProtvistaUniprot extends LitElement {
               display-start=${this.displayCoordinates?.start}
               display-end="${this.displayCoordinates?.end}"
               highlight-event="onclick"
+              use-ctrl-to-zoom
             ></nightingale-sequence>
           </div>
         </div>
@@ -623,6 +623,7 @@ class ProtvistaUniprot extends LitElement {
               display-start=${this.displayCoordinates.start}
               display-end="${this.displayCoordinates.end}"
               highlight-event="onclick"
+              use-ctrl-to-zoom
             ></nightingale-sequence>
           </div>
         </div>
@@ -658,7 +659,7 @@ class ProtvistaUniprot extends LitElement {
   getFilter(filters, filterName) {
     return filters?.filter((f) => f.name === filterName)?.[0];
   }
-  
+
   handleFilterClick(e: CustomEvent) {
     const target = e.target as Element as NightingaleFilter;
     const consequenceFilters = this.groupByCategory(
@@ -679,24 +680,24 @@ class ProtvistaUniprot extends LitElement {
       const selectedProvenanceFilters = selectedFilters
         .map((f) => this.getFilter(provenanceFilters, f))
         .filter(Boolean);
-  
+
       const filteredVariants = this.transformedVariants.variants
         ?.filter((variant) =>
-          selectedConsequenceFilters.some(
-            (filter) => filter.filterPredicate(variant)
+          selectedConsequenceFilters.some((filter) =>
+            filter.filterPredicate(variant)
           )
         )
         .filter((variant) =>
-          selectedProvenanceFilters.some(
-            (filter) => filter.filterPredicate(variant)
+          selectedProvenanceFilters.some((filter) =>
+            filter.filterPredicate(variant)
           )
         );
-  
+
       this.data['VARIATION-variation'] = {
         ...this.data['VARIATION-variation'],
         variants: filteredVariants,
       };
-  
+
       this._loadDataInComponents();
     }
   }
@@ -739,6 +740,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             highlight-event="onclick"
+            use-ctrl-to-zoom
           >
           </nightingale-track>
         `;
@@ -753,6 +755,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             highlight-event="onclick"
+            use-ctrl-to-zoom
           >
           </nightingale-interpro-track>
         `;
@@ -765,6 +768,7 @@ class ProtvistaUniprot extends LitElement {
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             highlight-event="onclick"
+            use-ctrl-to-zoom
           >
           </nightingale-variation>
         `;
@@ -776,6 +780,9 @@ class ProtvistaUniprot extends LitElement {
             display-start="${this.displayCoordinates?.start}"
             display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
+            show-label-name
+            highlight-on-click
+            use-ctrl-to-zoom
           >
           </nightingale-linegraph-track>
         `;
@@ -790,6 +797,7 @@ class ProtvistaUniprot extends LitElement {
             color-range="${colorRange}"
             height="13"
             highlight-event="onclick"
+            use-ctrl-to-zoom
           >
           </nightingale-colored-sequence>
         `;
@@ -805,6 +813,7 @@ class ProtvistaUniprot extends LitElement {
             highlight-event="onclick"
             highlight-color="#EB3BFF66"
             height="300"
+            use-ctrl-to-zoom
           >
           </nightingale-sequence-heatmap>
         `;

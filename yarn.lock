@@ -1703,10 +1703,8 @@
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
-"@nightingale-elements/nightingale-linegraph-track@5.0.0":
+"@nightingale-elements/nightingale-linegraph-track@file:.yalc/@nightingale-elements/nightingale-linegraph-track":
   version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-linegraph-track/-/nightingale-linegraph-track-5.0.0.tgz#a86e375ecce0d753c817517288b8aac1987803b7"
-  integrity sha512-Q2KWQWwFbxGItE66EBN30OhBEIisFd7NCBSDBKu73zJ3Ln0DPjgIP9xjxgOehWMPoV/C5GtX8ndhvF/fK/BKQA==
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.0.0"
     d3 "7.9.0"
