@@ -1,7 +1,7 @@
 {
   "name": "protvista-uniprot",
   "description": "ProtVista tool for the UniProt website",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "files": [
     "dist",
     "src"
@@ -26,7 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@nightingale-elements/nightingale-colored-sequence": "5.1.0",
-    "@nightingale-elements/nightingale-filter": "5.1.0",
+    "@nightingale-elements/nightingale-filter": "5.1.2",
     "@nightingale-elements/nightingale-interpro-track": "5.1.0",
     "@nightingale-elements/nightingale-linegraph-track": "5.1.0",
     "@nightingale-elements/nightingale-manager": "5.1.0",
