@@ -33,6 +33,35 @@ export const getFilteredVariants = (
     };
   });
 
+const filterPredicates = {
+  disease: (variantPos) =>
+    variantPos.association?.some((association) => association.disease),
+  predicted: (variantPos) => variantPos.hasPredictions,
+  nonDisease: (variantPos) =>
+    variantPos.association?.some(
+      (association) => association.disease === false
+    ),
+  uncertain: (variantPos) =>
+    (typeof variantPos.clinicalSignificances === 'undefined' &&
+      !variantPos.hasPredictions) ||
+    (variantPos.clinicalSignificances &&
+      significanceMatches(
+        variantPos.clinicalSignificances,
+        consequences.uncertain
+      )),
+  UniProt: (variantPos) =>
+    variantPos.xrefNames &&
+    (variantPos.xrefNames.includes('uniprot') ||
+      variantPos.xrefNames.includes('UniProt')),
+  ClinVar: (variantPos) =>
+    variantPos.xrefNames &&
+    (variantPos.xrefNames.includes('ClinVar') ||
+      variantPos.xrefNames.includes('clinvar')),
+  LSS: (variantPos) =>
+    variantPos.sourceType === 'large_scale_study' ||
+    variantPos.sourceType === 'mixed',
+};
+
 const filterConfig = [
   {
     name: 'disease',
@@ -41,13 +70,12 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely pathogenic or pathogenic'],
-      colors: [scaleColors.UPDiseaseColor],
+      label: 'Likely pathogenic or pathogenic',
+      color: scaleColors.UPDiseaseColor,
     },
+    filterPredicate: filterPredicates['disease'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(variants, (variantPos) =>
-        variantPos.association?.some((association) => association.disease)
-      ),
+      getFilteredVariants(variants, filterPredicates['disease']),
   },
   {
     name: 'predicted',
@@ -56,11 +84,12 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Predicted consequence'],
-      colors: [scaleColors.predictedColor],
+      label: 'Predicted consequence',
+      color: scaleColors.predictedColor,
     },
+    filterPredicate: filterPredicates['predicted'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(variants, (variantPos) => variantPos.hasPredictions),
+      getFilteredVariants(variants, filterPredicates['predicted']),
   },
   {
     name: 'nonDisease',
@@ -69,15 +98,12 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Likely benign or benign'],
-      colors: [scaleColors.UPNonDiseaseColor],
+      label: 'Likely benign or benign',
+      color: scaleColors.UPNonDiseaseColor,
     },
+    filterPredicate: filterPredicates['nonDisease'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(variants, (variantPos) =>
-        variantPos.association?.some(
-          (association) => association.disease === false
-        )
-      ),
+      getFilteredVariants(variants, filterPredicates['nonDisease']),
   },
   {
     name: 'uncertain',
@@ -86,21 +112,12 @@ const filterConfig = [
       text: 'Filter Consequence',
     },
     options: {
-      labels: ['Uncertain significance'],
-      colors: [scaleColors.othersColor],
+      label: 'Uncertain significance',
+      color: scaleColors.othersColor,
     },
+    filterPredicate: filterPredicates['uncertain'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(
-        variants,
-        (variantPos) =>
-          (typeof variantPos.clinicalSignificances === 'undefined' &&
-            !variantPos.hasPredictions) ||
-          (variantPos.clinicalSignificances &&
-            significanceMatches(
-              variantPos.clinicalSignificances,
-              consequences.uncertain
-            ))
-      ),
+      getFilteredVariants(variants, filterPredicates['uncertain']),
   },
   {
     name: 'UniProt',
@@ -109,17 +126,12 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['UniProt reviewed'],
-      colors: ['#9f9f9f'],
+      label: 'UniProt reviewed',
+      color: '#9f9f9f',
     },
+    filterPredicate: filterPredicates['UniProt'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(
-        variants,
-        (variantPos) =>
-          variantPos.xrefNames &&
-          (variantPos.xrefNames.includes('uniprot') ||
-            variantPos.xrefNames.includes('UniProt'))
-      ),
+      getFilteredVariants(variants, filterPredicates['UniProt']),
   },
   {
     name: 'ClinVar',
@@ -128,17 +140,12 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['ClinVar'],
-      colors: ['#9f9f9f'],
+      label: 'ClinVar',
+      color: '#9f9f9f',
     },
+    filterPredicate: filterPredicates['ClinVar'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(
-        variants,
-        (variantPos) =>
-          variantPos.xrefNames &&
-          (variantPos.xrefNames.includes('ClinVar') ||
-            variantPos.xrefNames.includes('clinvar'))
-      ),
+      getFilteredVariants(variants, filterPredicates['ClinVar']),
   },
   {
     name: 'LSS',
@@ -147,16 +154,12 @@ const filterConfig = [
       text: 'Filter Provenance',
     },
     options: {
-      labels: ['Large scale studies'],
-      colors: ['#9f9f9f'],
+      label: 'Large scale studies',
+      color: '#9f9f9f',
     },
+    filterPredicate: filterPredicates['LSS'],
     filterData: (variants: ProtvistaVariationData) =>
-      getFilteredVariants(
-        variants,
-        (variantPos) =>
-          variantPos.sourceType === 'large_scale_study' ||
-          variantPos.sourceType === 'mixed'
-      ),
+      getFilteredVariants(variants, filterPredicates['LSS']),
   },
 ];
 
@@ -172,7 +175,7 @@ const countVariantsForFilter = (
   return false;
 };
 
-export const colorConfig = (variant: ProtvistaVariant) => {
+export const colorConfig = (variant: any) => {
   if (countVariantsForFilter('disease', variant)) {
     return scaleColors.UPDiseaseColor;
   } else if (countVariantsForFilter('nonDisease', variant)) {

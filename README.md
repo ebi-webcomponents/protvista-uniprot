@@ -53,7 +53,7 @@ You can pass your own configuration to the component using the `config` attribut
     {
       "name": string,
       "label": string,
-      "trackType": protvista-track|protvista-variation-graph|protvista-variation,
+      "trackType": nightingale-track|nightingale-linegraph-track|nightingale-variation,
       "adapter": protvista-feature-adapter|protvista-structure-adapter|protvista-proteomics-adapter|protvista-variation-adapter,
       "url": string,
       "tracks": [
@@ -61,7 +61,7 @@ You can pass your own configuration to the component using the `config` attribut
           "name": string,
           "label": string,
           "filter": string,
-          "trackType": "protvista-track|protvista-variation-graph|protvista-variation",
+          "trackType": "nightingale-track|nightingale-linegraph-track|nightingale-variation",
           "tooltip": string
         }
       ]

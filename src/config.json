@@ -3,13 +3,13 @@
     {
       "name": "MOLECULE_PROCESSING",
       "label": "Molecule processing",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "signal",
           "label": "Signal peptide",
           "filter": "SIGNAL",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -22,7 +22,7 @@
           "name": "chain",
           "label": "Chain",
           "filter": "CHAIN",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -35,7 +35,7 @@
           "name": "transit",
           "label": "Transit peptide",
           "filter": "TRANSIT",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -48,7 +48,7 @@
           "name": "init_met",
           "label": "Initiator methionine",
           "filter": "INIT_MET",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -62,7 +62,7 @@
           "name": "propep",
           "label": "Propeptide",
           "filter": "PROPEP",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -75,7 +75,7 @@
           "name": "peptide",
           "label": "Peptide",
           "filter": "PEPTIDE",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -89,13 +89,13 @@
     {
       "name": "SEQUENCE_INFORMATION",
       "label": "Sequence information",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "compbias",
           "label": "Compositional bias",
           "filter": "COMPBIAS",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -108,7 +108,7 @@
           "name": "conflict",
           "label": "Sequence conflict",
           "filter": "CONFLICT",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -120,7 +120,7 @@
         {
           "name": "non_cons",
           "filter": "NON_CONS",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "label": "Non-adjacent residues",
           "data": [
             {
@@ -133,7 +133,7 @@
         {
           "name": "non_ter",
           "filter": "NON_TER",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "label": "Non-terminal residue",
           "data": [
             {
@@ -146,7 +146,7 @@
         {
           "name": "unsure",
           "filter": "UNSURE",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "label": "Sequence uncertainty",
           "data": [
             {
@@ -159,7 +159,7 @@
         {
           "name": "non_std",
           "filter": "NON_STD",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "label": "Non-standard residue",
           "data": [
             {
@@ -174,13 +174,13 @@
     {
       "name": "TOPOLOGY",
       "label": "Topology",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "topo_dom",
           "label": "Topological domain",
           "filter": "TOPO_DOM",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -193,7 +193,7 @@
           "name": "transmem",
           "label": "Transmembrane",
           "filter": "TRANSMEM",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -206,7 +206,7 @@
           "name": "intramem",
           "label": "Intramembrane",
           "filter": "INTRAMEM",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -220,13 +220,13 @@
     {
       "name": "DOMAINS",
       "label": "Domains",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "domain",
           "label": "Domain",
           "filter": "DOMAIN",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -238,7 +238,7 @@
         {
           "name": "InterPro representative domain",
           "label": "InterPro Representative Domain",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-interpro-adapter",
@@ -251,7 +251,7 @@
           "name": "region",
           "label": "Region",
           "filter": "REGION",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -264,7 +264,7 @@
           "name": "repeat",
           "label": "Repeat",
           "filter": "REPEAT",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -277,7 +277,7 @@
           "name": "motif",
           "label": "Motif",
           "filter": "MOTIF",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -290,7 +290,7 @@
           "name": "zn_fing",
           "label": "Zinc finger",
           "filter": "ZN_FING",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -304,13 +304,13 @@
     {
       "name": "SITES",
       "label": "Sites",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "metal",
           "label": "Metal binding",
           "filter": "METAL",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -323,7 +323,7 @@
           "name": "site",
           "label": "Site",
           "filter": "SITE",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -336,7 +336,7 @@
           "name": "ca_bind",
           "label": "Calcium binding",
           "filter": "CA_BIND",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -349,7 +349,7 @@
           "name": "dna_bind",
           "label": "DNA binding",
           "filter": "DNA_BIND",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -362,7 +362,7 @@
           "name": "np_bind",
           "label": "Nucleotide binding",
           "filter": "NP_BIND",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -375,7 +375,7 @@
           "name": "binding",
           "label": "Binding site",
           "filter": "BINDING",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -388,7 +388,7 @@
           "name": "act_site",
           "label": "Active site",
           "filter": "ACT_SITE",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -402,13 +402,13 @@
     {
       "name": "PTM",
       "label": "PTM",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "mod_res",
           "label": "Modified residue",
           "filter": "MOD_RES",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -421,7 +421,7 @@
           "name": "mod_res_ls",
           "label": "Modified residue (large scale data)",
           "filter": "MOD_RES_LS",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-ptm-adapter",
@@ -434,7 +434,7 @@
           "name": "carbohyd",
           "label": "Glycosylation",
           "filter": "CARBOHYD",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -447,7 +447,7 @@
           "name": "disulfid",
           "label": "Disulfide bond",
           "filter": "DISULFID",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -460,7 +460,7 @@
           "name": "crosslnk",
           "label": "Cross-link",
           "filter": "CROSSLNK",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -473,7 +473,7 @@
           "name": "lipid",
           "label": "Lipidation",
           "filter": "LIPID",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -487,12 +487,12 @@
     {
       "name": "EPITOPE",
       "label": "Epitopes",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "epitope",
           "label": "Epitope",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -506,12 +506,12 @@
     {
       "name": "ANTIGEN",
       "label": "Antigenic sequences",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "antigen",
           "label": "Antibody binding sequences",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -525,13 +525,13 @@
     {
       "name": "MUTAGENESIS",
       "label": "Mutagenesis",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "mutagen",
           "label": "Mutagenesis",
           "filter": "MUTAGEN",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -543,7 +543,7 @@
         {
           "name": "othermutagen",
           "label": "Mutagenesis (large scale data)",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -557,12 +557,24 @@
     {
       "name": "VARIATION",
       "label": "Variants",
-      "trackType": "protvista-variation-graph",
+      "trackType": "nightingale-linegraph-track",
       "tracks": [
+        {
+          "name": "variation_graph",
+          "label": "Counts",
+          "trackType": "nightingale-linegraph-track",
+          "data": [
+            {
+              "adapter": "protvista-variation-graph-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
+            }
+          ],
+          "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
+        },
         {
           "name": "variation",
           "filterComponent": "protvista-filter",
-          "trackType": "protvista-variation",
+          "trackType": "nightingale-variation",
           "data": [
             {
               "adapter": "protvista-variation-adapter",
@@ -576,7 +588,7 @@
     {
       "name": "PROTEOMICS",
       "label": "Proteomics",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "adapter": "protvista-proteomics-adapter",
       "urls": [
         "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
@@ -587,7 +599,7 @@
           "name": "unique",
           "label": "Unique peptide",
           "filter": "unique",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
@@ -600,7 +612,7 @@
           "name": "non_unique",
           "label": "Non-unique peptide",
           "filter": "non_unique",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
@@ -612,7 +624,7 @@
         {
           "name": "hpp",
           "label": "Human proteome project",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
@@ -624,7 +636,7 @@
         {
           "name": "proteomics-ptm",
           "label": "PTM-containing peptide",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-proteomics-adapter",
@@ -638,12 +650,12 @@
     {
       "name": "STRUCTURE_COVERAGE",
       "label": "PDBe 3D structure coverage",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "pdbe_cover",
           "label": "PDBe coverage",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "tooltip": "PDBe 3D structure coverage",
           "data": [
             {
@@ -657,7 +669,7 @@
     {
       "name": "ALPHAFOLD_CONFIDENCE",
       "label": "AlphaFold",
-      "trackType": "protvista-coloured-sequence",
+      "trackType": "nightingale-colored-sequence",
       "scale": "H:90,M:70,L:50,D:0",
       "color-range": "#ff7d45:0,#ffdb13:50,#65cbf3:70,#0053d6:90,#0053d6:100",
       "tracks": [
@@ -665,7 +677,7 @@
           "name": "alphafold_confidence",
           "label": "AlphaFold Confidence",
           "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
-          "trackType": "protvista-coloured-sequence",
+          "trackType": "nightingale-colored-sequence",
           "data": [
             {
               "adapter": "protvista-alphafold-confidence-adapter",
@@ -682,15 +694,14 @@
     {
       "name": "ALPHAMISSENSE_PATHOGENICITY",
       "label": "AlphaMissense",
-      "trackType": "protvista-coloured-sequence",
+      "trackType": "nightingale-colored-sequence",
       "scale": "P:100,A:50,B:0",
       "color-range": "#9a131a:100,#a8a9ad:50,#3d5493:0",
       "tracks": [
         {
           "name": "alphamissense_pathogenicity",
-          "label": "AlphaMissense Pathogenicity",
-          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
-          "trackType": "protvista-coloured-sequence",
+          "label": "Average Pathogenicity Score",
+          "trackType": "nightingale-colored-sequence",
           "data": [
             {
               "adapter": "protvista-alphamissense-pathogenicity-adapter",
@@ -700,20 +711,36 @@
               ]
             }
           ],
-          "tooltip": "AlphaMissense prediction pathogenicity"
+          "tooltip": "AlphaMissense pathogenicity"
+        },
+        {
+          "name": "alphamissense_pathogenicity_heatmap",
+          "label": "AlphaMissense Pathogenicity",
+          "labelUrl": "https://alphafold.ebi.ac.uk/entry/{accession}",
+          "trackType": "nightingale-sequence-heatmap",
+          "data": [
+            {
+              "adapter": "protvista-alphamissense-heatmap-adapter",
+              "url": [
+                "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
+                "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
+              ]
+            }
+          ],
+          "tooltip": "AlphaMissense pathogenicity"
         }
       ]
     },
     {
       "name": "STRUCTURAL",
       "label": "Structural features",
-      "trackType": "protvista-track",
+      "trackType": "nightingale-track",
       "tracks": [
         {
           "name": "helix",
           "label": "Helix",
           "filter": "HELIX",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -726,7 +753,7 @@
           "name": "strand",
           "label": "Beta strand",
           "filter": "STRAND",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -739,7 +766,7 @@
           "name": "turn",
           "label": "Turn",
           "filter": "TURN",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
@@ -752,7 +779,7 @@
           "name": "coiled",
           "label": "Coiled coil",
           "filter": "COILED",
-          "trackType": "protvista-track",
+          "trackType": "nightingale-track",
           "data": [
             {
               "adapter": "protvista-feature-adapter",
