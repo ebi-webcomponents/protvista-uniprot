@@ -1,32 +1,37 @@
 import { LitElement, html, svg } from 'lit-element';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
-// components
-import ProtvistaNavigation from 'protvista-navigation';
-import ProtvistaTooltip from 'protvista-tooltip';
-import ProtvistaTrackConfig from 'protvista-track';
-import ProtvistaColouredSequenceConfig from 'protvista-coloured-sequence';
-import ProtvistaInterproTrack from 'protvista-interpro-track';
-import ProtvistaSequence from 'protvista-sequence';
-import ProtvistaVariation from 'protvista-variation';
-import ProtvistaVariationGraph from 'protvista-variation-graph';
-import ProtvistaFilter from 'protvista-filter';
-import ProtvistaManager from 'protvista-manager';
+
+// Nightingale
+import NightingaleManager from '@nightingale-elements/nightingale-manager';
+import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';
+import NightingaleSequence from '@nightingale-elements/nightingale-sequence';
+import NightingaleColoredSequence from '@nightingale-elements/nightingale-colored-sequence';
+import NightingaleTrack from '@nightingale-elements/nightingale-track';
+import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro-track';
+import NightingaleVariation from '@nightingale-elements/nightingale-variation';
+import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegraph-track';
+import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
+import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 
 import { load } from 'data-loader';
 // adapters
 import { transformData as _transformDataFeatureAdapter } from 'protvista-feature-adapter';
 import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
 import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
-import { transformData as _transformDataVariationAdapter } from 'protvista-variation-adapter';
+import {
+  transformData as _transformDataVariationAdapter,
+  TransformedVariant,
+} from 'protvista-variation-adapter';
+import { transformData as _transformDataVariationGraphAdapter } from './protvista-variation-graph-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
 import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
 import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
 import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './protvista-alphamissense-pathogenicity';
+import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './protvista-alphamissense-heatmap';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
-import _DownloadPanel from './download-panel';
 import { loadComponent } from './loadComponents';
 import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
 import { NightingaleEvent } from './types/nightingale-components';
@@ -39,6 +44,8 @@ export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
 export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
 export const transformDataStructureAdapter = _transformDataStructureAdapter;
 export const transformDataVariationAdapter = _transformDataVariationAdapter;
+export const transformDataVariationGraphAdapter =
+  _transformDataVariationGraphAdapter;
 export const transformDataInterproAdapter = _transformDataInterproAdapter;
 export const transformDataProteomicsPTMApdapter =
   _transformDataProteomicsPTMApdapter;
@@ -48,10 +55,12 @@ export const transformDataAlphaFoldConfidenceAdapter =
 export const transformDataAlphaMissensePathogenicityAdapter =
   _transformDataAlphaMissensePathogenicityAdapter;
 
+export const transformDataAlphaMissenseHeatmapAdapter =
+  _transformDataAlphaMissenseHeatmapAdapter;
+
 export const filterConfig = _filterConfig;
 export const colorConfig = _colorConfig;
 export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
-export const DownloadPanel = _DownloadPanel;
 
 const adapters = {
   'protvista-feature-adapter': transformDataFeatureAdapter,
@@ -59,19 +68,23 @@ const adapters = {
   'protvista-proteomics-adapter': transformDataProteomicsAdapter,
   'protvista-structure-adapter': transformDataStructureAdapter,
   'protvista-variation-adapter': transformDataVariationAdapter,
+  'protvista-variation-graph-adapter': transformDataVariationGraphAdapter,
   'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
   'protvista-alphafold-confidence-adapter':
     transformDataAlphaFoldConfidenceAdapter,
   'protvista-alphamissense-pathogenicity-adapter':
     transformDataAlphaMissensePathogenicityAdapter,
+  'protvista-alphamissense-heatmap-adapter':
+    transformDataAlphaMissenseHeatmapAdapter,
 };
 
 type TrackType =
-  | 'protvista-track'
-  | 'protvista-variation'
-  | 'protvista-variation-graph'
-  | 'protvista-interpro-track'
-  | 'protvista-coloured-sequence';
+  | 'nightingale-track'
+  | 'nightingale-interpro-track'
+  | 'nightingale-colored-sequence'
+  | 'nightingale-variation'
+  | 'nightingale-linegraph-track'
+  | 'nightingale-sequence-heatmap';
 
 type ProtvistaTrackConfig = {
   name: string;
@@ -86,13 +99,17 @@ type ProtvistaTrackConfig = {
       | 'protvista-structure-adapter'
       | 'protvista-proteomics-adapter'
       | 'protvista-variation-adapter'
-      | 'protvista-interpro-adapter';
+      | 'protvista-variation-graph-adapter'
+      | 'protvista-interpro-adapter'
+      | 'protvista-alphafold-confidence-adapter'
+      | 'protvista-alphamissense-pathogenicity-adapter'
+      | 'protvista-alphamissense-heatmap-adapter';
   }[];
   tooltip: string;
   color?: string;
   shape?: string; //TODO: eventually replace with list
   scale?: string;
-  filterComponent?: 'protvista-filter';
+  filterComponent?: 'nightingale-filter';
   'color-range'?: string;
 };
 
@@ -119,7 +136,6 @@ type ProtvistaConfig = {
 
 class ProtvistaUniprot extends LitElement {
   private openCategories: string[];
-  private notooltip: boolean;
   private nostructure: boolean;
   private hasData: boolean;
   private loading: boolean;
@@ -129,19 +145,23 @@ class ProtvistaUniprot extends LitElement {
   private suspend?: boolean;
   private accession?: string;
   private sequence?: string;
+  private transformedVariants?: {
+    sequence: string;
+    variants: TransformedVariant[];
+  };
   private config?: ProtvistaConfig;
 
   constructor() {
     super();
     this.openCategories = [];
-    this.notooltip = false;
     this.nostructure = false;
     this.hasData = false;
     this.loading = true;
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
-    this.addStyles();
+    (this.transformedVariants = { sequence: '', variants: [] }),
+      this.addStyles();
   }
 
   static get properties() {
@@ -167,20 +187,17 @@ class ProtvistaUniprot extends LitElement {
   }
 
   registerWebComponents() {
-    loadComponent('protvista-navigation', ProtvistaNavigation);
-    loadComponent('protvista-tooltip', ProtvistaTooltip);
-    loadComponent('protvista-track', ProtvistaTrackConfig);
-    loadComponent(
-      'protvista-coloured-sequence',
-      ProtvistaColouredSequenceConfig
-    );
-    loadComponent('protvista-interpro-track', ProtvistaInterproTrack);
-    loadComponent('protvista-sequence', ProtvistaSequence);
-    loadComponent('protvista-variation', ProtvistaVariation);
-    loadComponent('protvista-variation-graph', ProtvistaVariationGraph);
-    loadComponent('protvista-filter', ProtvistaFilter);
-    loadComponent('protvista-manager', ProtvistaManager);
+    loadComponent('nightingale-navigation', NightingaleNavigation);
+    loadComponent('nightingale-track', NightingaleTrack);
+    loadComponent('nightingale-colored-sequence', NightingaleColoredSequence);
+    loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
+    loadComponent('nightingale-sequence', NightingaleSequence);
+    loadComponent('nightingale-variation', NightingaleVariation);
+    loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
+    loadComponent('nightingale-filter', NightingaleFilter);
+    loadComponent('nightingale-manager', NightingaleManager);
     loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
+    loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
   }
 
   async _loadData() {
@@ -269,12 +286,16 @@ class ProtvistaUniprot extends LitElement {
             // 3. Assign track data
             this.data[`${categoryName}-${trackName}`] = filteredData;
 
+            if (trackName === 'variation') {
+              this.transformedVariants = filteredData;
+            }
             return filteredData;
           })
         );
+
         this.data[categoryName] =
-          trackType === 'protvista-variation-graph' ||
-          trackType === 'protvista-coloured-sequence'
+          trackType === 'nightingale-linegraph-track' ||
+          trackType === 'nightingale-colored-sequence'
             ? categoryData[0]
             : categoryData.flat();
       }
@@ -286,9 +307,9 @@ class ProtvistaUniprot extends LitElement {
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element: ProtvistaTrack | null = document.getElementById(
+      const element: NightingaleTrack | null = document.getElementById(
         `track-${id}`
-      );
+      ) as NightingaleTrack;
       // set data if it hasn't changed
       if (element && element.data !== data) {
         element.data = data;
@@ -314,11 +335,35 @@ class ProtvistaUniprot extends LitElement {
           categoryElt.style.display = 'flex';
         }
         for (const track of currentCategory.tracks) {
-          const elementTrack: ProtvistaTrack | null = document.getElementById(
+          const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
-          );
+          ) as NightingaleTrack | null;
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
+          }
+        }
+      }
+
+      if (
+        currentCategory?.name === 'ALPHAMISSENSE_PATHOGENICITY' &&
+        currentCategory.tracks
+      ) {
+        for (const track of currentCategory.tracks) {
+          if (track.trackType === 'nightingale-sequence-heatmap') {
+            const heatmapComponent = this.querySelector<
+              typeof NightingaleSequenceHeatmap
+            >('nightingale-sequence-heatmap');
+            if (heatmapComponent) {
+              const heatmapData = this.data[`${id}-${track.name}`];
+              const xDomain = Array.from(
+                { length: this.sequence.length },
+                (_, i) => i + 1
+              );
+              const yDomain = [
+                ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
+              ];
+              heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
+            }
           }
         }
       }
@@ -329,15 +374,16 @@ class ProtvistaUniprot extends LitElement {
     super.updated(changedProperties);
 
     const filterComponent =
-      this.querySelector<ProtvistaFilter>('protvista-filter');
+      this.querySelector<NightingaleFilter>('nightingale-filter');
     if (filterComponent && filterComponent.filters !== filterConfig) {
       filterComponent.filters = filterConfig;
     }
 
-    const variationComponent = this.querySelector<ProtvistaVariation>(
-      'protvista-variation'
+    const variationComponent = this.querySelector<NightingaleVariation>(
+      'nightingale-variation'
     );
-    if (variationComponent && variationComponent.colorConfig !== colorConfig) {
+    
+    if (variationComponent && variationComponent?.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
 
@@ -376,32 +422,7 @@ class ProtvistaUniprot extends LitElement {
       if (e.detail?.displayend) {
         this.displayCoordinates.end = e.detail.displayend;
       }
-
-      if (!this.notooltip) {
-        if (!e.detail?.eventtype) {
-          this._resetTooltip();
-        } else if (e.detail.eventtype === 'click') {
-          this.updateTooltip(e);
-        }
-      }
     });
-
-    if (!this.notooltip) {
-      this.addEventListener('click', (e) => {
-        const target = e.target as Element;
-        if (
-          !target.closest('.feature') &&
-          !target.closest('protvista-tooltip')
-        ) {
-          const tooltip =
-            this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-          if (tooltip) {
-            tooltip.visible = false;
-          }
-        }
-      });
-      document.addEventListener('click', this._resetTooltip);
-    }
 
     // Note: this doesn't seem to work
     this.addEventListener('load', () => {
@@ -417,21 +438,6 @@ class ProtvistaUniprot extends LitElement {
         this.hasData = true;
       }
     });
-  }
-
-  disconnectedCallback() {
-    if (!this.notooltip) {
-      document.removeEventListener('click', this._resetTooltip);
-    }
-  }
-
-  _resetTooltip(e?: MouseEvent) {
-    if (this && (!e || !(e.target as Element)?.closest('protvista-uniprot'))) {
-      const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-      if (tooltip) {
-        tooltip.visible = false;
-      }
-    }
   }
 
   async loadEntry(accession: string) {
@@ -467,28 +473,25 @@ class ProtvistaUniprot extends LitElement {
       </div>`;
     }
     return html`
-      <protvista-manager
-        attributes="length displaystart displayend highlight activefilters filters"
-        additionalsubscribers="protvista-structure"
+      <nightingale-manager
+        reflected-attributes="length display-start display-end highlight activefilters filters"
       >
         <div class="nav-container">
-          <div class="action-buttons">
-            <download-panel
-              accession="${this.accession}"
-              config="${JSON.stringify(this.config.download)}"
-            />
-          </div>
+          <div class="nav-track-label"></div>
           <div class="track-content">
-            <protvista-navigation
+            <nightingale-navigation
               length="${this.sequence.length}"
-            ></protvista-navigation>
-            <protvista-sequence
+              height="40"
+            ></nightingale-navigation>
+            <nightingale-sequence
               length="${this.sequence.length}"
+              height="40"
               sequence="${this.sequence}"
-              displaystart=${this.displayCoordinates?.start}
-              displayend="${this.displayCoordinates?.end}"
-              no-scroll
-            ></protvista-sequence>
+              display-start=${this.displayCoordinates?.start}
+              display-end="${this.displayCoordinates?.end}"
+              highlight-event="onclick"
+              use-ctrl-to-zoom
+            ></nightingale-sequence>
           </div>
         </div>
         ${this.config.categories.map(
@@ -506,7 +509,7 @@ class ProtvistaUniprot extends LitElement {
                 <div
                   data-id="category_${category.name}"
                   class="aggregate-track-content track-content ${category.trackType ===
-                  'protvista-coloured-sequence'
+                  'nightingale-colored-sequence'
                     ? 'track-content__coloured-sequence'
                     : ''}"
                   .style="${this.openCategories.includes(category.name)
@@ -555,7 +558,7 @@ class ProtvistaUniprot extends LitElement {
                           <div
                             class="track-content"
                             class="track-content ${category.trackType ===
-                            'protvista-coloured-sequence'
+                            'nightingale-colored-sequence'
                               ? 'track-content__coloured-sequence'
                               : ''}"
                             data-id="track_${track.name}"
@@ -613,13 +616,15 @@ class ProtvistaUniprot extends LitElement {
         <div class="nav-container">
           <div class="credits"></div>
           <div class="track-content">
-            <protvista-sequence
+            <nightingale-sequence
               length="${this.sequence.length}"
+              height="40"
               sequence="${this.sequence}"
-              displaystart=${this.displayCoordinates.start}
-              displayend="${this.displayCoordinates.end}"
-              no-scroll
-            ></protvista-sequence>
+              display-start=${this.displayCoordinates.start}
+              display-end="${this.displayCoordinates.end}"
+              highlight-event="onclick"
+              use-ctrl-to-zoom
+            ></nightingale-sequence>
           </div>
         </div>
         ${!this.nostructure
@@ -629,32 +634,8 @@ class ProtvistaUniprot extends LitElement {
               ></protvista-uniprot-structure>
             `
           : ''}
-        <protvista-tooltip />
-      </protvista-manager>
+      </nightingale-manager>
     `;
-  }
-
-  async updateTooltip(e: NightingaleEvent) {
-    const d = e.detail?.feature;
-
-    if (!d.tooltipContent) {
-      return;
-    }
-
-    const tooltip = this.querySelector<ProtvistaTooltip>('protvista-tooltip');
-    if (!tooltip) {
-      return;
-    }
-
-    tooltip.title = `${d.type} ${d.start}-${d.end}`;
-    tooltip.innerHTML = d.tooltipContent;
-    tooltip.visible = true;
-
-    if (e.detail?.coords) {
-      const [x, y] = e.detail.coords;
-      tooltip.x = x;
-      tooltip.y = y;
-    }
   }
 
   handleCategoryClick(e: MouseEvent) {
@@ -671,16 +652,67 @@ class ProtvistaUniprot extends LitElement {
     }
   }
 
+  groupByCategory(filters, category) {
+    return filters?.filter((f) => f.type.name === category);
+  }
+
+  getFilter(filters, filterName) {
+    return filters?.filter((f) => f.name === filterName)?.[0];
+  }
+
+  handleFilterClick(e: CustomEvent) {
+    const target = e.target as Element as NightingaleFilter;
+    const consequenceFilters = this.groupByCategory(
+      target.filters,
+      'consequence'
+    );
+    const provenanceFilters = this.groupByCategory(
+      target.filters,
+      'provenance'
+    );
+
+    const selectedFilters = e.detail?.value;
+
+    if (selectedFilters) {
+      const selectedConsequenceFilters = selectedFilters
+        .map((f) => this.getFilter(consequenceFilters, f))
+        .filter(Boolean);
+      const selectedProvenanceFilters = selectedFilters
+        .map((f) => this.getFilter(provenanceFilters, f))
+        .filter(Boolean);
+
+      const filteredVariants = this.transformedVariants.variants
+        ?.filter((variant) =>
+          selectedConsequenceFilters.some((filter) =>
+            filter.filterPredicate(variant)
+          )
+        )
+        .filter((variant) =>
+          selectedProvenanceFilters.some((filter) =>
+            filter.filterPredicate(variant)
+          )
+        );
+
+      this.data['VARIATION-variation'] = {
+        ...this.data['VARIATION-variation'],
+        variants: filteredVariants,
+      };
+
+      this._loadDataInComponents();
+    }
+  }
+
   getCategoryTypesAsString(tracks: ProtvistaTrackConfig[]) {
     return tracks.map((t) => t.filter).join(',');
   }
 
   getFilterComponent(forId: string) {
     return html`
-      <protvista-filter
+      <nightingale-filter
         style="minWidth: 20%"
         for="track-${forId}"
-      ></protvista-filter>
+        @change="${this.handleFilterClick}"
+      ></nightingale-filter>
     `;
   }
 
@@ -696,68 +728,94 @@ class ProtvistaUniprot extends LitElement {
     // lit-html doesn't allow to have dynamic tag names, hence the switch/case
     // with repeated code
     switch (trackType) {
-      case 'protvista-track':
+      case 'nightingale-track':
         return html`
-          <protvista-track
+          <nightingale-track
             length="${this.sequence?.length}"
+            height="40"
             layout="${layout}"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
+            highlight-event="onclick"
+            use-ctrl-to-zoom
           >
-          </protvista-track>
+          </nightingale-track>
         `;
-      case 'protvista-interpro-track':
+      case 'nightingale-interpro-track':
         return html`
-          <protvista-interpro-track
+          <nightingale-interpro-track
             length="${this.sequence?.length}"
+            height="40"
             color="${color}"
             shape="${shape}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
+            highlight-event="onclick"
+            use-ctrl-to-zoom
           >
-          </protvista-interpro-track>
+          </nightingale-interpro-track>
         `;
-      case 'protvista-variation':
+      case 'nightingale-variation':
         return html`
-          <protvista-variation
+          <nightingale-variation
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            height="500"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
+            highlight-event="onclick"
+            use-ctrl-to-zoom
           >
-          </protvista-variation>
+          </nightingale-variation>
         `;
-      case 'protvista-variation-graph':
+      case 'nightingale-linegraph-track':
         return html`
-          <protvista-variation-graph
+          <nightingale-linegraph-track
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            height="50"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
-            no-scroll
+            show-label-name
+            highlight-on-click
+            use-ctrl-to-zoom
           >
-          </protvista-variation-graph>
+          </nightingale-linegraph-track>
         `;
-      case 'protvista-coloured-sequence':
+      case 'nightingale-colored-sequence':
         return html`
-          <protvista-coloured-sequence
+          <nightingale-colored-sequence
             length="${this.sequence?.length}"
-            displaystart="${this.displayCoordinates?.start}"
-            displayend="${this.displayCoordinates?.end}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
             id="track-${id}"
             scale="${scale}"
-            color_range="${colorRange}"
+            color-range="${colorRange}"
             height="13"
-            no-scroll
+            highlight-event="onclick"
+            use-ctrl-to-zoom
           >
-          </protvista-coloured-sequence>
+          </nightingale-colored-sequence>
+        `;
+
+      case 'nightingale-sequence-heatmap':
+        return html`
+          <nightingale-sequence-heatmap
+            id="track-${id}"
+            heatmap-id="seq-heatmap"
+            length="${this.sequence?.length}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
+            highlight-event="onclick"
+            highlight-color="#EB3BFF66"
+            height="300"
+            use-ctrl-to-zoom
+          >
+          </nightingale-sequence-heatmap>
         `;
       default:
         console.warn('No Matching ProtvistaTrack Found.');

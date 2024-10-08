@@ -1,10 +1,6 @@
 import { css } from 'lit-element';
 
 export default css`
-  protvista-tooltip a {
-    text-decoration: underline;
-    color: #fff;
-  }
   .track-content {
     width: 80vw;
   }
@@ -27,16 +23,11 @@ export default css`
 
   .category-label,
   .track-label,
-  .action-buttons,
+  .nav-track-label,
   .credits {
     width: 20vw;
     padding: 0.5em;
-  }
-
-  .action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+    line-height: normal;
   }
 
   .category-label {
@@ -74,17 +65,21 @@ export default css`
     background-color: #d9faff;
   }
 
-  protvista-track {
+  nightingale-track {
     border-top: 1px solid #d9faff;
   }
 
-  protvista-navigation {
+  nightingale-navigation {
     .handle {
       fill: darkgrey;
       stroke: black;
       stroke-width: 0.5px;
       height: 19px;
     }
+  }
+
+  nightingale-filter {
+    font-size: 0.8rem;
   }
 
   .feature {
