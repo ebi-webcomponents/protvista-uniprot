@@ -1,5 +1,5 @@
-import { LitElement, html, svg, TemplateResult, css } from 'lit-element';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+import { LitElement, html, svg, TemplateResult, css } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { load } from 'data-loader';
 import NightingaleStructure, {
   PredictionData,

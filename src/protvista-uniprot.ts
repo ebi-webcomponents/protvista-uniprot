@@ -1,5 +1,5 @@
-import { LitElement, html, svg } from 'lit-element';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+import { LitElement, html, svg } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
 
 // Nightingale
@@ -382,7 +382,7 @@ class ProtvistaUniprot extends LitElement {
     const variationComponent = this.querySelector<NightingaleVariation>(
       'nightingale-variation'
     );
-    
+
     if (variationComponent && variationComponent?.colorConfig !== colorConfig) {
       variationComponent.colorConfig = colorConfig;
     }
