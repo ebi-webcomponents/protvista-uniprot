@@ -53,6 +53,7 @@ const config = {
       path.join(__dirname, 'node_modules'),
     ],
     open: true,
+    port: 9999,
   },
 };
 
