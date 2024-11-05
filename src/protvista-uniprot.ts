@@ -47,7 +47,7 @@ const adapters = {
   'structure-adapter': structureAdapter,
   'variation-adapter': variationAdapter,
   'variation-graph-adapter': variationGraphAdapter,
-  'protvista-proteomics-ptm-adapter': proteomicsPTMApdapter,
+  'proteomics-ptm-adapter': proteomicsPTMApdapter,
   'alphafold-confidence-adapter': alphaFoldConfidenceAdapter,
   'alphamissense-pathogenicity-adapter': alphaMissensePathogenicityAdapter,
   'alphamissense-heatmap-adapter': alphaMissenseHeatmapAdapter,

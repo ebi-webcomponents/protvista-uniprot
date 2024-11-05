@@ -424,7 +424,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-proteomics-ptm-adapter",
+              "adapter": "proteomics-ptm-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
             }
           ],
