@@ -1,4 +1,4 @@
-import { loadComponent } from './loadComponents';
+import { loadComponent } from './utils';
 
 import ProtvistaUniprot from './protvista-uniprot';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';

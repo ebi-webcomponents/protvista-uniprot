@@ -6,7 +6,7 @@ import NightingaleStructure, {
   StructureData,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
-import { loadComponent } from './loadComponents';
+import { loadComponent } from './utils';
 
 import loaderIcon from './icons/spinner.svg';
 import downloadIcon from './icons/download.svg';

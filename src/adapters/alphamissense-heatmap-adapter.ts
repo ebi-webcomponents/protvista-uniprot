@@ -1,8 +1,8 @@
 import {
   cellSplitter,
   rowSplitter,
-} from './protvista-alphamissense-pathogenicity';
-import { AlphafoldPayload } from './commonTypes';
+} from './alphamissense-pathogenicity-adapter';
+import { AlphafoldPayload } from '../types/common-types';
 
 const parseCSV = (rawText: string): Array<Record<string, string>> => {
   const data = [];
@@ -24,7 +24,9 @@ const parseCSV = (rawText: string): Array<Record<string, string>> => {
 };
 
 // Load and parse
-const loadAndParseAnnotations = async (url: string): Promise<Array<Record<string, string>>> => {
+const loadAndParseAnnotations = async (
+  url: string
+): Promise<Array<Record<string, string>>> => {
   try {
     const payload = await fetch(url);
     const rawCSV = await payload.text();

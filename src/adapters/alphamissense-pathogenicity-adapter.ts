@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from './commonTypes';
+import { AlphafoldPayload } from '../types/common-types';
 
 // from example data
 // benign: [0.0448,0.3397]: x < 0.34

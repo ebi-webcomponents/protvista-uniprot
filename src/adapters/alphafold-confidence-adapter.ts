@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from './commonTypes';
+import { AlphafoldPayload } from '../types/common-types';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;

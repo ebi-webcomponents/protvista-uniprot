@@ -23,17 +23,17 @@ import {
   transformData as _transformDataVariationAdapter,
   TransformedVariant,
 } from 'protvista-variation-adapter';
-import { transformData as _transformDataVariationGraphAdapter } from './protvista-variation-graph-adapter';
+import { transformData as _transformDataVariationGraphAdapter } from './adapters/variation-graph-adapter';
 import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
-import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
-import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
-import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './protvista-alphamissense-pathogenicity';
-import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './protvista-alphamissense-heatmap';
+import { transformData as _transformDataProteomicsPTMApdapter } from './adapters/ptm-exchange-adapter';
+import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './adapters/alphafold-confidence-adapter';
+import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './adapters/alphamissense-pathogenicity-adapter';
+import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './adapters/alphamissense-heatmap-adapter';
 
 import defaultConfig from './config.json';
 import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
-import { loadComponent } from './loadComponents';
-import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
+import { loadComponent } from './utils';
+import _filterConfig, { colorConfig as _colorConfig } from './filter-config';
 import { NightingaleEvent } from './types/nightingale-components';
 
 import loaderIcon from './icons/spinner.svg';
