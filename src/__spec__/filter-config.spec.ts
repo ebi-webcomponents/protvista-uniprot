@@ -1,4 +1,4 @@
-import { colorConfig, getFilteredVariants } from '../src/filterConfig';
+import { colorConfig, getFilteredVariants } from '../filter-config';
 
 const transformedVariantPositions = [
   {
