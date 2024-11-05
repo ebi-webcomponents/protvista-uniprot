@@ -4,7 +4,6 @@ import {
 } from '../structure-adapter';
 
 import entryData from './__mocks__/uniprotkb-entry-data';
-import featuresData from './__mocks__/uniprotkb-features-data';
 
 describe('structure data', () => {
   it('should turn structures into features', () => {
@@ -13,7 +12,8 @@ describe('structure data', () => {
   });
 
   it('should merge Overlapping Intervals', () => {
-    const overlapping = mergeOverlappingIntervals(featuresData);
+    const features = getAllFeatureStructures(entryData);
+    const overlapping = mergeOverlappingIntervals(features);
     expect(overlapping).toMatchSnapshot();
   });
 });
