@@ -25,7 +25,8 @@ export default css`
   .track-label,
   .nav-track-label,
   .credits {
-    width: 20vw;
+    min-width: 20vw;
+    max-width: 20vw;
     padding: 0.5em;
     line-height: normal;
   }
