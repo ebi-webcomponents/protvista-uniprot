@@ -17,7 +17,7 @@ const getSourceType = (xrefs: Xref[], sourceType: SourceType) => {
   return xrefNames;
 };
 
-export const transformData = (
+const transformData = (
   data: ProteinsAPIVariation
 ): {
   sequence: string;
@@ -38,3 +38,5 @@ export const transformData = (
   if (!variants) return null;
   return { sequence, variants };
 };
+
+export default transformData;

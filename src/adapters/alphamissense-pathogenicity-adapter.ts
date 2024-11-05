@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from '../types/common-types';
+import { AlphafoldPayload } from './types/alphafold';
 
 // from example data
 // benign: [0.0448,0.3397]: x < 0.34
@@ -87,7 +87,7 @@ type PartialProtein = {
   };
 };
 
-export const transformData = async (
+const transformData = async (
   data: AlphafoldPayload,
   protein: PartialProtein
 ) => {
@@ -98,3 +98,5 @@ export const transformData = async (
     return variationData;
   }
 };
+
+export default transformData;

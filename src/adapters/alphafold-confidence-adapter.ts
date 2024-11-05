@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from '../types/common-types';
+import { AlphafoldPayload } from './types/alphafold';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;
@@ -30,7 +30,7 @@ type PartialProtein = {
   };
 };
 
-export const transformData = async (
+const transformData = async (
   data: AlphafoldPayload,
   protein: PartialProtein
 ) => {
@@ -41,3 +41,5 @@ export const transformData = async (
     return confidenceData?.confidenceCategory.join('');
   }
 };
+
+export default transformData;

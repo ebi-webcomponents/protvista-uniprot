@@ -2,7 +2,7 @@ import {
   cellSplitter,
   rowSplitter,
 } from './alphamissense-pathogenicity-adapter';
-import { AlphafoldPayload } from '../types/common-types';
+import { AlphafoldPayload } from './types/alphafold';
 
 const parseCSV = (rawText: string): Array<Record<string, string>> => {
   const data = [];
@@ -42,7 +42,7 @@ type PartialProtein = {
   };
 };
 
-export const transformData = async (
+const transformData = async (
   data: AlphafoldPayload,
   protein: PartialProtein
 ) => {
@@ -52,3 +52,5 @@ export const transformData = async (
     return heatmapData;
   }
 };
+
+export default transformData;

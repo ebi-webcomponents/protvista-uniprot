@@ -135,7 +135,7 @@ const convertPtmExchangePtms = (
   };
 };
 
-export const transformData = (data: ProteomicsPtm) => {
+const transformData = (data: ProteomicsPtm) => {
   if (data) {
     const { features } = data;
 
@@ -178,3 +178,5 @@ export const transformData = (data: ProteomicsPtm) => {
   }
   return [];
 };
+
+export default transformData;

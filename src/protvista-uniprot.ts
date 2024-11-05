@@ -14,53 +14,31 @@ import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegra
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
 import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 
-import { load } from 'data-loader';
 // adapters
-import { transformData as _transformDataFeatureAdapter } from 'protvista-feature-adapter';
-import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
-import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
-import {
-  transformData as _transformDataVariationAdapter,
-  TransformedVariant,
-} from 'protvista-variation-adapter';
-import { transformData as _transformDataVariationGraphAdapter } from './adapters/variation-graph-adapter';
-import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
-import { transformData as _transformDataProteomicsPTMApdapter } from './adapters/ptm-exchange-adapter';
-import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './adapters/alphafold-confidence-adapter';
-import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './adapters/alphamissense-pathogenicity-adapter';
-import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './adapters/alphamissense-heatmap-adapter';
+import transformDataFeatureAdapter from './adapters/feature-adapter';
+import transformDataProteomicsAdapter from './adapters/proteomics-adapter';
+import transformDataStructureAdapter from './adapters/structure-adapter';
+import transformDataVariationAdapter from './adapters/variation-adapter';
+import transformDataInterproAdapter from './adapters/interpro-adapter';
+import transformDataVariationGraphAdapter from './adapters/variation-graph-adapter';
+import transformDataProteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
+import transformDataAlphaFoldConfidenceAdapter from './adapters/alphafold-confidence-adapter';
+import transformDataAlphaMissensePathogenicityAdapter from './adapters/alphamissense-pathogenicity-adapter';
+import transformDataAlphaMissenseHeatmapAdapter from './adapters/alphamissense-heatmap-adapter';
 
-import defaultConfig from './config.json';
-import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
+import ProtvistaUniprotStructure from './protvista-uniprot-structure';
+
+import { load } from 'data-loader';
 import { loadComponent } from './utils';
-import _filterConfig, { colorConfig as _colorConfig } from './filter-config';
+
+import filterConfig, { colorConfig } from './filter-config';
+import defaultConfig from './config.json';
+
 import { NightingaleEvent } from './types/nightingale-components';
 
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
-
-export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
-export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
-export const transformDataStructureAdapter = _transformDataStructureAdapter;
-export const transformDataVariationAdapter = _transformDataVariationAdapter;
-export const transformDataVariationGraphAdapter =
-  _transformDataVariationGraphAdapter;
-export const transformDataInterproAdapter = _transformDataInterproAdapter;
-export const transformDataProteomicsPTMApdapter =
-  _transformDataProteomicsPTMApdapter;
-export const transformDataAlphaFoldConfidenceAdapter =
-  _transformDataAlphaFoldConfidenceAdapter;
-
-export const transformDataAlphaMissensePathogenicityAdapter =
-  _transformDataAlphaMissensePathogenicityAdapter;
-
-export const transformDataAlphaMissenseHeatmapAdapter =
-  _transformDataAlphaMissenseHeatmapAdapter;
-
-export const filterConfig = _filterConfig;
-export const colorConfig = _colorConfig;
-export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
 
 const adapters = {
   'protvista-feature-adapter': transformDataFeatureAdapter,
@@ -196,7 +174,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
     loadComponent('nightingale-filter', NightingaleFilter);
     loadComponent('nightingale-manager', NightingaleManager);
-    loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
+    loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
     loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
   }
 
