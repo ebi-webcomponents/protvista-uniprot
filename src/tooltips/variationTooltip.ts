@@ -4,7 +4,7 @@ import {
   PopulationFrequency,
   Variant,
   Prediction,
-} from '@nightingale-elements/nightingale-variation/dist/proteinAPI';
+} from '@nightingale-elements/nightingale-variation';
 import groupBy from 'lodash-es/groupBy';
 
 import { formatXrefs, getEvidenceFromCodes } from './featureTooltip';

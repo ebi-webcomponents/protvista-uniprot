@@ -2,7 +2,7 @@ import { VariationData } from '@nightingale-elements/nightingale-variation/dist/
 import {
   ClinicalSignificance,
   Variant,
-} from '@nightingale-elements/nightingale-variation/dist/proteinAPI';
+} from '@nightingale-elements/nightingale-variation';
 
 const scaleColors = {
   UPDiseaseColor: '#990000',
