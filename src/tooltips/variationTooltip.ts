@@ -1,5 +1,7 @@
-import { formatXrefs, getEvidenceFromCodes } from 'protvista-feature-adapter';
 import groupBy from 'lodash-es/groupBy';
+
+import { formatXrefs, getEvidenceFromCodes } from './featureTooltip';
+
 import {
   Association,
   Description,

@@ -1,4 +1,4 @@
-import { ClinicalSignificance } from 'protvista-variation-adapter/dist/es/variants';
+import { ClinicalSignificance } from 'variation-adapter/dist/es/variants';
 
 const scaleColors = {
   UPDiseaseColor: '#990000',

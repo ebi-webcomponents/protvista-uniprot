@@ -12,7 +12,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -25,7 +25,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -38,7 +38,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -51,7 +51,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -65,7 +65,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -78,7 +78,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -98,7 +98,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -111,7 +111,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -124,7 +124,7 @@
           "label": "Non-adjacent residues",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -137,7 +137,7 @@
           "label": "Non-terminal residue",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -150,7 +150,7 @@
           "label": "Sequence uncertainty",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -163,7 +163,7 @@
           "label": "Non-standard residue",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -183,7 +183,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -196,7 +196,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -209,7 +209,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -229,7 +229,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -241,7 +241,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-interpro-adapter",
+              "adapter": "interpro-adapter",
               "url": "https://www.ebi.ac.uk/interpro/api/entry/all/protein/uniprot/{accession}?type=domain&page_size=100"
             }
           ],
@@ -254,7 +254,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -267,7 +267,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -280,7 +280,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -293,7 +293,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -313,7 +313,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -326,7 +326,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -339,7 +339,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -352,7 +352,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -365,7 +365,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -378,7 +378,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -391,7 +391,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -411,7 +411,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -437,7 +437,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -450,7 +450,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -463,7 +463,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -476,7 +476,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -495,7 +495,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/epitope/{accession}"
             }
           ],
@@ -514,7 +514,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/antigen/{accession}"
             }
           ],
@@ -534,7 +534,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -546,7 +546,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/mutagenesis/{accession}"
             }
           ],
@@ -565,7 +565,7 @@
           "trackType": "nightingale-linegraph-track",
           "data": [
             {
-              "adapter": "protvista-variation-graph-adapter",
+              "adapter": "variation-graph-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
             }
           ],
@@ -577,7 +577,7 @@
           "trackType": "nightingale-variation",
           "data": [
             {
-              "adapter": "protvista-variation-adapter",
+              "adapter": "variation-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/variation/{accession}"
             }
           ],
@@ -589,7 +589,7 @@
       "name": "PROTEOMICS",
       "label": "Proteomics",
       "trackType": "nightingale-track",
-      "adapter": "protvista-proteomics-adapter",
+      "adapter": "proteomics-adapter",
       "urls": [
         "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
         "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
@@ -602,7 +602,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-proteomics-adapter",
+              "adapter": "proteomics-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
             }
           ],
@@ -615,7 +615,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-proteomics-adapter",
+              "adapter": "proteomics-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
             }
           ],
@@ -627,7 +627,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-proteomics-adapter",
+              "adapter": "proteomics-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/hpp/{accession}"
             }
           ],
@@ -639,7 +639,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-proteomics-adapter",
+              "adapter": "proteomics-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
             }
           ],
@@ -659,7 +659,7 @@
           "tooltip": "PDBe 3D structure coverage",
           "data": [
             {
-              "adapter": "protvista-structure-adapter",
+              "adapter": "structure-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
             }
           ]
@@ -680,7 +680,7 @@
           "trackType": "nightingale-colored-sequence",
           "data": [
             {
-              "adapter": "protvista-alphafold-confidence-adapter",
+              "adapter": "alphafold-confidence-adapter",
               "url": [
                 "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
                 "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
@@ -704,7 +704,7 @@
           "trackType": "nightingale-colored-sequence",
           "data": [
             {
-              "adapter": "protvista-alphamissense-pathogenicity-adapter",
+              "adapter": "alphamissense-pathogenicity-adapter",
               "url": [
                 "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
                 "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
@@ -720,7 +720,7 @@
           "trackType": "nightingale-sequence-heatmap",
           "data": [
             {
-              "adapter": "protvista-alphamissense-heatmap-adapter",
+              "adapter": "alphamissense-heatmap-adapter",
               "url": [
                 "https://alphafold.ebi.ac.uk/api/prediction/{accession}",
                 "https://www.ebi.ac.uk/proteins/api/proteins/{accession}"
@@ -743,7 +743,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -756,7 +756,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -769,7 +769,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],
@@ -782,7 +782,7 @@
           "trackType": "nightingale-track",
           "data": [
             {
-              "adapter": "protvista-feature-adapter",
+              "adapter": "feature-adapter",
               "url": "https://www.ebi.ac.uk/proteins/api/features/{accession}"
             }
           ],

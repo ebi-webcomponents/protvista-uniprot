@@ -15,16 +15,16 @@ import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequen
 import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 
 // adapters
-import transformDataFeatureAdapter from './adapters/feature-adapter';
-import transformDataProteomicsAdapter from './adapters/proteomics-adapter';
-import transformDataStructureAdapter from './adapters/structure-adapter';
-import transformDataVariationAdapter from './adapters/variation-adapter';
-import transformDataInterproAdapter from './adapters/interpro-adapter';
-import transformDataVariationGraphAdapter from './adapters/variation-graph-adapter';
-import transformDataProteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
-import transformDataAlphaFoldConfidenceAdapter from './adapters/alphafold-confidence-adapter';
-import transformDataAlphaMissensePathogenicityAdapter from './adapters/alphamissense-pathogenicity-adapter';
-import transformDataAlphaMissenseHeatmapAdapter from './adapters/alphamissense-heatmap-adapter';
+import featureAdapter from './adapters/feature-adapter';
+import proteomicsAdapter from './adapters/proteomics-adapter';
+import structureAdapter from './adapters/structure-adapter';
+import variationAdapter from './adapters/variation-adapter';
+import interproAdapter from './adapters/interpro-adapter';
+import variationGraphAdapter from './adapters/variation-graph-adapter';
+import proteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
+import alphaFoldConfidenceAdapter from './adapters/alphafold-confidence-adapter';
+import alphaMissensePathogenicityAdapter from './adapters/alphamissense-pathogenicity-adapter';
+import alphaMissenseHeatmapAdapter from './adapters/alphamissense-heatmap-adapter';
 
 import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 
@@ -41,19 +41,16 @@ import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
 
 const adapters = {
-  'protvista-feature-adapter': transformDataFeatureAdapter,
-  'protvista-interpro-adapter': transformDataInterproAdapter,
-  'protvista-proteomics-adapter': transformDataProteomicsAdapter,
-  'protvista-structure-adapter': transformDataStructureAdapter,
-  'protvista-variation-adapter': transformDataVariationAdapter,
-  'protvista-variation-graph-adapter': transformDataVariationGraphAdapter,
-  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
-  'protvista-alphafold-confidence-adapter':
-    transformDataAlphaFoldConfidenceAdapter,
-  'protvista-alphamissense-pathogenicity-adapter':
-    transformDataAlphaMissensePathogenicityAdapter,
-  'protvista-alphamissense-heatmap-adapter':
-    transformDataAlphaMissenseHeatmapAdapter,
+  'feature-adapter': featureAdapter,
+  'interpro-adapter': interproAdapter,
+  'proteomics-adapter': proteomicsAdapter,
+  'structure-adapter': structureAdapter,
+  'variation-adapter': variationAdapter,
+  'variation-graph-adapter': variationGraphAdapter,
+  'protvista-proteomics-ptm-adapter': proteomicsPTMApdapter,
+  'alphafold-confidence-adapter': alphaFoldConfidenceAdapter,
+  'alphamissense-pathogenicity-adapter': alphaMissensePathogenicityAdapter,
+  'alphamissense-heatmap-adapter': alphaMissenseHeatmapAdapter,
 };
 
 type TrackType =
@@ -73,15 +70,15 @@ type ProtvistaTrackConfig = {
   data: {
     url: string | string[];
     adapter?:
-      | 'protvista-feature-adapter'
-      | 'protvista-structure-adapter'
-      | 'protvista-proteomics-adapter'
-      | 'protvista-variation-adapter'
-      | 'protvista-variation-graph-adapter'
-      | 'protvista-interpro-adapter'
-      | 'protvista-alphafold-confidence-adapter'
-      | 'protvista-alphamissense-pathogenicity-adapter'
-      | 'protvista-alphamissense-heatmap-adapter';
+      | 'feature-adapter'
+      | 'structure-adapter'
+      | 'proteomics-adapter'
+      | 'variation-adapter'
+      | 'variation-graph-adapter'
+      | 'interpro-adapter'
+      | 'alphafold-confidence-adapter'
+      | 'alphamissense-pathogenicity-adapter'
+      | 'alphamissense-heatmap-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -220,8 +217,7 @@ class ProtvistaUniprot extends LitElement {
 
             if (
               !trackData ||
-              (adapter === 'protvista-variation-adapter' &&
-                trackData[0].length === 0)
+              (adapter === 'variation-adapter' && trackData[0].length === 0)
             ) {
               return;
             }
@@ -231,7 +227,7 @@ class ProtvistaUniprot extends LitElement {
               ? await adapters[adapter](...trackData)
               : trackData;
 
-            if (adapter === 'protvista-interpro-adapter') {
+            if (adapter === 'interpro-adapter') {
               const representativeDomains = [];
               transformedData?.forEach((feature) => {
                 feature.locations?.forEach((location) => {
@@ -300,7 +296,7 @@ class ProtvistaUniprot extends LitElement {
         currentCategory.tracks &&
         data &&
         // Check there's data and special case for variants
-        // NOTE: should refactor protvista-variation-adapter
+        // NOTE: should refactor variation-adapter
         // to return a list of variants and set the sequence
         // on protvista-variation separately
         (data.length > 0 || data.variants?.length)
