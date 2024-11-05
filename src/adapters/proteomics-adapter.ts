@@ -17,7 +17,7 @@ const transformData = (data) => {
       Once they are available in the data, there is no need for the below merging */
 
     // To merge PTM data present in same residue in a same length peptide, have a map [key: start-end-phospho site 1-... phosphosite n, value: corresponding feature elements]
-    const ptmMap = {};
+    const ptmMap: Record<string, any> = {};
     data.features.forEach((feature) => {
       let ft = `${feature.begin}-${feature.end}`;
       if (feature.ptms) {

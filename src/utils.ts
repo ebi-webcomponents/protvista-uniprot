@@ -1,15 +1,8 @@
-export const renameProperties = (features) => {
-  return features.map((ft) => {
-    const obj = {};
-    if (ft.begin) {
-      obj.start = ft.begin;
-    }
-    return {
-      ...ft,
-      ...obj,
-    };
-  });
-};
+export const renameProperties = (features) =>
+  features.map((ft) => ({
+    ...ft,
+    start: ft.begin || undefined,
+  }));
 
 export const loadComponent = function (
   name: string,

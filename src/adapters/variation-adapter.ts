@@ -32,7 +32,7 @@ const transformData = (
     variant: variant.alternativeSequence
       ? variant.alternativeSequence
       : AminoAcid.Empty,
-    start: variant.begin,
+    start: +variant.begin,
     xrefNames: getSourceType(variant.xrefs, variant.sourceType),
     hasPredictions: variant.predictions && variant.predictions.length > 0,
     tooltipContent: formatTooltip(variant),

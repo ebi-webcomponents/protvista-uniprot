@@ -1,8 +1,5 @@
-import { VariationData } from '@nightingale-elements/nightingale-variation/dist/nightingale-variation';
-import {
-  ClinicalSignificance,
-  Variant,
-} from '@nightingale-elements/nightingale-variation';
+import { VariationDatum } from '@nightingale-elements/nightingale-variation';
+import { ClinicalSignificance } from '@nightingale-elements/nightingale-variation';
 
 const scaleColors = {
   UPDiseaseColor: '#990000',
@@ -23,9 +20,15 @@ const significanceMatches = (
     return values.some((rx) => rx.test(type));
   });
 
+type VariantsForFilter = [
+  {
+    variants: VariationDatum[];
+  }
+];
+
 export const getFilteredVariants = (
-  variants: VariationData,
-  callbackFilter: (variantPos: Variant) => void
+  variants: VariantsForFilter,
+  callbackFilter: (variantPos: VariationDatum) => void
 ) =>
   variants.map((variant) => {
     const matchingVariants = variant.variants.filter((variantPos) =>
@@ -78,7 +81,7 @@ const filterConfig = [
       color: scaleColors.UPDiseaseColor,
     },
     filterPredicate: filterPredicates['disease'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['disease']),
   },
   {
@@ -92,7 +95,7 @@ const filterConfig = [
       color: scaleColors.predictedColor,
     },
     filterPredicate: filterPredicates['predicted'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['predicted']),
   },
   {
@@ -106,7 +109,7 @@ const filterConfig = [
       color: scaleColors.UPNonDiseaseColor,
     },
     filterPredicate: filterPredicates['nonDisease'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['nonDisease']),
   },
   {
@@ -120,7 +123,7 @@ const filterConfig = [
       color: scaleColors.othersColor,
     },
     filterPredicate: filterPredicates['uncertain'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['uncertain']),
   },
   {
@@ -134,7 +137,7 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['UniProt'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['UniProt']),
   },
   {
@@ -148,7 +151,7 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['ClinVar'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['ClinVar']),
   },
   {
@@ -162,16 +165,16 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['LSS'],
-    filterData: (variants: VariationData) =>
+    filterData: (variants: VariantsForFilter) =>
       getFilteredVariants(variants, filterPredicates['LSS']),
   },
 ];
 
 const countVariantsForFilter = (
   filterName: 'disease' | 'nonDisease' | 'uncertain' | 'predicted',
-  variant: ProtvistaVariant
+  variant: VariationDatum
 ) => {
-  const variantWrapper = [{ variants: [variant] }];
+  const variantWrapper: VariantsForFilter = [{ variants: [variant] }];
   const filter = filterConfig.find((filter) => filter.name === filterName);
   if (filter) {
     return filter.filterData(variantWrapper)[0].variants.length > 0;

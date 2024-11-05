@@ -18,7 +18,9 @@ import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 import featureAdapter from './adapters/feature-adapter';
 import proteomicsAdapter from './adapters/proteomics-adapter';
 import structureAdapter from './adapters/structure-adapter';
-import variationAdapter from './adapters/variation-adapter';
+import variationAdapter, {
+  TransformedVariant,
+} from './adapters/variation-adapter';
 import interproAdapter from './adapters/interpro-adapter';
 import variationGraphAdapter from './adapters/variation-graph-adapter';
 import proteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
@@ -224,7 +226,7 @@ class ProtvistaUniprot extends LitElement {
 
             // 1. Convert data
             let transformedData = adapter
-              ? await adapters[adapter](...trackData)
+              ? await adapters[adapter].apply(null, trackData)
               : trackData;
 
             if (adapter === 'interpro-adapter') {
