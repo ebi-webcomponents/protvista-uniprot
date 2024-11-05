@@ -573,7 +573,7 @@
         },
         {
           "name": "variation",
-          "filterComponent": "protvista-filter",
+          "filterComponent": "nightingale-filter",
           "trackType": "nightingale-variation",
           "data": [
             {

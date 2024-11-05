@@ -2,10 +2,14 @@ import {
   ProteinsAPIVariation,
   VariationDatum,
 } from '@nightingale-elements/nightingale-variation';
+import {
+  AminoAcid,
+  SourceType,
+  Variant,
+  Xref,
+} from '@nightingale-elements/nightingale-variation/dist/proteinAPI';
 
 import formatTooltip from '../tooltips/variationTooltip';
-
-import { Xref, SourceType, Variant, AminoAcid } from './types/variants';
 
 export type TransformedVariant = VariationDatum & Variant;
 

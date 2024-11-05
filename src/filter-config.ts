@@ -1,4 +1,8 @@
-import { ClinicalSignificance } from 'variation-adapter/dist/es/variants';
+import { VariationData } from '@nightingale-elements/nightingale-variation/dist/nightingale-variation';
+import {
+  ClinicalSignificance,
+  Variant,
+} from '@nightingale-elements/nightingale-variation/dist/proteinAPI';
 
 const scaleColors = {
   UPDiseaseColor: '#990000',
@@ -20,8 +24,8 @@ const significanceMatches = (
   });
 
 export const getFilteredVariants = (
-  variants: ProtvistaVariationData,
-  callbackFilter: (variantPos: ProtvistaVariant) => void
+  variants: VariationData,
+  callbackFilter: (variantPos: Variant) => void
 ) =>
   variants.map((variant) => {
     const matchingVariants = variant.variants.filter((variantPos) =>
@@ -74,7 +78,7 @@ const filterConfig = [
       color: scaleColors.UPDiseaseColor,
     },
     filterPredicate: filterPredicates['disease'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['disease']),
   },
   {
@@ -88,7 +92,7 @@ const filterConfig = [
       color: scaleColors.predictedColor,
     },
     filterPredicate: filterPredicates['predicted'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['predicted']),
   },
   {
@@ -102,7 +106,7 @@ const filterConfig = [
       color: scaleColors.UPNonDiseaseColor,
     },
     filterPredicate: filterPredicates['nonDisease'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['nonDisease']),
   },
   {
@@ -116,7 +120,7 @@ const filterConfig = [
       color: scaleColors.othersColor,
     },
     filterPredicate: filterPredicates['uncertain'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['uncertain']),
   },
   {
@@ -130,7 +134,7 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['UniProt'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['UniProt']),
   },
   {
@@ -144,7 +148,7 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['ClinVar'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['ClinVar']),
   },
   {
@@ -158,7 +162,7 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['LSS'],
-    filterData: (variants: ProtvistaVariationData) =>
+    filterData: (variants: VariationData) =>
       getFilteredVariants(variants, filterPredicates['LSS']),
   },
 ];

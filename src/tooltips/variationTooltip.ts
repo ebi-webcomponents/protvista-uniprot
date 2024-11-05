@@ -1,14 +1,13 @@
-import groupBy from 'lodash-es/groupBy';
-
-import { formatXrefs, getEvidenceFromCodes } from './featureTooltip';
-
 import {
   Association,
   Description,
   PopulationFrequency,
-  Prediction,
   Variant,
-} from '../adapters/types/variants';
+  Prediction,
+} from '@nightingale-elements/nightingale-variation/dist/proteinAPI';
+import groupBy from 'lodash-es/groupBy';
+
+import { formatXrefs, getEvidenceFromCodes } from './featureTooltip';
 
 const getDiseaseAssociations = (associations: Association[]): string =>
   associations
