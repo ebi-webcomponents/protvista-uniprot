@@ -3,9 +3,9 @@ import {
   VariationDatum,
 } from '@nightingale-elements/nightingale-variation';
 
-import formatTooltip from './tooltip';
+import formatTooltip from '../tooltips/variationTooltip';
 
-import { Xref, SourceType, Variant, AminoAcid } from './types';
+import { Xref, SourceType, Variant, AminoAcid } from './types/variants';
 
 export type TransformedVariant = VariationDatum & Variant;
 

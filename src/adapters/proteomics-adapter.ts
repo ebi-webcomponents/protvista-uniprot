@@ -1,5 +1,5 @@
-import { renameProperties } from '../../utils';
-import { formatTooltip } from '../feature-adapter/tooltip';
+import { renameProperties } from '../utils';
+import { formatTooltip } from '../tooltips/featureTooltip';
 
 const proteomicsTrackProperties = (feature) => {
   return {

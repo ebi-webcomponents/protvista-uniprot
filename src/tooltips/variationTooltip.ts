@@ -6,7 +6,7 @@ import {
   PopulationFrequency,
   Prediction,
   Variant,
-} from './types';
+} from '../adapters/types/variants';
 
 const getDiseaseAssociations = (associations: Association[]): string =>
   associations

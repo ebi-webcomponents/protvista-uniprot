@@ -1,4 +1,4 @@
-const myTestData = {
+const data = {
   accession: 'P01234',
   id: 'A4_HUMAN_mocked',
   dbReferences: [
@@ -73,6 +73,4 @@ const myTestData = {
   },
 };
 
-export function getEntryTestData() {
-  return myTestData;
-}
+export default data;

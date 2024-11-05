@@ -1,4 +1,4 @@
-import ecoMap from './config';
+import ecoMap from '../adapters/config/evidence';
 
 const formatSource = (source) => {
   if (source.name?.toLowerCase() === 'PubMed'.toLowerCase()) {
