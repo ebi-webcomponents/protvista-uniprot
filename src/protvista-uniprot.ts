@@ -101,7 +101,7 @@ type ProtvistaCategory = {
   'color-range'?: string;
 };
 
-export type DownloadConfig = {
+type DownloadConfig = {
   type: string;
   url: string;
 }[];

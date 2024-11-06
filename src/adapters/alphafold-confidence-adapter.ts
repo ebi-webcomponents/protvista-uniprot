@@ -6,7 +6,7 @@ type AlphafoldConfidencePayload = {
   confidenceCategory: Array<string>;
 };
 
-export const getConfidenceURLFromPayload = (data: AlphafoldPayload) => {
+const getConfidenceURLFromPayload = (data: AlphafoldPayload) => {
   const cifURL = data?.[0]?.cifUrl;
   return cifURL?.length
     ? cifURL.replace('-model', '-confidence').replace('.cif', '.json')
