@@ -25,17 +25,25 @@
   "author": "Xavier Watkins &lt;xwatkins@ebi.ac.uk&gt;",
   "license": "MIT",
   "dependencies": {
-    "@nightingale-elements/nightingale-colored-sequence": "5.2.0",
-    "@nightingale-elements/nightingale-filter": "5.2.0",
-    "@nightingale-elements/nightingale-interpro-track": "5.2.0",
-    "@nightingale-elements/nightingale-linegraph-track": "5.2.0",
-    "@nightingale-elements/nightingale-manager": "5.2.0",
-    "@nightingale-elements/nightingale-navigation": "5.2.0",
-    "@nightingale-elements/nightingale-sequence": "5.2.0",
-    "@nightingale-elements/nightingale-sequence-heatmap": "5.1.0",
-    "@nightingale-elements/nightingale-structure": "5.2.0",
-    "@nightingale-elements/nightingale-track": "5.2.0",
-    "@nightingale-elements/nightingale-variation": "5.2.0",
+    "@nightingale-elements/nightingale-colored-sequence": "file:.yalc/@nightingale-elements/nightingale-colored-sequence",
+    "@nightingale-elements/nightingale-filter": "file:.yalc/@nightingale-elements/nightingale-filter",
+    "@nightingale-elements/nightingale-heatmap": "file:.yalc/@nightingale-elements/nightingale-heatmap",
+    "@nightingale-elements/nightingale-interpro-track": "file:.yalc/@nightingale-elements/nightingale-interpro-track",
+    "@nightingale-elements/nightingale-linegraph-track": "file:.yalc/@nightingale-elements/nightingale-linegraph-track",
+    "@nightingale-elements/nightingale-links": "file:.yalc/@nightingale-elements/nightingale-links",
+    "@nightingale-elements/nightingale-manager": "file:.yalc/@nightingale-elements/nightingale-manager",
+    "@nightingale-elements/nightingale-msa": "file:.yalc/@nightingale-elements/nightingale-msa",
+    "@nightingale-elements/nightingale-navigation": "file:.yalc/@nightingale-elements/nightingale-navigation",
+    "@nightingale-elements/nightingale-new-core": "file:.yalc/@nightingale-elements/nightingale-new-core",
+    "@nightingale-elements/nightingale-overlay": "file:.yalc/@nightingale-elements/nightingale-overlay",
+    "@nightingale-elements/nightingale-saver": "file:.yalc/@nightingale-elements/nightingale-saver",
+    "@nightingale-elements/nightingale-sequence": "file:.yalc/@nightingale-elements/nightingale-sequence",
+    "@nightingale-elements/nightingale-sequence-heatmap": "file:.yalc/@nightingale-elements/nightingale-sequence-heatmap",
+    "@nightingale-elements/nightingale-structure": "file:.yalc/@nightingale-elements/nightingale-structure",
+    "@nightingale-elements/nightingale-sunburst": "file:.yalc/@nightingale-elements/nightingale-sunburst",
+    "@nightingale-elements/nightingale-textarea-sequence": "file:.yalc/@nightingale-elements/nightingale-textarea-sequence",
+    "@nightingale-elements/nightingale-track": "file:.yalc/@nightingale-elements/nightingale-track",
+    "@nightingale-elements/nightingale-variation": "file:.yalc/@nightingale-elements/nightingale-variation",
     "color-hash": "^2.0.2",
     "core-js": "^3.13.0",
     "data-loader": "^2.9.1",
@@ -52,6 +60,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime-corejs3": "^7.14.0",
     "@types/file-saver": "^2.0.2",
+    "@types/jest": "^29.5.14",
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "4.26.1",
     "@typescript-eslint/parser": "4.26.1",
@@ -74,6 +83,13 @@
   },
   "peerDependencies": {
     "d3": "5.X"
+  },
+  "jest": {
+    "testRegex": "(/__tests__/.*|(\\.|/))spec\\.ts$",
+    "testPathIgnorePatterns": [
+      "/__mocks__/",
+      "<rootDir>/dist/"
+    ]
   },
   "gitHead": "5a756316482fa31d085602d46438861fb45e5178"
 }
