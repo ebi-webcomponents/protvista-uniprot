@@ -12,7 +12,9 @@ const getStructuresHTML = (structureList) => {
           </ul>`;
 };
 
-export const formatTooltip = (feature) => {
+const formatTooltip = (feature) => {
   const structuresHTML = getStructuresHTML(feature.structures);
   return `${structuresHTML ? `<h5>Structures</h5>${structuresHTML}` : ``}`;
 };
+
+export default formatTooltip;

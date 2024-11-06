@@ -103,7 +103,7 @@ const findModifiedResidueName = (feature, ptm) => {
   return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
 };
 
-export const formatTooltip = (feature) => {
+const formatTooltip = (feature) => {
   const evidenceHTML =
     feature.type === 'PROTEOMICS_PTM'
       ? getPTMEvidence(feature.ptms)
@@ -219,3 +219,5 @@ export const formatTooltip = (feature) => {
     return '';
   }
 };
+
+export default formatTooltip;

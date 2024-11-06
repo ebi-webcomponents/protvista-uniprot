@@ -5,6 +5,10 @@ import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 
 import filterConfig, { colorConfig } from './filter-config';
 
+import getFeatureTooltip from './tooltips/featureTooltip';
+import getStructureTooltip from './tooltips/structureTooltip';
+import getVariationTooltip from './tooltips/variationTooltip';
+
 loadComponent('protvista-uniprot', ProtvistaUniprot);
 loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
 
@@ -13,4 +17,7 @@ export {
   ProtvistaUniprotStructure,
   filterConfig,
   colorConfig,
+  getFeatureTooltip,
+  getStructureTooltip,
+  getVariationTooltip,
 };
