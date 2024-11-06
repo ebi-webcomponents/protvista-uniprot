@@ -38,8 +38,6 @@ import { loadComponent } from './utils';
 import filterConfig, { colorConfig } from './filter-config';
 import defaultConfig from './config.json';
 
-import { NightingaleEvent } from './types/nightingale-components';
-
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
@@ -111,6 +109,16 @@ type DownloadConfig = {
 type ProtvistaConfig = {
   categories: ProtvistaCategory[];
   download: DownloadConfig;
+};
+
+type NightingaleEvent = Event & {
+  detail?: {
+    displaystart?: number;
+    displayend?: number;
+    eventType?: 'click' | 'mouseover' | 'mouseout' | 'reset';
+    feature?: any;
+    coords?: [number, number];
+  };
 };
 
 @customElement('protvista-uniprot')
@@ -329,9 +337,10 @@ class ProtvistaUniprot extends LitElement {
       ) {
         for (const track of currentCategory.tracks) {
           if (track.trackType === 'nightingale-sequence-heatmap') {
-            const heatmapComponent = this.querySelector<
-              typeof NightingaleSequenceHeatmap
-            >('nightingale-sequence-heatmap');
+            const heatmapComponent =
+              this.querySelector<NightingaleSequenceHeatmap>(
+                'nightingale-sequence-heatmap'
+              );
             if (heatmapComponent) {
               const heatmapData = this.data[`${id}-${track.name}`];
               const xDomain = Array.from(
@@ -340,7 +349,7 @@ class ProtvistaUniprot extends LitElement {
               );
               const yDomain = [
                 ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
-              ];
+              ] as string[];
               heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
             }
           }
