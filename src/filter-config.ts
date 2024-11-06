@@ -20,11 +20,9 @@ const significanceMatches = (
     return values.some((rx) => rx.test(type));
   });
 
-type VariantsForFilter = [
-  {
-    variants: VariationDatum[];
-  }
-];
+export type VariantsForFilter = {
+  variants: VariationDatum[];
+}[];
 
 export const getFilteredVariants = (
   variants: VariantsForFilter,
@@ -95,8 +93,12 @@ const filterConfig = [
       color: scaleColors.predictedColor,
     },
     filterPredicate: filterPredicates['predicted'],
-    filterData: (variants: VariantsForFilter) =>
-      getFilteredVariants(variants, filterPredicates['predicted']),
+    filterData: (variants: VariantsForFilter) => {
+      const foo = getFilteredVariants(variants, filterPredicates['predicted']);
+      console.log(variants);
+      console.log(foo);
+      return foo;
+    },
   },
   {
     name: 'nonDisease',
@@ -137,8 +139,10 @@ const filterConfig = [
       color: '#9f9f9f',
     },
     filterPredicate: filterPredicates['UniProt'],
-    filterData: (variants: VariantsForFilter) =>
-      getFilteredVariants(variants, filterPredicates['UniProt']),
+    filterData: (variants: VariantsForFilter) => {
+      console.log(variants);
+      return getFilteredVariants(variants, filterPredicates['UniProt']);
+    },
   },
   {
     name: 'ClinVar',
