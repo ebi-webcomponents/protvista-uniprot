@@ -281,6 +281,15 @@
     "@babel/helper-plugin-utils" "^7.25.9"
     "@babel/traverse" "^7.25.9"
 
+"@babel/plugin-proposal-decorators@^7.25.9":
+  version "7.25.9"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.25.9.tgz#8680707f943d1a3da2cd66b948179920f097e254"
+  integrity sha512-smkNLL/O1ezy9Nhy4CNosc4Va+1wo5w4gzSZeLe6y6dM4mmHfYOCPolXQPHQxonZCF+ZyebxN9vqOolkYrSn5g==
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "^7.25.9"
+    "@babel/helper-plugin-utils" "^7.25.9"
+    "@babel/plugin-syntax-decorators" "^7.25.9"
+
 "@babel/plugin-proposal-private-property-in-object@7.21.0-placeholder-for-preset-env.2":
   version "7.21.0-placeholder-for-preset-env.2"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.0-placeholder-for-preset-env.2.tgz#7844f9289546efa9febac2de4cfe358a050bd703"
@@ -313,6 +322,13 @@
   integrity sha512-b+YyPmr6ldyNnM6sqYeMWE+bgJcJpO6yS4QD7ymxgH34GBPNDM/THBh8iunyvKIZztiwLH4CJZ0RxTk9emgpjw==
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
+
+"@babel/plugin-syntax-decorators@^7.25.9":
+  version "7.25.9"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.25.9.tgz#986b4ca8b7b5df3f67cee889cedeffc2e2bf14b3"
+  integrity sha512-ryzI0McXUPJnRCvMo4lumIKZUzhYUO/ScI+Mz4YVaTLt04DHNSjEUjKVvbzQjZFLuod/cYEc07mJWhzl6v4DPg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.25.9"
 
 "@babel/plugin-syntax-import-assertions@^7.26.0":
   version "7.26.0"
@@ -1343,53 +1359,68 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@nightingale-elements/nightingale-colored-sequence@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-colored-sequence/-/nightingale-colored-sequence-5.2.0.tgz#585bf78f4ad7bea9aac68da103c069937c16726a"
-  integrity sha512-PXoDbLW9W5XKe74GhrYrGJLpkxmNEhjd99lXWFKzd6v90Dnwffpuv7qYgKOEjlSkMXf/vGg0LUmC/FjBrHlbxg==
+"@nightingale-elements/nightingale-colored-sequence@file:.yalc/@nightingale-elements/nightingale-colored-sequence":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     "@nightingale-elements/nightingale-sequence" "^5.2.0"
     d3 "7.9.0"
 
-"@nightingale-elements/nightingale-filter@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-filter/-/nightingale-filter-5.2.0.tgz#b243a441feb8cc0ffee18962f090aae90889ee21"
-  integrity sha512-4KLE5kl0lO2o/oIbTRxid1teqGXmgpjT2BMOSG8JZruukJ3jc6I1amf5lriiCDOxgbCk5/Y8VFhjTOdJsO1S8Q==
+"@nightingale-elements/nightingale-filter@file:.yalc/@nightingale-elements/nightingale-filter":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-manager" "^5.2.0"
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     lodash-es "^4.17.11"
 
-"@nightingale-elements/nightingale-interpro-track@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-interpro-track/-/nightingale-interpro-track-5.2.0.tgz#52e798c8c3cefa3660732394ee9a103417b50b6e"
-  integrity sha512-twEXjyG90PaZ+Onsf+xhFkxytdBUz/BqF3ecTA//EnxUZ0Is88TEqHT+26wSZBjs5AnNQnPV6O2WYCsvdLb1pg==
+"@nightingale-elements/nightingale-heatmap@file:.yalc/@nightingale-elements/nightingale-heatmap":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    d3 "7.9.0"
+
+"@nightingale-elements/nightingale-interpro-track@file:.yalc/@nightingale-elements/nightingale-interpro-track":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     "@nightingale-elements/nightingale-track" "^5.2.0"
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
-"@nightingale-elements/nightingale-linegraph-track@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-linegraph-track/-/nightingale-linegraph-track-5.2.0.tgz#070697ddc23f794396523fecdf94be1d34b75e01"
-  integrity sha512-xVJmzxgRqQCQ4muZE4pNLrsr+fhMbriilfMyYiQypzfrsFkHM3sD2/fLxDeOkXMRl5dArwkcfESx7QohKz03uQ==
+"@nightingale-elements/nightingale-linegraph-track@file:.yalc/@nightingale-elements/nightingale-linegraph-track":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     d3 "7.9.0"
 
-"@nightingale-elements/nightingale-manager@5.2.0", "@nightingale-elements/nightingale-manager@^5.2.0":
+"@nightingale-elements/nightingale-links@file:.yalc/@nightingale-elements/nightingale-links":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    "@nightingale-elements/nightingale-track" "^5.2.0"
+    d3 "7.9.0"
+    lodash-es "^4.17.15"
+
+"@nightingale-elements/nightingale-manager@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-manager/-/nightingale-manager-5.2.0.tgz#76fa38ffed08e7e31af2827481fd9ce948003dd5"
   integrity sha512-WC8JJg5uWZtgt6HHbQ0Bg6N+qxFmIVoFa/FtT+RQwosHjSqvBgfglvy0uFUn2+37LzR4Egg/6ZxYGt1gw1l8og==
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
 
-"@nightingale-elements/nightingale-navigation@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-navigation/-/nightingale-navigation-5.2.0.tgz#5e5d982a07eeef7135886d4dfc3ea661081f229d"
-  integrity sha512-bRuLijeiyKNj8DV91mwg7zTKz5ldeFZyKZWDWz6mZQy/8NeArE268xRn8XrIk+Y4uHhRYYUAAK/eulKnWnSysw==
+"@nightingale-elements/nightingale-manager@file:.yalc/@nightingale-elements/nightingale-manager":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+
+"@nightingale-elements/nightingale-msa@file:.yalc/@nightingale-elements/nightingale-msa":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    d3 "7.9.0"
+
+"@nightingale-elements/nightingale-navigation@file:.yalc/@nightingale-elements/nightingale-navigation":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     d3 "7.9.0"
@@ -1410,16 +1441,31 @@
     d3 "7.9.0"
     lit "3.1.3"
 
-"@nightingale-elements/nightingale-sequence-heatmap@5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-sequence-heatmap/-/nightingale-sequence-heatmap-5.1.0.tgz#bb84a140843256f233fe7c83ad2a3521bea5bd8a"
-  integrity sha512-r/sOvkRZYKHL5XWRRYrFEoYeF1c9cXGui6T8SQUfBVawC/KQ5TwyOLbX7x3p9eoZvqqUBmgCSuHjImCir1ySfA==
+"@nightingale-elements/nightingale-new-core@file:.yalc/@nightingale-elements/nightingale-new-core":
+  version "5.2.5"
+  dependencies:
+    d3 "7.9.0"
+    lit "3.1.3"
+
+"@nightingale-elements/nightingale-overlay@file:.yalc/@nightingale-elements/nightingale-overlay":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+
+"@nightingale-elements/nightingale-saver@file:.yalc/@nightingale-elements/nightingale-saver":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    rasterizehtml "1.3.1"
+
+"@nightingale-elements/nightingale-sequence-heatmap@file:.yalc/@nightingale-elements/nightingale-sequence-heatmap":
+  version "5.1.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^4.5.0"
     d3 "7.8.5"
     heatmap-component "^1.0.1"
 
-"@nightingale-elements/nightingale-sequence@5.2.0", "@nightingale-elements/nightingale-sequence@^5.2.0":
+"@nightingale-elements/nightingale-sequence@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-sequence/-/nightingale-sequence-5.2.0.tgz#d22c1ce64ffc686c193ac4da626b04ecb72f97c0"
   integrity sha512-oOqteICf5n7CT8JPvcZKiYytiQPZFQFTRm2V5nENSEVHp9O4vTtKB8RgH3ZbLrtCdBhJl4deANcA5PitlmhgUg==
@@ -1427,16 +1473,34 @@
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     d3 "7.9.0"
 
-"@nightingale-elements/nightingale-structure@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-structure/-/nightingale-structure-5.2.0.tgz#95ef76f2ad7009cf54be867b7cbe1f9b400f3db1"
-  integrity sha512-0I4TECkncgi0fzt+b2U9zTHC3g7kebUq74yOixZOq2KSDAwuh6YTavvLnvKM9LBdKYGOKUrioZNWQNs/pahyVg==
+"@nightingale-elements/nightingale-sequence@file:.yalc/@nightingale-elements/nightingale-sequence":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    d3 "7.9.0"
+
+"@nightingale-elements/nightingale-structure@file:.yalc/@nightingale-elements/nightingale-structure":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     d3 "7.9.0"
     molstar "3.44.0"
 
-"@nightingale-elements/nightingale-track@5.2.0", "@nightingale-elements/nightingale-track@^5.2.0":
+"@nightingale-elements/nightingale-sunburst@file:.yalc/@nightingale-elements/nightingale-sunburst":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    d3 "7.9.0"
+    lodash-es "^4.17.15"
+
+"@nightingale-elements/nightingale-textarea-sequence@file:.yalc/@nightingale-elements/nightingale-textarea-sequence":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    lodash-es "^4.17.11"
+    quill "1.3.7"
+
+"@nightingale-elements/nightingale-track@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-track/-/nightingale-track-5.2.0.tgz#a6a7c3150a1c844eb053677023832b95c7cb8fa4"
   integrity sha512-GAUyfH/O5+RNly1ZJXERTPi37FwKx7OgSfifXg+QB7m31yxGrjWQzi7ivkBE6X9V0LbSZFcudqfxddYJPmIsrg==
@@ -1445,10 +1509,15 @@
     d3 "7.9.0"
     lodash-es "^4.17.15"
 
-"@nightingale-elements/nightingale-variation@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-variation/-/nightingale-variation-5.2.0.tgz#88815187286624baa63cd0f305bde4e9dd6839f7"
-  integrity sha512-3uISJtw3ZI6j/b8PTvR+ekbZNbn8cDkNWZwkbW3h2EQQ1qJRlCux7tMyN8J8XzAVHhKEDN8FQ45oVu2MSLHs2g==
+"@nightingale-elements/nightingale-track@file:.yalc/@nightingale-elements/nightingale-track":
+  version "5.2.5"
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.2.0"
+    d3 "7.9.0"
+    lodash-es "^4.17.15"
+
+"@nightingale-elements/nightingale-variation@file:.yalc/@nightingale-elements/nightingale-variation":
+  version "5.2.5"
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.2.0"
     "@nightingale-elements/nightingale-track" "^5.2.0"
@@ -2974,6 +3043,11 @@ clone-deep@^4.0.1:
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
 
+clone@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+  integrity sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -3216,6 +3290,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+css-font-face-src@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/css-font-face-src/-/css-font-face-src-1.0.0.tgz#a8c6307d48d9afc84a404082cb1776cd458864b1"
+  integrity sha512-kUl2r9ZMiLKY+04SM83Rk6dLnUU/hk30aN5CSZ+ZMGWT2COCU8I7yVu8fHbfCQu7Gx1ce45W0Q9hRaw2awqlww==
 
 css-loader@^5.2.6:
   version "5.2.7"
@@ -4457,6 +4536,11 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
+eventemitter3@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
+  integrity sha512-jLN68Dx5kyFHaePoXWPsCGW5qdyZQtLYHkxkg02/Mz6g0kYpDx4FyP6XfArhQdlOC4b8Mv+EMxPo/8La7Tzghg==
+
 eventemitter3@^4.0.0:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
@@ -4608,7 +4692,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@^3.0.0:
+extend@^3.0.0, extend@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
@@ -4631,6 +4715,11 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
+
+fast-diff@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.1.2.tgz#4b62c42b8e03de3f848460b639079920695d0154"
+  integrity sha512-KaJUt+M9t1qaIteSvjc6P3RbMdXsNhK61GRftR6SNxqmhthcd9MGIi4T+o0jD8LUSpSnSKXE20nLtJ3fOHxQig==
 
 fast-glob@^3.2.7, fast-glob@^3.2.9:
   version "3.3.2"
@@ -5480,6 +5569,14 @@ inline-style-parser@0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/inline-style-parser/-/inline-style-parser-0.2.4.tgz#f4af5fe72e612839fcd453d989a586566d695f22"
   integrity sha512-0aO8FkhNZlj/ZIbNi7Lxxr12obT7cL1moPfE4tg1LkX7LlLfC6DeX4l2ZEud1ukP9jNQyNnfzQVqwbwmAATY4Q==
+
+inlineresources@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/inlineresources/-/inlineresources-1.0.1.tgz#a8b71e8908036e940f62aff40b18aec9a4205a07"
+  integrity sha512-r0TMecufaxuZva1tqvTR50hxud4wEAOAe0lWRp+kxWKAjGPYUxYDl+IFcOgWE8jMxVIJQl14vuJfhtMYdomPjw==
+  dependencies:
+    css-font-face-src "^1.0.0"
+    url "~0.11.0"
 
 internal-ip@^4.3.0:
   version "4.3.0"
@@ -7807,6 +7904,11 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
+parchment@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/parchment/-/parchment-1.1.4.tgz#aeded7ab938fe921d4c34bc339ce1168bc2ffde5"
+  integrity sha512-J5FBQt/pM2inLzg4hEWmzQx/8h8D0CiDxaG3vyp9rKrQRSDgBlhjdP5jQGgosEajXPSQouXGHOmVdgo7QmJuOg==
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -8200,6 +8302,27 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
+quill-delta@^3.6.2:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/quill-delta/-/quill-delta-3.6.3.tgz#b19fd2b89412301c60e1ff213d8d860eac0f1032"
+  integrity sha512-wdIGBlcX13tCHOXGMVnnTVFtGRLoP0imqxM696fIPwIf5ODIYUHIvHbZcyvGlZFiFhK5XzDC2lpjbxRhnM05Tg==
+  dependencies:
+    deep-equal "^1.0.1"
+    extend "^3.0.2"
+    fast-diff "1.1.2"
+
+quill@1.3.7:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/quill/-/quill-1.3.7.tgz#da5b2f3a2c470e932340cdbf3668c9f21f9286e8"
+  integrity sha512-hG/DVzh/TiknWtE6QmWAF/pxoZKYxfe3J/d/+ShUWkDvvkZQVTPeVmUJVu1uE6DDooC4fWTiCLh84ul89oNz5g==
+  dependencies:
+    clone "^2.1.1"
+    deep-equal "^1.0.1"
+    eventemitter3 "^2.0.3"
+    extend "^3.0.2"
+    parchment "^1.1.4"
+    quill-delta "^3.6.2"
+
 randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
@@ -8211,6 +8334,16 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
+
+rasterizehtml@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/rasterizehtml/-/rasterizehtml-1.3.1.tgz#c205d63e0c46ea11ad5fb7b20e9262571255b52f"
+  integrity sha512-YfFxHJgyBWe6fGKQwiZQKWb5IYICQabg2iCyzjMzOXFKj2g+AfntlOxkM4f1+I0I6XjRp7bVOAxqXbfzsqjqTA==
+  dependencies:
+    inlineresources "^1.0.1"
+    sane-domparser-error "~0.2.0"
+    url "~0.11.0"
+    xmlserializer "~0.6.0"
 
 raw-body@2.5.2:
   version "2.5.2"
@@ -8623,6 +8756,11 @@ safe-regex@^1.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
+
+sane-domparser-error@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/sane-domparser-error/-/sane-domparser-error-0.2.0.tgz#adec5360c8a394526c204e61b00ea125f7b2b01f"
+  integrity sha512-wxjDV5jty95tNv8N/4WA15UNGqqaor/xX7rnNYY961hifN3bheYoKqtXN+V/M6EUgmUAs6pMul3klwUPMEiVXA==
 
 sane@^4.0.3:
   version "4.1.0"
@@ -9866,7 +10004,7 @@ url-parse@^1.5.10, url-parse@^1.5.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
-url@^0.11.0:
+url@^0.11.0, url@~0.11.0:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.4.tgz#adca77b3562d56b72746e76b330b7f27b6721f3c"
   integrity sha512-oCwdVC7mTuWiPyjLUz/COz5TLk6wgp0RCsN+wHZ2Ekneac9w8uuV0njcbbie2ME+Vs+d6duwmYuR3HgQXs1fOg==
@@ -10293,6 +10431,11 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+
+xmlserializer@~0.6.0:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/xmlserializer/-/xmlserializer-0.6.1.tgz#14099f60272e16cb608be3758992f998070cc29a"
+  integrity sha512-FNb0eEqqUUbnuvxuHqNuKH8qCGKqxu+558Zi8UzOoQk8Z9LdvpONK+v7m3gpKVHrk5Aq+0nNLsKxu/6OYh7Umw==
 
 "xtend@>=4.0.0 <4.1.0-0":
   version "4.0.2"

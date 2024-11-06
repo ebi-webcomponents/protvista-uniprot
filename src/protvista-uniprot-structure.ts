@@ -1,4 +1,6 @@
 import { LitElement, html, svg, TemplateResult, css } from 'lit';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { load } from 'data-loader';
 import NightingaleStructure, {
@@ -140,6 +142,8 @@ const foldseekURL = (accession, sourceDB) => {
 };
 
 const styleId = 'protvista-styles';
+
+@customElement('protvista-uniprot-structure')
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   data?: ProcessedStructureData[];
