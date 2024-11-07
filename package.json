@@ -10,8 +10,6 @@
     "build:es": "tsc",
     "build": "webpack --mode=production && yarn build:es",
     "watch": "webpack --mode=development -w",
-    "link-all": "yarn link protvista-interpro-adapter protvista-feature-adapter protvista-interpro-track nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
-    "add-all": "yarn add protvista-feature-adapter nightingale-filter nightingale-manager nightingale-navigation protvista-proteomics-adapter nightingale-sequence protvista-structure-adapter nightingale-track nightingale-variation protvista-variation-adapter nightingale-linegraph-track protvista-datatable nightingale-structure data-loader",
     "start": "webpack serve --mode=development",
     "test:lint": "eslint src --ext .ts ",
     "test:types": "tsc",
