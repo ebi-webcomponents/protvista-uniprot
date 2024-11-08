@@ -1746,18 +1746,6 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
-"@types/lodash-es@4.17.3":
-  version "4.17.3"
-  resolved "https://registry.yarnpkg.com/@types/lodash-es/-/lodash-es-4.17.3.tgz#87eb0b3673b076b8ee655f1890260a136af09a2d"
-  integrity sha512-iHI0i7ZAL1qepz1Y7f3EKg/zUMDwDfTzitx+AlHhJJvXwenP682ZyGbgPSc5Ej3eEAKVbNWKFuwOadCj5vBbYQ==
-  dependencies:
-    "@types/lodash" "*"
-
-"@types/lodash@*":
-  version "4.17.13"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.17.13.tgz#786e2d67cfd95e32862143abe7463a7f90c300eb"
-  integrity sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==
-
 "@types/mdast@^4.0.0":
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-4.0.4.tgz#7ccf72edd2f1aa7dd3437e180c64373585804dd6"
@@ -3798,14 +3786,6 @@ d3@7.9.0, d3@^7.9.0:
     d3-timer "3"
     d3-transition "3"
     d3-zoom "3"
-
-data-loader@^2.9.1:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/data-loader/-/data-loader-2.12.0.tgz#e14158ed1c6ffa5314590871a7b8758da9617add"
-  integrity sha512-HhFGutLwfMIfz96ctq4FZ03WMQ9W8zdMBHkEKJGaaTaChKhczVIoRtldWd4MkERHNIFWJJkTgi+pjNAZjzwfeA==
-  dependencies:
-    "@types/lodash-es" "4.17.3"
-    lodash-es "^4.17.11"
 
 data-urls@^2.0.0:
   version "2.0.0"
