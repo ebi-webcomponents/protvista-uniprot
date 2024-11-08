@@ -179,7 +179,6 @@ class ProtvistaUniprotStructure extends LitElement {
     const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldURl]);
-    console.log(rawData);
 
     this.loading = false;
     // TODO: return if no data at all
