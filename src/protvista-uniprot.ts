@@ -101,14 +101,8 @@ type ProtvistaCategory = {
   'color-range'?: string;
 };
 
-type DownloadConfig = {
-  type: string;
-  url: string;
-}[];
-
 type ProtvistaConfig = {
   categories: ProtvistaCategory[];
-  download: DownloadConfig;
 };
 
 type NightingaleEvent = Event & {
