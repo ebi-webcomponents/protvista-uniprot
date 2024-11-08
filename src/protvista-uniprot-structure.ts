@@ -2,7 +2,6 @@ import { LitElement, html, svg, TemplateResult, css } from 'lit';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { load } from 'data-loader';
 import NightingaleStructure, {
   PredictionData,
   StructureData,
@@ -179,18 +178,22 @@ class ProtvistaUniprotStructure extends LitElement {
     const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
-    const rawData: { [key: string]: any } = [];
-
-    await Promise.all(
-      [pdbUrl, alphaFoldURl].map((url: string) =>
-        load(url).then(
-          (data) => (rawData[url] = data.payload),
-          // TODO handle this better based on error code
-          // Fail silently for now
-          (error) => console.warn(error)
-        )
+    const rawData = Object.fromEntries(
+      await Promise.all(
+        [pdbUrl, alphaFoldURl].map(async (url) => {
+          const response = await fetch(url);
+          if (!response.ok) {
+            // TODO handle this better based on error code
+            // Fail silently for now
+            console.warn(`HTTP error status: ${response.status} at ${url}`);
+            return [url, null];
+          }
+          return [url, await response.json()];
+        })
       )
     );
+
+    console.log(rawData);
 
     this.loading = false;
     // TODO: return if no data at all
