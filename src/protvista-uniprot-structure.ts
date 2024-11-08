@@ -7,7 +7,7 @@ import NightingaleStructure, {
   StructureData,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
-import { loadComponent } from './utils';
+import { fetchAll, loadComponent } from './utils';
 
 import loaderIcon from './icons/spinner.svg';
 import downloadIcon from './icons/download.svg';
@@ -178,21 +178,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
-    const rawData = Object.fromEntries(
-      await Promise.all(
-        [pdbUrl, alphaFoldURl].map(async (url) => {
-          const response = await fetch(url);
-          if (!response.ok) {
-            // TODO handle this better based on error code
-            // Fail silently for now
-            console.warn(`HTTP error status: ${response.status} at ${url}`);
-            return [url, null];
-          }
-          return [url, await response.json()];
-        })
-      )
-    );
-
+    const rawData = await fetchAll([pdbUrl, alphaFoldURl]);
     console.log(rawData);
 
     this.loading = false;

@@ -32,8 +32,7 @@ import alphaMissenseHeatmapAdapter from './adapters/alphamissense-heatmap-adapte
 
 import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 
-import { load } from 'data-loader';
-import { loadComponent } from './utils';
+import { fetchAll, loadComponent } from './utils';
 
 import filterConfig, { colorConfig } from './filter-config';
 import defaultConfig from './config.json';
@@ -189,27 +188,16 @@ class ProtvistaUniprot extends LitElement {
       const urls = this.config.categories.flatMap(({ tracks }) =>
         tracks.flatMap(({ data }) => data[0].url)
       );
-      const uniqueUrls = [...new Set(urls)];
+
       // Get the data for all urls and store it
-      await Promise.all(
-        uniqueUrls.map((url: string) =>
-          load(url.replace('{accession}', accession))
-            .then(
-              (data) => {
-                this.rawData[url] = data.payload;
-                // Some endpoints return empty arrays, while most fail 🙄
-                if (!this.hasData && data.payload?.features?.length)
-                  this.hasData = true;
-              },
-              // TODO handle this better based on error code
-              // Fail silently for now
-              (error) => console.warn(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            })
-        )
+      this.rawData = await fetchAll([...new Set(urls)], (url) =>
+        url.replace('{accession}', accession)
       );
+
+      // Some endpoints return empty arrays, while most fail 🙄
+      this.hasData =
+        this.hasData ||
+        Object.values(this.rawData).some((d) => !!d?.features?.length);
 
       // Now iterate over tracks and categories, transforming the data
       // and assigning it as adequate
