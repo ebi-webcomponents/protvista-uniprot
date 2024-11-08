@@ -1,4 +1,6 @@
 import { LitElement, html, svg } from 'lit';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
 
@@ -14,68 +16,42 @@ import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegra
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
 import NightingaleFilter from '@nightingale-elements/nightingale-filter';
 
-import { load } from 'data-loader';
 // adapters
-import { transformData as _transformDataFeatureAdapter } from 'protvista-feature-adapter';
-import { transformData as _transformDataProteomicsAdapter } from 'protvista-proteomics-adapter';
-import { transformData as _transformDataStructureAdapter } from 'protvista-structure-adapter';
-import {
-  transformData as _transformDataVariationAdapter,
+import featureAdapter from './adapters/feature-adapter';
+import proteomicsAdapter from './adapters/proteomics-adapter';
+import structureAdapter from './adapters/structure-adapter';
+import variationAdapter, {
   TransformedVariant,
-} from 'protvista-variation-adapter';
-import { transformData as _transformDataVariationGraphAdapter } from './protvista-variation-graph-adapter';
-import { transformData as _transformDataInterproAdapter } from 'protvista-interpro-adapter';
-import { transformData as _transformDataProteomicsPTMApdapter } from './protvista-ptm-exchange';
-import { transformData as _transformDataAlphaFoldConfidenceAdapter } from './protvista-alphafold-confidence';
-import { transformData as _transformDataAlphaMissensePathogenicityAdapter } from './protvista-alphamissense-pathogenicity';
-import { transformData as _transformDataAlphaMissenseHeatmapAdapter } from './protvista-alphamissense-heatmap';
+} from './adapters/variation-adapter';
+import interproAdapter from './adapters/interpro-adapter';
+import variationGraphAdapter from './adapters/variation-graph-adapter';
+import proteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
+import alphaFoldConfidenceAdapter from './adapters/alphafold-confidence-adapter';
+import alphaMissensePathogenicityAdapter from './adapters/alphamissense-pathogenicity-adapter';
+import alphaMissenseHeatmapAdapter from './adapters/alphamissense-heatmap-adapter';
 
+import ProtvistaUniprotStructure from './protvista-uniprot-structure';
+
+import { fetchAll, loadComponent } from './utils';
+
+import filterConfig, { colorConfig } from './filter-config';
 import defaultConfig from './config.json';
-import _ProtvistaUniprotStructure from './protvista-uniprot-structure';
-import { loadComponent } from './loadComponents';
-import _filterConfig, { colorConfig as _colorConfig } from './filterConfig';
-import { NightingaleEvent } from './types/nightingale-components';
 
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
 
-export const transformDataFeatureAdapter = _transformDataFeatureAdapter;
-export const transformDataProteomicsAdapter = _transformDataProteomicsAdapter;
-export const transformDataStructureAdapter = _transformDataStructureAdapter;
-export const transformDataVariationAdapter = _transformDataVariationAdapter;
-export const transformDataVariationGraphAdapter =
-  _transformDataVariationGraphAdapter;
-export const transformDataInterproAdapter = _transformDataInterproAdapter;
-export const transformDataProteomicsPTMApdapter =
-  _transformDataProteomicsPTMApdapter;
-export const transformDataAlphaFoldConfidenceAdapter =
-  _transformDataAlphaFoldConfidenceAdapter;
-
-export const transformDataAlphaMissensePathogenicityAdapter =
-  _transformDataAlphaMissensePathogenicityAdapter;
-
-export const transformDataAlphaMissenseHeatmapAdapter =
-  _transformDataAlphaMissenseHeatmapAdapter;
-
-export const filterConfig = _filterConfig;
-export const colorConfig = _colorConfig;
-export const ProtvistaUniprotStructure = _ProtvistaUniprotStructure;
-
 const adapters = {
-  'protvista-feature-adapter': transformDataFeatureAdapter,
-  'protvista-interpro-adapter': transformDataInterproAdapter,
-  'protvista-proteomics-adapter': transformDataProteomicsAdapter,
-  'protvista-structure-adapter': transformDataStructureAdapter,
-  'protvista-variation-adapter': transformDataVariationAdapter,
-  'protvista-variation-graph-adapter': transformDataVariationGraphAdapter,
-  'protvista-proteomics-ptm-adapter': transformDataProteomicsPTMApdapter,
-  'protvista-alphafold-confidence-adapter':
-    transformDataAlphaFoldConfidenceAdapter,
-  'protvista-alphamissense-pathogenicity-adapter':
-    transformDataAlphaMissensePathogenicityAdapter,
-  'protvista-alphamissense-heatmap-adapter':
-    transformDataAlphaMissenseHeatmapAdapter,
+  'feature-adapter': featureAdapter,
+  'interpro-adapter': interproAdapter,
+  'proteomics-adapter': proteomicsAdapter,
+  'structure-adapter': structureAdapter,
+  'variation-adapter': variationAdapter,
+  'variation-graph-adapter': variationGraphAdapter,
+  'proteomics-ptm-adapter': proteomicsPTMApdapter,
+  'alphafold-confidence-adapter': alphaFoldConfidenceAdapter,
+  'alphamissense-pathogenicity-adapter': alphaMissensePathogenicityAdapter,
+  'alphamissense-heatmap-adapter': alphaMissenseHeatmapAdapter,
 };
 
 type TrackType =
@@ -95,15 +71,15 @@ type ProtvistaTrackConfig = {
   data: {
     url: string | string[];
     adapter?:
-      | 'protvista-feature-adapter'
-      | 'protvista-structure-adapter'
-      | 'protvista-proteomics-adapter'
-      | 'protvista-variation-adapter'
-      | 'protvista-variation-graph-adapter'
-      | 'protvista-interpro-adapter'
-      | 'protvista-alphafold-confidence-adapter'
-      | 'protvista-alphamissense-pathogenicity-adapter'
-      | 'protvista-alphamissense-heatmap-adapter';
+      | 'feature-adapter'
+      | 'structure-adapter'
+      | 'proteomics-adapter'
+      | 'variation-adapter'
+      | 'variation-graph-adapter'
+      | 'interpro-adapter'
+      | 'alphafold-confidence-adapter'
+      | 'alphamissense-pathogenicity-adapter'
+      | 'alphamissense-heatmap-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -124,16 +100,21 @@ type ProtvistaCategory = {
   'color-range'?: string;
 };
 
-export type DownloadConfig = {
-  type: string;
-  url: string;
-}[];
-
 type ProtvistaConfig = {
   categories: ProtvistaCategory[];
-  download: DownloadConfig;
 };
 
+type NightingaleEvent = Event & {
+  detail?: {
+    displaystart?: number;
+    displayend?: number;
+    eventType?: 'click' | 'mouseover' | 'mouseout' | 'reset';
+    feature?: any;
+    coords?: [number, number];
+  };
+};
+
+@customElement('protvista-uniprot')
 class ProtvistaUniprot extends LitElement {
   private openCategories: string[];
   private nostructure: boolean;
@@ -196,7 +177,7 @@ class ProtvistaUniprot extends LitElement {
     loadComponent('nightingale-linegraph-track', NightingaleLinegraphTrack);
     loadComponent('nightingale-filter', NightingaleFilter);
     loadComponent('nightingale-manager', NightingaleManager);
-    loadComponent('protvista-uniprot-structure', _ProtvistaUniprotStructure);
+    loadComponent('protvista-uniprot-structure', ProtvistaUniprotStructure);
     loadComponent('nightingale-sequence-heatmap', NightingaleSequenceHeatmap);
   }
 
@@ -207,27 +188,16 @@ class ProtvistaUniprot extends LitElement {
       const urls = this.config.categories.flatMap(({ tracks }) =>
         tracks.flatMap(({ data }) => data[0].url)
       );
-      const uniqueUrls = [...new Set(urls)];
+
       // Get the data for all urls and store it
-      await Promise.all(
-        uniqueUrls.map((url: string) =>
-          load(url.replace('{accession}', accession))
-            .then(
-              (data) => {
-                this.rawData[url] = data.payload;
-                // Some endpoints return empty arrays, while most fail 🙄
-                if (!this.hasData && data.payload?.features?.length)
-                  this.hasData = true;
-              },
-              // TODO handle this better based on error code
-              // Fail silently for now
-              (error) => console.warn(error)
-            )
-            .catch((e) => {
-              console.log(e);
-            })
-        )
+      this.rawData = await fetchAll([...new Set(urls)], (url) =>
+        url.replace('{accession}', accession)
       );
+
+      // Some endpoints return empty arrays, while most fail 🙄
+      this.hasData =
+        this.hasData ||
+        Object.values(this.rawData).some((d) => !!d?.features?.length);
 
       // Now iterate over tracks and categories, transforming the data
       // and assigning it as adequate
@@ -242,18 +212,17 @@ class ProtvistaUniprot extends LitElement {
 
             if (
               !trackData ||
-              (adapter === 'protvista-variation-adapter' &&
-                trackData[0].length === 0)
+              (adapter === 'variation-adapter' && trackData[0].length === 0)
             ) {
               return;
             }
 
             // 1. Convert data
             let transformedData = adapter
-              ? await adapters[adapter](...trackData)
+              ? await adapters[adapter].apply(null, trackData)
               : trackData;
 
-            if (adapter === 'protvista-interpro-adapter') {
+            if (adapter === 'interpro-adapter') {
               const representativeDomains = [];
               transformedData?.forEach((feature) => {
                 feature.locations?.forEach((location) => {
@@ -322,7 +291,7 @@ class ProtvistaUniprot extends LitElement {
         currentCategory.tracks &&
         data &&
         // Check there's data and special case for variants
-        // NOTE: should refactor protvista-variation-adapter
+        // NOTE: should refactor variation-adapter
         // to return a list of variants and set the sequence
         // on protvista-variation separately
         (data.length > 0 || data.variants?.length)
@@ -350,9 +319,10 @@ class ProtvistaUniprot extends LitElement {
       ) {
         for (const track of currentCategory.tracks) {
           if (track.trackType === 'nightingale-sequence-heatmap') {
-            const heatmapComponent = this.querySelector<
-              typeof NightingaleSequenceHeatmap
-            >('nightingale-sequence-heatmap');
+            const heatmapComponent =
+              this.querySelector<NightingaleSequenceHeatmap>(
+                'nightingale-sequence-heatmap'
+              );
             if (heatmapComponent) {
               const heatmapData = this.data[`${id}-${track.name}`];
               const xDomain = Array.from(
@@ -361,7 +331,7 @@ class ProtvistaUniprot extends LitElement {
               );
               const yDomain = [
                 ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
-              ];
+              ] as string[];
               heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
             }
           }

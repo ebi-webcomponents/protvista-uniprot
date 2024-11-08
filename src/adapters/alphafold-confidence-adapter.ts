@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from './commonTypes';
+import { AlphafoldPayload } from './types/alphafold';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;
@@ -6,7 +6,7 @@ type AlphafoldConfidencePayload = {
   confidenceCategory: Array<string>;
 };
 
-export const getConfidenceURLFromPayload = (data: AlphafoldPayload) => {
+const getConfidenceURLFromPayload = (data: AlphafoldPayload) => {
   const cifURL = data?.[0]?.cifUrl;
   return cifURL?.length
     ? cifURL.replace('-model', '-confidence').replace('.cif', '.json')
@@ -30,7 +30,7 @@ type PartialProtein = {
   };
 };
 
-export const transformData = async (
+const transformData = async (
   data: AlphafoldPayload,
   protein: PartialProtein
 ) => {
@@ -41,3 +41,5 @@ export const transformData = async (
     return confidenceData?.confidenceCategory.join('');
   }
 };
+
+export default transformData;

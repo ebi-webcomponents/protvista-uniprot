@@ -1,4 +1,8 @@
-import { colorConfig, getFilteredVariants } from '../src/filterConfig';
+import {
+  colorConfig,
+  getFilteredVariants,
+  VariantsForFilter,
+} from '../filter-config';
 
 const transformedVariantPositions = [
   {
@@ -7,7 +11,7 @@ const transformedVariantPositions = [
         accession: 'A',
         begin: 1,
         end: 1,
-        start: '1',
+        start: 1,
         tooltipContent: '',
         sourceType: 'source',
         variant: 'V',
@@ -24,12 +28,13 @@ const transformedVariantPositions = [
           },
         ],
         xrefs: [],
+        hasPredictions: false,
       },
       {
         accession: 'B',
         begin: 1,
         end: 1,
-        start: '1',
+        start: 1,
         tooltipContent: '',
         sourceType: 'source',
         variant: 'D',
@@ -40,6 +45,7 @@ const transformedVariantPositions = [
         alternativeSequence: 'D',
         consequenceType: 'disease',
         xrefs: [],
+        hasPredictions: false,
       },
     ],
   },
@@ -49,7 +55,7 @@ const transformedVariantPositions = [
         accession: 'C',
         begin: 2,
         end: 2,
-        start: '2',
+        start: 2,
         tooltipContent: '',
         sourceType: 'source',
         variant: 'V',
@@ -60,6 +66,7 @@ const transformedVariantPositions = [
         alternativeSequence: 'V',
         consequenceType: 'disease',
         xrefs: [],
+        hasPredictions: false,
       },
     ],
   },
@@ -69,7 +76,7 @@ const transformedVariantPositions = [
         accession: 'D',
         begin: 3,
         end: 3,
-        start: '3',
+        start: 3,
         tooltipContent: '',
         sourceType: 'source',
         variant: 'V',
@@ -81,6 +88,7 @@ const transformedVariantPositions = [
         consequenceType: 'disease',
         siftScore: 0.5,
         xrefs: [],
+        hasPredictions: false,
       },
     ],
   },
@@ -89,7 +97,7 @@ const transformedVariantPositions = [
 describe('Variation filter config', () => {
   test('it should filter according to the callback function', () => {
     const filteredVariants = getFilteredVariants(
-      transformedVariantPositions,
+      transformedVariantPositions as VariantsForFilter,
       (variant) => variant.accession === 'A'
     );
     expect(filteredVariants).toEqual([
@@ -121,7 +129,7 @@ describe('Variation filter config', () => {
 
   test('it should get the right colour for other', () => {
     const thirdVariant = colorConfig(
-      transformedVariantPositions[1].variants[0]
+      transformedVariantPositions?.[1].variants[0]
     );
     expect(thirdVariant).toEqual('#009e73');
   });

@@ -1,12 +1,13 @@
 import { LitElement, html, svg, TemplateResult, css } from 'lit';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { load } from 'data-loader';
 import NightingaleStructure, {
   PredictionData,
   StructureData,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
-import { loadComponent } from './loadComponents';
+import { fetchAll, loadComponent } from './utils';
 
 import loaderIcon from './icons/spinner.svg';
 import downloadIcon from './icons/download.svg';
@@ -140,6 +141,8 @@ const foldseekURL = (accession, sourceDB) => {
 };
 
 const styleId = 'protvista-styles';
+
+@customElement('protvista-uniprot-structure')
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   data?: ProcessedStructureData[];
@@ -175,18 +178,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
-    const rawData: { [key: string]: any } = [];
-
-    await Promise.all(
-      [pdbUrl, alphaFoldURl].map((url: string) =>
-        load(url).then(
-          (data) => (rawData[url] = data.payload),
-          // TODO handle this better based on error code
-          // Fail silently for now
-          (error) => console.warn(error)
-        )
-      )
-    );
+    const rawData = await fetchAll([pdbUrl, alphaFoldURl]);
 
     this.loading = false;
     // TODO: return if no data at all
