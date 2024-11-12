@@ -6,8 +6,8 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ## Compatibility
 
-- (protvista-uniprot v3)[https://github.com/ebi-webcomponents/protvista-uniprot] is compatible with [nightingale v5](https://github.com/ebi-webcomponents/nightingale)
-- (protvista-uniprot v2)[https://github.com/ebi-webcomponents/protvista-uniprot/tree/v2] is compatible with [nightingale v3](https://github.com/ebi-webcomponents/nightingale/tree/v3)
+- [protvista-uniprot v3](https://github.com/ebi-webcomponents/protvista-uniprot) is compatible with [nightingale v5](https://github.com/ebi-webcomponents/nightingale)
+- [protvista-uniprot v2](https://github.com/ebi-webcomponents/protvista-uniprot/tree/v2) is compatible with [nightingale v3](https://github.com/ebi-webcomponents/nightingale/tree/v3)
 
 ## Usage
 
