@@ -6,6 +6,20 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ## Usage
 
+### Use within an HTML file
+
+Create an [es-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) import within a static HTML file:
+
+```html
+<script type="module" src="./protvista-uniprot.mjs"></script>
+```
+
+and then the component can be displayed with:
+
+```html
+<protvista-uniprot accession="P05067"></protvista-uniprot>
+```
+
 ### Importing as a module
 
 ```
@@ -20,23 +34,10 @@ You can then use it like this:
 <protvista-uniprot accession="P05067" />
 ```
 
-#### Dependencies
-
-The component relies on d3 which is set as a global variable and needs to be added to your project.
-
-```
-<script src="https://d3js.org/d3.v4.min.js" charset="utf-8" defer></script>
-```
-
-### or via CDN
-
-See [here](https://codepen.io/xwatkins/pen/rXpZXX)
-
 ### API
 
 - accession: String
 - config?: Array [see below](#configuration)
-- notooltip?: Boolean(false)
 - nostructure?: Boolean(false)
 
 ## Development
@@ -54,7 +55,7 @@ You can pass your own configuration to the component using the `config` attribut
       "name": string,
       "label": string,
       "trackType": nightingale-track|nightingale-linegraph-track|nightingale-variation,
-      "adapter": protvista-feature-adapter|protvista-structure-adapter|protvista-proteomics-adapter|protvista-variation-adapter,
+      "adapter": feature-adapter|structure-adapter|proteomics-adapter|variation-adapter,
       "url": string,
       "tracks": [
         {
