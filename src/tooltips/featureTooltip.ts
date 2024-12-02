@@ -18,7 +18,7 @@ const formatSource = (source) => {
 export const getEvidenceFromCodes = (evidenceList) => {
   if (!evidenceList) return ``;
   return `
-        <ul>${evidenceList
+        <ul class="no-bullet">${evidenceList
           .map((ev) => {
             const ecoMatch = ecoMap.find((eco) => eco.name === ev.code);
             if (!ecoMatch) return ``;
@@ -33,7 +33,7 @@ export const getEvidenceFromCodes = (evidenceList) => {
 };
 
 export const formatXrefs = (xrefs) => {
-  return `<ul>${xrefs
+  return `<ul class="no-bullet">${xrefs
     .map(
       (xref) =>
         `<li style="padding: .25rem 0">${xref.name} ${
@@ -55,7 +55,7 @@ const getPTMEvidence = (ptms) => {
   const proteomexchange =
     'https://proteomecentral.proteomexchange.org/dataset/';
   return `
-    <ul>${uniqueIds
+    <ul class="no-bullet">${uniqueIds
       .map((id) => {
         const datasetID = id === 'Glue project' ? 'PXD012174' : id;
         return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" style="color:#FFF" target="_blank">ProteomeXchange</a>${
@@ -85,7 +85,7 @@ const formatPTMPeptidoform = (peptide, ptms) => {
   });
   // Add last remaining part of the peptide if any
   peptidoform = `${peptidoform}${peptide.slice(lastModPosition)}`;
-  return `<p>${peptidoform}</p>`;
+  return peptidoform;
 };
 
 // At the moment, there is only phospho data. In future we may have more, the below AA sites have to be updated to accomodate more.
@@ -150,7 +150,7 @@ const formatTooltip = (feature) => {
         }
         ${
           ptms
-            ? `<h5 data-article-id="ptm_processing_section">PTMs</h5><ul>${ptms
+            ? `<h5 data-article-id="ptm_processing_section">PTMs</h5><ul class="no-bullet">${ptms
                 .map((item) => `<li>${item}</li>`)
                 .join('')}</ul>
               `
@@ -177,7 +177,7 @@ const formatTooltip = (feature) => {
         ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
         ${
           feature.ptms && dataset && !dataset.includes('Glue project')
-            ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul>${feature.ptms
+            ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.ptms
                 .map((ptm) =>
                   ptm.dbReferences
                     .map(

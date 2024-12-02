@@ -106,7 +106,7 @@ const convertPtmExchangePtms = (
   }
   ${
     evidences
-      ? `<h5>Evidence</h5><ul>${evidences
+      ? `<h5>Evidence</h5><ul class="no-bullet">${evidences
           .map((id) => {
             const datasetID = id === 'Glue project' ? 'PXD012174' : id;
             return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;
