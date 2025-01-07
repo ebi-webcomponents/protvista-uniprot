@@ -586,6 +586,25 @@
       ]
     },
     {
+      "name": "RNA EDITING",
+      "label": "RNA editing",
+      "trackType": "nightingale-linegraph-track",
+      "tracks": [
+        {
+          "name": "rna_editing_graph",
+          "label": "Count2s",
+          "trackType": "nightingale-linegraph-track",
+          "data": [
+            {
+              "adapter": "rna-editing-graph-adapter",
+              "url": "https://www.ebi.ac.uk/proteins/api/rna-editing/{accession}"
+            }
+          ],
+          "tooltip": "TODO: fill"
+        }
+      ]
+    },
+    {
       "name": "PROTEOMICS",
       "label": "Proteomics",
       "trackType": "nightingale-track",

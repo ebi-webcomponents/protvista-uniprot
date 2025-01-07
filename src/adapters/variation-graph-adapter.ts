@@ -15,22 +15,21 @@ const transformData = (data) => {
       // eslint-disable-next-line no-continue
       if (index < 1 || index > data.sequence.length) continue;
 
-      // eslint-disable-next-line no-plusplus
-      total[index]++;
+      total[index] += 1;
 
       // eslint-disable-next-line no-continue
       if (!association) continue;
       const hasDisease = association.find(
         (association) => association.disease === true
       );
-      // eslint-disable-next-line no-plusplus
-      if (hasDisease) diseaseTotal[index]++;
+      if (hasDisease) diseaseTotal[index] += 1;
     }
 
+    const range = [0, Math.max(Math.max(...total), Math.max(...diseaseTotal))];
     const graphData = [
       {
         name: 'variant',
-        range: [0, Math.max(Math.max(...total), Math.max(...diseaseTotal))],
+        range,
         color: 'darkgrey',
         values: [...total].map((value, index) => ({
           position: index,
@@ -39,7 +38,7 @@ const transformData = (data) => {
       },
       {
         name: 'disease causing variant',
-        range: [0, Math.max(Math.max(...total), Math.max(...diseaseTotal))],
+        range,
         color: 'red',
         values: [...diseaseTotal].map((value, index) => ({
           position: index,
