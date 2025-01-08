@@ -1,7 +1,7 @@
 {
   "name": "protvista-uniprot",
   "description": "ProtVista tool for the UniProt website",
-  "version": "3.0.9",
+  "version": "3.0.10",
   "files": [
     "dist",
     "src"
@@ -15,15 +15,17 @@
     "test:types": "tsc",
     "test:unit": "jest",
     "test": "npm-run-all --continue-on-error test:*",
-    "clear-cdn-cache": "./scripts/clearCDNcaches.sh"
+    "clear-cdn-cache": "./scripts/clearCDNcaches.sh",
+    "serve-vite": "vite",
+    "build-vite": "vite build",
+    "preview-vite": "vite preview"
   },
   "main": "dist/protvista-uniprot.js",
   "module": "dist/protvista-uniprot.mjs",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/protvista-uniprot.mjs",
-      "require": "./dist/protvista-uniprot.js"
+      "import": "./dist/protvista-uniprot.mjs"
     }
   },
   "sideEffects": false,
@@ -56,6 +58,7 @@
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime-corejs3": "^7.14.0",
+    "@originjs/vite-plugin-commonjs": "^1.0.1",
     "@types/jest": "^29.5.14",
     "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "4.26.1",
@@ -72,6 +75,11 @@
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.0",
     "typescript": "^5.6.3",
+    "vite": "^2.7.2",
+    "vite-plugin-dts": "^4.4.0",
+    "vite-plugin-env-compatible": "^1.1.1",
+    "vite-plugin-html": "3.2.0",
+    "vite-plugin-svgo": "^1.6.2",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0"
