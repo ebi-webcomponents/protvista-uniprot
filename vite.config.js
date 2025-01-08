@@ -3,6 +3,7 @@ import envCompatible from 'vite-plugin-env-compatible';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import svg from 'vite-plugin-svgo';
+import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,6 +18,10 @@ export default defineConfig({
       },
     }),
     svg(),
+    dts({
+      outDir: 'dist/types',
+      insertTypesEntry: true,
+    }),
   ],
   build: {
     sourcemap: true,
