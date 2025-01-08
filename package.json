@@ -1,24 +1,20 @@
 {
   "name": "protvista-uniprot",
   "description": "ProtVista tool for the UniProt website",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
     "build:es": "tsc --emitDeclarationOnly",
-    "build": "webpack --mode=production --config webpack.config.js && yarn build:es",
-    "watch": "webpack --mode=development -w",
-    "start": "webpack serve --mode=development",
+    "build": "vite build",
+    "start": "vite",
     "test:lint": "eslint src --ext .ts ",
     "test:types": "tsc",
     "test:unit": "jest",
     "test": "npm-run-all --continue-on-error test:*",
-    "clear-cdn-cache": "./scripts/clearCDNcaches.sh",
-    "serve-vite": "vite",
-    "build-vite": "vite build",
-    "preview-vite": "vite preview"
+    "clear-cdn-cache": "./scripts/clearCDNcaches.sh"
   },
   "main": "dist/protvista-uniprot.js",
   "module": "dist/protvista-uniprot.mjs",
@@ -67,7 +63,6 @@
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.2.1",
     "concurrently": "^4.1.0",
-    "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^5.2.6",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
@@ -80,10 +75,7 @@
     "vite-plugin-dts": "^4.4.0",
     "vite-plugin-env-compatible": "^2.0.1",
     "vite-plugin-html": "3.2.2",
-    "vite-plugin-svgo": "^1.6.2",
-    "webpack": "^5.91.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "vite-plugin-svgo": "^1.6.2"
   },
   "jest": {
     "testRegex": "(/__tests__/.*|(\\.|/))spec\\.ts$",
