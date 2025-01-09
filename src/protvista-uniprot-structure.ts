@@ -1,4 +1,4 @@
-import { LitElement, html, svg, TemplateResult, css } from 'lit';
+import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -285,7 +285,7 @@ class ProtvistaUniprotStructure extends LitElement {
       .download-link svg {
         width: 1rem;
       }
-      .am-disabled {
+      .am-disabled * {
         cursor: not-allowed;
         color: #808080;
       }
@@ -327,32 +327,24 @@ class ProtvistaUniprotStructure extends LitElement {
                     />
                     <label for="alphafold">Confidence</label>
                   </div>
-                  <div>
-                  ${this.alphamissenseAvailable
-                    ? html` 
-                        <input
-                          type="radio"
-                          id="alphamissense"
-                          name="colorScheme"
-                          value="alphamissense"
-                          @click=${(e) => this.toggleColorTheme(e)}
-                        />
-                        <label for="alphamissense">Pathogenicity</label>
-                     `
-                    : html` 
-                        <input
-                          type="radio"
-                          id="alphamissense"
-                          name="colorScheme"
-                          value="alphamissense"
-                          class="am-disabled"
-                          @click=${(e) => this.toggleColorTheme(e)}
-                          disabled
-                        />
-                        <label for="alphamissense" class="am-disabled">Pathogenicity (not available)</label>
-                     `}
+                  <div
+                    class=${this.alphamissenseAvailable ? '' : 'am-disabled'}
+                  >
+                    <input
+                      type="radio"
+                      id="alphamissense"
+                      name="colorScheme"
+                      value="alphamissense"
+                      @click=${(e) => this.toggleColorTheme(e)}
+                      disabled=${this.alphamissenseAvailable ? nothing : 'true'}
+                    />
+                    <label for="alphamissense"
+                      >Pathogenicity
+                      ${this.alphamissenseAvailable
+                        ? ''
+                        : ' (not available)'}</label
+                    >
                   </div>
-                  
                 </div>
                 ${this.metaInfo}
               </div>`
