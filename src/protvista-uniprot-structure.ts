@@ -338,11 +338,13 @@ class ProtvistaUniprotStructure extends LitElement {
                       @click=${(e) => this.toggleColorTheme(e)}
                       disabled=${this.alphamissenseAvailable ? nothing : 'true'}
                     />
-                    <label for="alphamissense"
+                    <label for="alphamissense" title=${this.alphamissenseAvailable
+                        ? ''
+                        : 'Color by pathogenicity is disabled as there are no AlphaMissense predictions available for this model'}
                       >Pathogenicity
                       ${this.alphamissenseAvailable
                         ? ''
-                        : ' (not available)'}</label
+                        : ' (unavailable)'}</label
                     >
                   </div>
                 </div>
