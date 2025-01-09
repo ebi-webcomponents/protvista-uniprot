@@ -24,6 +24,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    target: 'es2021',
     sourcemap: true,
     lib: {
       entry: 'src/index.ts',
