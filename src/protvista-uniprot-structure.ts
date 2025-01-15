@@ -1,4 +1,4 @@
-import { LitElement, html, svg, TemplateResult, css } from 'lit';
+import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -150,6 +150,7 @@ class ProtvistaUniprotStructure extends LitElement {
   metaInfo?: TemplateResult;
   colorTheme?: string;
   private loading?: boolean;
+  private alphamissenseAvailable?: boolean;
 
   constructor() {
     super();
@@ -159,6 +160,7 @@ class ProtvistaUniprotStructure extends LitElement {
     this.onTableRowClick = this.onTableRowClick.bind(this);
     this.addStyles();
     this.colorTheme = 'alphafold';
+    this.alphamissenseAvailable = false;
   }
 
   static get properties() {
@@ -168,6 +170,7 @@ class ProtvistaUniprotStructure extends LitElement {
       data: { type: Object },
       loading: { type: Boolean },
       colorTheme: { type: String },
+      alphamissenseAvailable: { type: Boolean },
     };
   }
 
@@ -189,6 +192,9 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!data || !data.length) return;
 
     this.data = data;
+    this.alphamissenseAvailable = rawData[alphaFoldURl].some(
+      (data) => data.amAnnotationsUrl
+    );
   }
 
   disconnectedCallback() {
@@ -279,6 +285,10 @@ class ProtvistaUniprotStructure extends LitElement {
       .download-link svg {
         width: 1rem;
       }
+      .am-disabled * {
+        cursor: not-allowed;
+        color: #808080;
+      }
     `;
   }
 
@@ -305,24 +315,38 @@ class ProtvistaUniprotStructure extends LitElement {
           ${this.metaInfo
             ? html` <div class="protvista-uniprot-structure__meta">
                 <div class="theme-selection">
-                  Select color scale <br />
-                  <input
-                    type="radio"
-                    id="alphafold"
-                    name="colorScheme"
-                    value="alphafold"
-                    @click=${(e) => this.toggleColorTheme(e)}
-                    checked
-                  />
-                  <label for="alphafold">Confidence</label><br />
-                  <input
-                    type="radio"
-                    id="alphamissense"
-                    name="colorScheme"
-                    value="alphamissense"
-                    @click=${(e) => this.toggleColorTheme(e)}
-                  />
-                  <label for="alphamissense">Pathogenecity</label><br />
+                  Select color scale
+                  <div>
+                    <input
+                      type="radio"
+                      id="alphafold"
+                      name="colorScheme"
+                      value="alphafold"
+                      @click=${(e) => this.toggleColorTheme(e)}
+                      checked
+                    />
+                    <label for="alphafold">Confidence</label>
+                  </div>
+                  <div
+                    class=${this.alphamissenseAvailable ? '' : 'am-disabled'}
+                  >
+                    <input
+                      type="radio"
+                      id="alphamissense"
+                      name="colorScheme"
+                      value="alphamissense"
+                      @click=${(e) => this.toggleColorTheme(e)}
+                      disabled=${this.alphamissenseAvailable ? nothing : 'true'}
+                    />
+                    <label for="alphamissense" title=${this.alphamissenseAvailable
+                        ? ''
+                        : 'Color by pathogenicity is disabled as there are no AlphaMissense predictions available for this model'}
+                      >Pathogenicity
+                      ${this.alphamissenseAvailable
+                        ? ''
+                        : ' (unavailable)'}</label
+                    >
+                  </div>
                 </div>
                 ${this.metaInfo}
               </div>`
