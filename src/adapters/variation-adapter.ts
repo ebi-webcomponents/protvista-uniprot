@@ -36,7 +36,6 @@ const transformData = (
     tooltipContent: formatTooltip(variant),
   }));
   if (!variants) return null;
-  console.log({ sequence, variants });
   return { sequence, variants };
 };
 

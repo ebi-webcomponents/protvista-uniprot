@@ -611,7 +611,7 @@
               "url": "https://www.ebi.ac.uk/proteins/api/rna-editing/{accession}"
             }
           ],
-          "tooltip": "Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events"
+          "tooltip": "TODO: fill"
         }
       ]
     },

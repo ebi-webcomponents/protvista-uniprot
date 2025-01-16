@@ -16,6 +16,7 @@ const transformData = ({
     accession: feature.variantType.genomicLocation?.join(', '),
     variant: feature.variantType.mutatedType || AminoAcid.Empty,
     start: +feature.locationType.position.position,
+    end: +feature.locationType.position.position,
     tooltipContent: 'foo',
     xrefNames: [],
     hasPredictions: false,
