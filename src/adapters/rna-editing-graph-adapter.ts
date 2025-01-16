@@ -2,23 +2,18 @@ import { RnaEditing } from './types/rna-editing';
 
 const transformData = (data: RnaEditing) => {
   if (data.sequence && data.features.length) {
-    const rnaEdits = data.features.map((f) => ({
-      ...f,
-      accession: f.variantType.genomicLocation?.join(', '),
-      start: f.locationType.position,
-    }));
-
     const total = new Uint8ClampedArray(data.sequence.length);
     const missense = new Uint8ClampedArray(data.sequence.length);
     const synonymous = new Uint8ClampedArray(data.sequence.length);
-
-    for (const { start, variantType } of rnaEdits) {
-      const index = +start;
+    for (const feature of data.features) {
+      const index = +feature.locationType.position.position;
+      const consequence = feature.variantType.consequenceType;
       if (index >= 0 && index <= data.sequence.length) {
         total[index] += 1;
-        if (variantType.consequenceType === 'missense') {
+        if (consequence === 'missense') {
           missense[index] += 1;
-        } else if (variantType.consequenceType === 'synonymous') {
+        } else if (consequence === 'synonymous') {
+          // TODO: at present the data contains only missense
           synonymous[index] += 1;
         }
       }
@@ -35,15 +30,16 @@ const transformData = (data: RnaEditing) => {
           value: value,
         })),
       },
-      {
-        name: 'synonymous',
-        range,
-        color: 'red',
-        values: [...synonymous].map((value, index) => ({
-          position: index,
-          value: value,
-        })),
-      },
+      // TODO: at present the data contains only missense
+      // {
+      //   name: 'synonymous',
+      //   range,
+      //   color: 'red',
+      //   values: [...synonymous].map((value, index) => ({
+      //     position: index,
+      //     value: value,
+      //   })),
+      // },
     ];
     return graphData;
   }
