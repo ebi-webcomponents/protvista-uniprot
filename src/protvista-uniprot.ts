@@ -141,8 +141,8 @@ class ProtvistaUniprot extends LitElement {
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
-    (this.transformedVariants = { sequence: '', variants: [] }),
-      this.addStyles();
+    this.transformedVariants = { sequence: '', variants: [] };
+    this.addStyles();
   }
 
   static get properties() {
