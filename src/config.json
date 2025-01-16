@@ -586,13 +586,13 @@
       ]
     },
     {
-      "name": "RNA EDITING",
+      "name": "RNA_EDITING",
       "label": "RNA editing",
       "trackType": "nightingale-linegraph-track",
       "tracks": [
         {
           "name": "rna_editing_graph",
-          "label": "Count2s",
+          "label": "Counts",
           "trackType": "nightingale-linegraph-track",
           "data": [
             {
