@@ -1,3 +1,6 @@
+// Yvonne Lussi: This first dataset is for human proteins, and we decided to only show
+// the RNA editing events that have missense consequence. It may be possible to import
+// the synonymous events at a later timepoint.
 // Fetch all of the available human rna-editing entries
 // Source: https://www.ebi.ac.uk/proteins/api/rna-editing?offset=0&size=-1&taxid=9606
 // Save above request to rna-editing.json then using quicktype tool (https://github.com/glideapps/quicktype):
