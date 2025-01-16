@@ -1,11 +1,11 @@
-const transformData = (data) => {
-  console.log('here');
+import { RnaEditing } from './types/rna-editing';
+
+const transformData = (data: RnaEditing) => {
   if (data.sequence && data.features.length) {
-    console.log(data.features);
-    const rnaEdits = data.features.map((rnaEdit) => ({
-      ...rnaEdit,
-      accession: rnaEdit.genomicLocation?.join(', '),
-      start: rnaEdit.position.position,
+    const rnaEdits = data.features.map((f) => ({
+      ...f,
+      accession: f.variantType.genomicLocation?.join(', '),
+      start: f.locationType.position,
     }));
 
     const total = new Uint8ClampedArray(data.sequence.length);
