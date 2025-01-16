@@ -1,28 +1,27 @@
 import {
-  ProteinsAPIVariation,
   AminoAcid,
+  VariationDatum,
 } from '@nightingale-elements/nightingale-variation';
+import { RnaEditing } from './types/rna-editing';
 
-// TODO: import types
-export type RNAEditing = any;
-
-const transformData = (
-  data: ProteinsAPIVariation
-): {
+const transformData = ({
+  sequence,
+  features,
+}: RnaEditing): {
   sequence: string;
-  variants: RNAEditing[];
+  variants: VariationDatum[];
 } => {
-  const { sequence, features } = data;
-  const variants = features.map((variant) => ({
-    ...variant,
-    accession: variant.genomicLocation?.join(', '),
-    variant: variant.alternativeSequence
-      ? variant.alternativeSequence
-      : AminoAcid.Empty,
-    start: +variant.begin,
+  const variants = features.map((feature) => ({
+    ...feature,
+    accession: feature.variantType.genomicLocation?.join(', '),
+    variant: feature.variantType.mutatedType || AminoAcid.Empty,
+    start: +feature.locationType.position.position,
     tooltipContent: 'foo',
+    xrefNames: [],
+    hasPredictions: false,
+    consequenceType: feature.variantType.consequenceType,
   }));
-  return variants ? { sequence, variants } : null;
+  return { sequence, variants };
 };
 
 export default transformData;

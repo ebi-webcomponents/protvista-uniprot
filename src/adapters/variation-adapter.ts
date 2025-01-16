@@ -29,15 +29,14 @@ const transformData = (
   const variants = features.map((variant) => ({
     ...variant,
     accession: variant.genomicLocation?.join(', '),
-    variant: variant.alternativeSequence
-      ? variant.alternativeSequence
-      : AminoAcid.Empty,
+    variant: variant.alternativeSequence || AminoAcid.Empty,
     start: +variant.begin,
     xrefNames: getSourceType(variant.xrefs, variant.sourceType),
     hasPredictions: variant.predictions && variant.predictions.length > 0,
     tooltipContent: formatTooltip(variant),
   }));
   if (!variants) return null;
+  console.log({ sequence, variants });
   return { sequence, variants };
 };
 
