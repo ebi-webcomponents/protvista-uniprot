@@ -425,7 +425,7 @@
           "data": [
             {
               "adapter": "proteomics-ptm-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/ptm/{accession}"
             }
           ],
           "tooltip": "Modified residues from Large scale studies"
@@ -591,8 +591,8 @@
       "trackType": "nightingale-track",
       "adapter": "proteomics-adapter",
       "urls": [
-        "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}",
-        "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+        "https://www.ebi.ac.uk/proteins/api/proteomics/nonPtm/{accession}",
+        "https://www.ebi.ac.uk/proteins/api/proteomics/ptm/{accession}"
       ],
       "tracks": [
         {
@@ -603,7 +603,7 @@
           "data": [
             {
               "adapter": "proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/nonPtm/{accession}"
             }
           ],
           "tooltip": ""
@@ -616,7 +616,7 @@
           "data": [
             {
               "adapter": "proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/nonPtm/{accession}"
             }
           ],
           "tooltip": ""
@@ -628,7 +628,7 @@
           "data": [
             {
               "adapter": "proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/hpp/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/hpp/{accession}"
             }
           ],
           "tooltip": ""
@@ -640,7 +640,7 @@
           "data": [
             {
               "adapter": "proteomics-adapter",
-              "url": "https://www.ebi.ac.uk/proteins/api/proteomics-ptm/{accession}"
+              "url": "https://www.ebi.ac.uk/proteins/api/proteomics/ptm/{accession}"
             }
           ],
           "tooltip": ""
