@@ -1,5 +1,15 @@
 import ecoMap from '../adapters/config/evidence';
 
+const peptideAtlasBuildData = {
+  '36329': { build: '542', organism: 'Plasmodium' },
+  '39947': { build: '539', organism: 'Rice' },
+  '10090': { build: '577', organism: 'Mouse' },
+  '9606': { build: '537', organism: 'Human' },
+  '559292': { build: '586', organism: 'Yeast' },
+  '4577': { build: '591', organism: 'Maize' },
+  '185431': { build: '590', organism: 'T Brucei' },
+};
+
 const formatSource = (source) => {
   if (source.name?.toLowerCase() === 'PubMed'.toLowerCase()) {
     return `${source.id}&nbsp;(<a href='${source.url}' style="color:#FFF" target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' style="color:#FFF" target='_blank'>EuropePMC</a>)`;
@@ -45,7 +55,7 @@ export const formatXrefs = (xrefs) => {
     .join('')}</ul>`;
 };
 
-const getPTMEvidence = (ptms) => {
+const getPTMEvidence = (ptms, taxId) => {
   if (!ptms) return ``;
   const ids = ptms.flatMap(({ dbReferences }) =>
     dbReferences.map((ref) => ref.id)
@@ -61,7 +71,7 @@ const getPTMEvidence = (ptms) => {
         return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" style="color:#FFF" target="_blank">ProteomeXchange</a>${
           id === 'Glue project'
             ? `)</li><li title="publication" style="padding: .25rem 0">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" style="color:#FFF" target="_blank">PubMed</a>)</li>`
-            : `&nbsp;<a href="http://www.peptideatlas.org/builds/rice/phospho/" style="color:#FFF" target="_blank">PeptideAtlas</a>)</li>`
+            : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${peptideAtlasBuildData[taxId].build}" style="color:#FFF" target="_blank">PeptideAtlas</a>)</li>`
         }`;
       })
       .join('')}</ul>
@@ -105,7 +115,7 @@ const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
   const proteinLocation = Number(peptideStart) + ptm.position - 1;
   const modifiedResidue = peptide.charAt(ptm.position - 1); // CharAt index starts from 0
-  if (ptm.name === '"Phosphorylation"') {
+  if (ptm.name === 'Phosphorylation') {
     return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
   } else if (ptm.name === 'SUMOylation') {
     return `${proteinLocation} SUMO${AASumoSites[modifiedResidue]}`;
@@ -113,10 +123,10 @@ const findModifiedResidueName = (feature, ptm) => {
   return '';
 };
 
-const formatTooltip = (feature) => {
+const formatTooltip = (feature, taxId?: string) => {
   const evidenceHTML =
     feature.type === 'PROTEOMICS_PTM'
-      ? getPTMEvidence(feature.ptms)
+      ? getPTMEvidence(feature.ptms, taxId)
       : getEvidenceFromCodes(feature.evidences);
   const ptms =
     feature.type === 'PROTEOMICS_PTM' &&
