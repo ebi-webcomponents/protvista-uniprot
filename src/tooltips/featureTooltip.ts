@@ -88,7 +88,7 @@ const formatPTMPeptidoform = (peptide, ptms) => {
   return peptidoform;
 };
 
-// At the moment, there is only phospho data. In future we may have more, the below AA sites have to be updated to accomodate more.
+// Amino acids for Phosphorylation modification
 const AAPhosphoSites = {
   A: 'alanine',
   S: 'serine',
@@ -96,11 +96,21 @@ const AAPhosphoSites = {
   Y: 'tyrosine',
 };
 
+// Amino acids for SUMOylation modification
+const AASumoSites = {
+  K: 'lysine'
+}
+
 const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
   const proteinLocation = Number(peptideStart) + ptm.position - 1;
   const modifiedResidue = peptide.charAt(ptm.position - 1); // CharAt index starts from 0
-  return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
+  if (ptm.name === '"Phosphorylation"') {
+    return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
+  } else if (ptm.name === 'SUMOylation') {
+    return `${proteinLocation} SUMO${AASumoSites[modifiedResidue]}`;
+  }
+  return '';
 };
 
 const formatTooltip = (feature) => {
