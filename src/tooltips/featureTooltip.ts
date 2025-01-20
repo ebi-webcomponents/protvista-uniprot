@@ -108,8 +108,8 @@ const AAPhosphoSites = {
 
 // Amino acids for SUMOylation modification
 const AASumoSites = {
-  K: 'lysine'
-}
+  K: 'lysine',
+};
 
 const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
@@ -118,7 +118,7 @@ const findModifiedResidueName = (feature, ptm) => {
   if (ptm.name === 'Phosphorylation') {
     return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
   } else if (ptm.name === 'SUMOylation') {
-    return `${proteinLocation} SUMO${AASumoSites[modifiedResidue]}`;
+    return `${proteinLocation} Sumoylated ${AASumoSites[modifiedResidue]}`;
   }
   return '';
 };
@@ -207,25 +207,38 @@ const formatTooltip = (feature, taxId?: string) => {
                           feature,
                           ptm
                         )}</b></li>
-                        <li style="text-indent: 2em">PubMed ID: <a href="https://europepmc.org/article/MED/${
+                        ${
                           ref.properties['Pubmed ID']
-                        }" style="color:#FFF" target="_blank">
-                        ${ref.properties['Pubmed ID']}</a>
-                        </li>
-                        <li style="text-indent: 2em"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${
+                            ? `<li style="text-indent: 2em">PubMed ID: <a href="https://europepmc.org/article/MED/${ref.properties['Pubmed ID']}" style="color:#FFF" target="_blank">${ref.properties['Pubmed ID']}</a></li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['Confidence score']
-                        }</li>
-                        <li style="text-indent: 2em">Universal Spectrum Id: 
-                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${
-                          ref.properties['Universal Spectrum Id']
-                        }" style="color:#FFF" target="_blank">View on ProteomeXchange</a>
-                        </li>
-                        <li style="text-indent: 2em">PSM Count (0.05 gFLR): ${
+                            ? `<li style="text-indent: 2em"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${ref.properties['Confidence score']}</li>`
+                            : ``
+                        }
+                        ${
+                          ref.properties['Organism part']
+                            ? `<li style="text-indent: 2em">Organism part: ${ref.properties['Organism part']}</li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['PSM Count (0.05 gFLR)']
-                        }</li>
-                        <li style="text-indent: 2em">Final site probability: ${
+                            ? `<li style="text-indent: 2em">PSM Count (0.05 gFLR): ${ref.properties['PSM Count (0.05 gFLR)']}</li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['Final site probability']
-                        }</li>
+                            ? `<li style="text-indent: 2em">Final site probability: ${ref.properties['Final site probability']}</li>`
+                            : ``
+                        }
+                        ${
+                          ref.properties['Universal Spectrum Id']
+                            ? `<li style="text-indent: 2em; white-space: nowrap;">Universal Spectrum Id: 
+                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${ref.properties['Universal Spectrum Id']}" target="_blank">View on ProteomeXchange</a>
+                        </li>`
+                            : ``
+                        }                        
                         `
                     )
                     .join('')
