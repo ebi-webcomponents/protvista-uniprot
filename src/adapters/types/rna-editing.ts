@@ -13,10 +13,10 @@ export type RnaEditing = {
   sequence: string;
   sequenceChecksum: string;
   taxid: number;
-  features: Feature[];
+  features: RnaEditingFeature[];
 };
 
-type Feature = {
+export type RnaEditingFeature = {
   type: Type;
   xrefs: Xref[];
   dbReferenceType: DBReferenceType[];
@@ -24,6 +24,15 @@ type Feature = {
   rnaEditingInfo: RnaEditingInfo;
   locationType: LocationType;
   variantlocation: string[];
+};
+
+export type TransformedRnaEditing = RnaEditingFeature & {
+  accession: string;
+  variant: string;
+  start: number;
+  end: number;
+  tooltipContent: string;
+  consequenceType: string;
 };
 
 type DBReferenceType = {
