@@ -218,6 +218,11 @@ const formatTooltip = (feature, taxId?: string) => {
                             : ``
                         }
                         ${
+                          ref.properties['Sumo isoforms']
+                            ? `<li style="text-indent: 2em">SUMO family member: ${ref.properties['Sumo isoforms']}</li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['Organism part']
                             ? `<li style="text-indent: 2em">Organism part: ${ref.properties['Organism part']}</li>`
                             : ``
