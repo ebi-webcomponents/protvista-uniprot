@@ -5,7 +5,7 @@ import formatTooltip from '../tooltips/rnaEditingTooltip';
 
 const transformData = ({
   sequence,
-  features,
+  features = [],
 }: RnaEditing): {
   sequence: string;
   variants: TransformedRnaEditing[];
