@@ -35,7 +35,7 @@ import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 import { fetchAll, loadComponent } from './utils';
 
 import filterConfig, { colorConfig } from './filter-config';
-import defaultConfig from './config.json';
+import config from './config';
 
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
@@ -367,7 +367,7 @@ class ProtvistaUniprot extends LitElement {
 
   _init() {
     if (!this.config) {
-      this.config = defaultConfig as ProtvistaConfig;
+      this.config = config as ProtvistaConfig;
     }
 
     if (!this.accession) return;
