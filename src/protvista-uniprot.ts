@@ -43,6 +43,8 @@ import config, {
   TrackType,
 } from './config';
 
+import { TransformedInterPro } from './adapters/types/interpro';
+
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
 import loaderStyles from './styles/loader-styles';
@@ -180,20 +182,22 @@ class ProtvistaUniprot extends LitElement {
 
             if (adapter === 'interpro-adapter') {
               const representativeDomains = [];
-              transformedData?.forEach((feature) => {
-                feature.locations?.forEach((location) => {
-                  if (location.representative) {
-                    location.fragments?.forEach((fragment) => {
-                      representativeDomains.push({
-                        ...feature,
-                        type: 'InterPro Representative Domain',
-                        start: fragment.start,
-                        end: fragment.end,
+              (transformedData as TransformedInterPro | undefined)?.forEach(
+                (feature) => {
+                  feature.locations?.forEach((location) => {
+                    if (location.representative) {
+                      location.fragments?.forEach((fragment) => {
+                        representativeDomains.push({
+                          ...feature,
+                          type: 'InterPro Representative Domain',
+                          start: fragment.start,
+                          end: fragment.end,
+                        });
                       });
-                    });
-                  }
-                });
-              });
+                    }
+                  });
+                }
+              );
               transformedData = representativeDomains;
             }
 
