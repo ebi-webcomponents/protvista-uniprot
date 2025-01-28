@@ -4,18 +4,69 @@ const alphafoldEntry = 'https://alphafold.ebi.ac.uk/entry/';
 const interproApi = 'https://www.ebi.ac.uk/interpro/api/';
 
 const proteinsApiServices = {
-    proteins: `${proteinsApi}proteins/`,
-    features: `${proteinsApi}features/`,
-    variation: `${proteinsApi}variation/`,
-    antigen: `${proteinsApi}antigen/`,
-    epitope: `${proteinsApi}epitope/`,
-    mutagenesis: `${proteinsApi}mutagenesis/`,
-    nonPtm: `${proteinsApi}proteomics/nonPtm/`,
-    ptm: `${proteinsApi}proteomics/ptm/`,
-    hpp: `${proteinsApi}proteomics/hpp/`,
+  proteins: `${proteinsApi}proteins/`,
+  features: `${proteinsApi}features/`,
+  variation: `${proteinsApi}variation/`,
+  antigen: `${proteinsApi}antigen/`,
+  epitope: `${proteinsApi}epitope/`,
+  mutagenesis: `${proteinsApi}mutagenesis/`,
+  nonPtm: `${proteinsApi}proteomics/nonPtm/`,
+  ptm: `${proteinsApi}proteomics/ptm/`,
+  hpp: `${proteinsApi}proteomics/hpp/`,
 };
 
-const config = {
+export type TrackType =
+  | 'nightingale-track'
+  | 'nightingale-interpro-track'
+  | 'nightingale-colored-sequence'
+  | 'nightingale-variation'
+  | 'nightingale-linegraph-track'
+  | 'nightingale-sequence-heatmap';
+
+export type ProtvistaTrackConfig = {
+  name: string;
+  label?: string;
+  labelUrl?: string;
+  filter?: string;
+  trackType: TrackType;
+  data: {
+    url: string | string[];
+    adapter?:
+      | 'feature-adapter'
+      | 'structure-adapter'
+      | 'proteomics-adapter'
+      | 'variation-adapter'
+      | 'variation-graph-adapter'
+      | 'interpro-adapter'
+      | 'alphafold-confidence-adapter'
+      | 'alphamissense-pathogenicity-adapter'
+      | 'alphamissense-heatmap-adapter'
+      | 'proteomics-ptm-adapter';
+  }[];
+  tooltip: string;
+  color?: string;
+  shape?: string; //TODO: eventually replace with list
+  scale?: string;
+  filterComponent?: 'nightingale-filter';
+  'color-range'?: string;
+};
+
+type ProtvistaCategory = {
+  name: string;
+  label: string;
+  trackType: TrackType;
+  tracks: ProtvistaTrackConfig[];
+  color?: string;
+  shape?: string; //TODO: eventually replace with list
+  scale?: string;
+  'color-range'?: string;
+};
+
+export type ProtvistaConfig = {
+  categories: ProtvistaCategory[];
+};
+
+const config: ProtvistaConfig = {
   categories: [
     {
       name: 'MOLECULE_PROCESSING',
@@ -553,7 +604,7 @@ const config = {
           data: [
             {
               adapter: 'feature-adapter',
-              url: `${proteinsApiServices.antigen}{accession}`
+              url: `${proteinsApiServices.antigen}{accession}`,
             },
           ],
           tooltip: '',
@@ -604,7 +655,7 @@ const config = {
           data: [
             {
               adapter: 'variation-graph-adapter',
-              url: `${proteinsApiServices.variation}{accession}`
+              url: `${proteinsApiServices.variation}{accession}`,
             },
           ],
           tooltip:
@@ -617,7 +668,7 @@ const config = {
           data: [
             {
               adapter: 'variation-adapter',
-              url: `${proteinsApiServices.variation}{accession}`
+              url: `${proteinsApiServices.variation}{accession}`,
             },
           ],
           tooltip:
@@ -629,7 +680,6 @@ const config = {
       name: 'PROTEOMICS',
       label: 'Proteomics',
       trackType: 'nightingale-track',
-      adapter: 'proteomics-adapter',
       tracks: [
         {
           name: 'unique',

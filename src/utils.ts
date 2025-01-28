@@ -15,7 +15,10 @@ export const loadComponent = (
 
 // Returns an object of the form url => payload json
 // getUrl optional function modifies url string
-export const fetchAll = async (urls: string[], getUrl = null) =>
+export const fetchAll = async (
+  urls: string[],
+  getUrl: ((url: string) => string) | null = null
+) =>
   Object.fromEntries(
     await Promise.all(
       urls.map(async (url) => {
