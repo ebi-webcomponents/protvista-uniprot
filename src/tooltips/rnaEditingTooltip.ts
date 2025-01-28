@@ -15,7 +15,7 @@ const getLinks = (feature: TransformedRnaEditing) => {
     links.push(
       `REDIportal <a href="${getREDIportalLink(
         rediPortalId
-      )}">${rediPortalId}</a>`
+      )}" target="_blank">${rediPortalId}</a>`
     );
   }
   for (const variantLocation of feature.variantType.variantLocation) {
