@@ -21,7 +21,7 @@ const getLinks = (feature: TransformedRnaEditing) => {
   for (const variantLocation of feature.variantType.variantLocation) {
     if (variantLocation.source === 'Ensembl') {
       links.push(
-        `Ensembl <a href="${getEnsemblLink(variantLocation.seqId)}">${
+        `Ensembl <a href="${getEnsemblLink(variantLocation.seqId)}" target="_blank">${
           variantLocation.seqId
         }</a>`
       );
