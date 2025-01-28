@@ -87,53 +87,39 @@ const getPredictions = (predictions: Prediction[]): string => {
 
 const formatTooltip = (variant: Variant): string =>
   `
-                <h5>Variant</h5><p>${variant.wildType} > ${
+  ${
+    variant.type && variant.begin && variant.end
+      ? `<h4>${variant.type} ${variant.begin}-${variant.end}</h4><hr />`
+      : ''
+  }
+  <h5>Variant</h5><p>${variant.wildType} > ${
     variant.alternativeSequence || ''
   }</p>
-                ${
-                  variant.populationFrequencies
-                    ? getPopulationFrequencies(variant.populationFrequencies)
-                    : ''
-                }
-                ${
-                  variant.consequenceType
-                    ? `<h5>Consequence</h5><p>${variant.consequenceType}</p>`
-                    : ``
-                }
-                ${
-                  variant.somaticStatus
-                    ? `<h5>Somatic</h5><p>${
-                        variant.somaticStatus === 0 ? 'No' : 'Yes'
-                      }</p>`
-                    : ``
-                }
-                ${
-                  variant.genomicLocation?.length
-                    ? `<h5>Location</h5><p>${variant.genomicLocation.join(
-                        ', '
-                      )}</p>`
-                    : ``
-                }
-                ${
-                  variant.ftId
-                    ? `<h5>Feature ID</h5><p>${variant.ftId}</p>`
-                    : ``
-                }
-                ${
-                  variant.descriptions
-                    ? getDescriptions(variant.descriptions)
-                    : ''
-                }
-                ${
-                  variant.association
-                    ? getDiseaseAssociations(variant.association)
-                    : ''
-                }
-                ${
-                  variant.predictions ? getPredictions(variant.predictions) : ''
-                }
-                ${getEnsemblCovidLinks(variant)}
-                
-        `;
+  ${
+    variant.populationFrequencies
+      ? getPopulationFrequencies(variant.populationFrequencies)
+      : ''
+  }
+  ${
+    variant.consequenceType
+      ? `<h5>Consequence</h5><p>${variant.consequenceType}</p>`
+      : ``
+  }
+  ${
+    variant.somaticStatus
+      ? `<h5>Somatic</h5><p>${variant.somaticStatus === 0 ? 'No' : 'Yes'}</p>`
+      : ``
+  }
+  ${
+    variant.genomicLocation?.length
+      ? `<h5>Location</h5><p>${variant.genomicLocation.join(', ')}</p>`
+      : ``
+  }
+  ${variant.ftId ? `<h5>Feature ID</h5><p>${variant.ftId}</p>` : ``}
+  ${variant.descriptions ? getDescriptions(variant.descriptions) : ''}
+  ${variant.association ? getDiseaseAssociations(variant.association) : ''}
+  ${variant.predictions ? getPredictions(variant.predictions) : ''}
+  ${getEnsemblCovidLinks(variant)}
+`;
 
 export default formatTooltip;

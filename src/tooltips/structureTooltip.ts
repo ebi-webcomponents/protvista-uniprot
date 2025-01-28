@@ -14,7 +14,15 @@ const getStructuresHTML = (structureList) => {
 
 const formatTooltip = (feature) => {
   const structuresHTML = getStructuresHTML(feature.structures);
-  return `${structuresHTML ? `<h5>Structures</h5>${structuresHTML}` : ``}`;
+  return !structuresHTML
+    ? ''
+    : `
+    ${
+      feature.type && feature.start && feature.end
+        ? `<h4>${feature.type} ${feature.start}-${feature.end}</h4><hr />`
+        : ''
+    }
+    <h5>Structures</h5>${structuresHTML}`;
 };
 
 export default formatTooltip;

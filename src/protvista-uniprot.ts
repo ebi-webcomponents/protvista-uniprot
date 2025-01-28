@@ -25,6 +25,8 @@ import variationAdapter, {
 } from './adapters/variation-adapter';
 import interproAdapter from './adapters/interpro-adapter';
 import variationGraphAdapter from './adapters/variation-graph-adapter';
+import rnaEditingGraphAdapter from './adapters/rna-editing-graph-adapter';
+import rnaEditingAdapter from './adapters/rna-editing-adapter';
 import proteomicsPTMApdapter from './adapters/ptm-exchange-adapter';
 import alphaFoldConfidenceAdapter from './adapters/alphafold-confidence-adapter';
 import alphaMissensePathogenicityAdapter from './adapters/alphamissense-pathogenicity-adapter';
@@ -48,6 +50,8 @@ const adapters = {
   'structure-adapter': structureAdapter,
   'variation-adapter': variationAdapter,
   'variation-graph-adapter': variationGraphAdapter,
+  'rna-editing-adapter': rnaEditingAdapter,
+  'rna-editing-graph-adapter': rnaEditingGraphAdapter,
   'proteomics-ptm-adapter': proteomicsPTMApdapter,
   'alphafold-confidence-adapter': alphaFoldConfidenceAdapter,
   'alphamissense-pathogenicity-adapter': alphaMissensePathogenicityAdapter,
@@ -141,8 +145,8 @@ class ProtvistaUniprot extends LitElement {
     this.data = {};
     this.rawData = {};
     this.displayCoordinates = {};
-    (this.transformedVariants = { sequence: '', variants: [] }),
-      this.addStyles();
+    this.transformedVariants = { sequence: '', variants: [] };
+    this.addStyles();
   }
 
   static get properties() {
@@ -159,9 +163,7 @@ class ProtvistaUniprot extends LitElement {
   }
 
   addStyles() {
-    // We are not using static get styles()
-    // as we are not using the shadowDOM
-    // because of Mol*
+    // We are not using static get styles() as we are not using the shadowDOM because of Mol*
     const styleTag = document.createElement('style');
     styleTag.innerHTML = `${protvistaStyles.toString()} ${loaderStyles.toString()}`;
     document.querySelector('head')?.append(styleTag);
