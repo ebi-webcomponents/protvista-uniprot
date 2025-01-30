@@ -1,15 +1,15 @@
 import ColorHash from 'color-hash';
 
+import { InterProProteinSearch, TransformedInterPro } from './types/interpro';
+
 // Copied from InterPro to replicate the same colours for the representative domains
-/* eslint-disable no-magic-numbers */
 const colorHash = new ColorHash({
   hash: 'bkdr',
   saturation: [0.65, 0.35, 0.5],
   lightness: [0.65, 0.35, 0.5],
 });
-/* eslint-enable no-magic-numbers */
 
-const transformData = (data) => {
+const transformData = (data: InterProProteinSearch): TransformedInterPro => {
   try {
     return data?.results?.map(({ metadata, proteins }) => ({
       ...metadata,

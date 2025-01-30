@@ -14,7 +14,9 @@ import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro
 import NightingaleVariation from '@nightingale-elements/nightingale-variation';
 import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegraph-track';
 import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequence-heatmap';
-import NightingaleFilter from '@nightingale-elements/nightingale-filter';
+import NightingaleFilter, {
+  Filter,
+} from '@nightingale-elements/nightingale-filter';
 
 // adapters
 import featureAdapter from './adapters/feature-adapter';
@@ -35,7 +37,13 @@ import ProtvistaUniprotStructure from './protvista-uniprot-structure';
 import { fetchAll, loadComponent } from './utils';
 
 import filterConfig, { colorConfig } from './filter-config';
-import defaultConfig from './config.json';
+import config, {
+  ProtvistaConfig,
+  ProtvistaTrackConfig,
+  TrackType,
+} from './config';
+
+import { TransformedInterPro } from './adapters/types/interpro';
 
 import loaderIcon from './icons/spinner.svg';
 import protvistaStyles from './styles/protvista-styles';
@@ -52,56 +60,6 @@ const adapters = {
   'alphafold-confidence-adapter': alphaFoldConfidenceAdapter,
   'alphamissense-pathogenicity-adapter': alphaMissensePathogenicityAdapter,
   'alphamissense-heatmap-adapter': alphaMissenseHeatmapAdapter,
-};
-
-type TrackType =
-  | 'nightingale-track'
-  | 'nightingale-interpro-track'
-  | 'nightingale-colored-sequence'
-  | 'nightingale-variation'
-  | 'nightingale-linegraph-track'
-  | 'nightingale-sequence-heatmap';
-
-type ProtvistaTrackConfig = {
-  name: string;
-  label: string;
-  labelUrl?: string;
-  filter: string;
-  trackType: TrackType;
-  data: {
-    url: string | string[];
-    adapter?:
-      | 'feature-adapter'
-      | 'structure-adapter'
-      | 'proteomics-adapter'
-      | 'variation-adapter'
-      | 'variation-graph-adapter'
-      | 'interpro-adapter'
-      | 'alphafold-confidence-adapter'
-      | 'alphamissense-pathogenicity-adapter'
-      | 'alphamissense-heatmap-adapter';
-  }[];
-  tooltip: string;
-  color?: string;
-  shape?: string; //TODO: eventually replace with list
-  scale?: string;
-  filterComponent?: 'nightingale-filter';
-  'color-range'?: string;
-};
-
-type ProtvistaCategory = {
-  name: string;
-  label: string;
-  trackType: TrackType;
-  tracks: ProtvistaTrackConfig[];
-  color?: string;
-  shape?: string; //TODO: eventually replace with list
-  scale?: string;
-  'color-range'?: string;
-};
-
-type ProtvistaConfig = {
-  categories: ProtvistaCategory[];
 };
 
 type NightingaleEvent = Event & {
@@ -190,7 +148,7 @@ class ProtvistaUniprot extends LitElement {
       );
 
       // Get the data for all urls and store it
-      this.rawData = await fetchAll([...new Set(urls)], (url) =>
+      this.rawData = await fetchAll([...new Set(urls)], (url: string) =>
         url.replace('{accession}', accession)
       );
 
@@ -224,20 +182,22 @@ class ProtvistaUniprot extends LitElement {
 
             if (adapter === 'interpro-adapter') {
               const representativeDomains = [];
-              transformedData?.forEach((feature) => {
-                feature.locations?.forEach((location) => {
-                  location.fragments?.forEach((fragment) => {
-                    if (fragment.representative) {
-                      representativeDomains.push({
-                        ...feature,
-                        type: 'InterPro Representative Domain',
-                        start: fragment.start,
-                        end: fragment.end,
+              (transformedData as TransformedInterPro | undefined)?.forEach(
+                (feature) => {
+                  feature.locations?.forEach((location) => {
+                    if (location.representative) {
+                      location.fragments?.forEach((fragment) => {
+                        representativeDomains.push({
+                          ...feature,
+                          type: 'InterPro Representative Domain',
+                          start: fragment.start,
+                          end: fragment.end,
+                        });
                       });
                     }
                   });
-                });
-              });
+                }
+              );
               transformedData = representativeDomains;
             }
 
@@ -323,7 +283,7 @@ class ProtvistaUniprot extends LitElement {
               this.querySelector<NightingaleSequenceHeatmap>(
                 'nightingale-sequence-heatmap'
               );
-            if (heatmapComponent) {
+            if (heatmapComponent && this.sequence) {
               const heatmapData = this.data[`${id}-${track.name}`];
               const xDomain = Array.from(
                 { length: this.sequence.length },
@@ -346,7 +306,7 @@ class ProtvistaUniprot extends LitElement {
     const filterComponent =
       this.querySelector<NightingaleFilter>('nightingale-filter');
     if (filterComponent && filterComponent.filters !== filterConfig) {
-      filterComponent.filters = filterConfig;
+      filterComponent.filters = filterConfig as Filter[];
     }
 
     const variationComponent = this.querySelector<NightingaleVariation>(
@@ -367,7 +327,7 @@ class ProtvistaUniprot extends LitElement {
 
   _init() {
     if (!this.config) {
-      this.config = defaultConfig as ProtvistaConfig;
+      this.config = config;
     }
 
     if (!this.accession) return;
@@ -515,6 +475,7 @@ class ProtvistaUniprot extends LitElement {
                                 `${category.name}-${track.name}`
                               )) ||
                             (track.labelUrl &&
+                              this.accession &&
                               html`<a
                                 target="_blank"
                                 href="${track.labelUrl.replace(
@@ -651,7 +612,7 @@ class ProtvistaUniprot extends LitElement {
         .map((f) => this.getFilter(provenanceFilters, f))
         .filter(Boolean);
 
-      const filteredVariants = this.transformedVariants.variants
+      const filteredVariants = this.transformedVariants?.variants
         ?.filter((variant) =>
           selectedConsequenceFilters.some((filter) =>
             filter.filterPredicate(variant)

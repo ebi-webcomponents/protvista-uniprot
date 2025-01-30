@@ -1,5 +1,15 @@
 import ecoMap from '../adapters/config/evidence';
 
+const taxIdToPeptideAtlasBuildData = {
+  '36329': { build: '542', organism: 'Plasmodium' },
+  '39947': { build: '539', organism: 'Rice' },
+  '10090': { build: '577', organism: 'Mouse' },
+  '9606': { build: '537', organism: 'Human' },
+  '559292': { build: '586', organism: 'Yeast' },
+  '4577': { build: '591', organism: 'Maize' },
+  '185431': { build: '590', organism: 'T Brucei' },
+};
+
 const formatSource = (source) => {
   if (source.name?.toLowerCase() === 'PubMed'.toLowerCase()) {
     return `${source.id}&nbsp;(<a href='${source.url}' style="color:#FFF" target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' style="color:#FFF" target='_blank'>EuropePMC</a>)`;
@@ -45,7 +55,7 @@ export const formatXrefs = (xrefs) => {
     .join('')}</ul>`;
 };
 
-const getPTMEvidence = (ptms) => {
+const getPTMEvidence = (ptms, taxId) => {
   if (!ptms) return ``;
   const ids = ptms.flatMap(({ dbReferences }) =>
     dbReferences.map((ref) => ref.id)
@@ -61,7 +71,7 @@ const getPTMEvidence = (ptms) => {
         return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" style="color:#FFF" target="_blank">ProteomeXchange</a>${
           id === 'Glue project'
             ? `)</li><li title="publication" style="padding: .25rem 0">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" style="color:#FFF" target="_blank">PubMed</a>)</li>`
-            : `&nbsp;<a href="http://www.peptideatlas.org/builds/rice/phospho/" style="color:#FFF" target="_blank">PeptideAtlas</a>)</li>`
+            : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" style="color:#FFF" target="_blank">PeptideAtlas</a>)</li>`
         }`;
       })
       .join('')}</ul>
@@ -88,7 +98,7 @@ const formatPTMPeptidoform = (peptide, ptms) => {
   return peptidoform;
 };
 
-// At the moment, there is only phospho data. In future we may have more, the below AA sites have to be updated to accomodate more.
+// Amino acids for Phosphorylation modification
 const AAPhosphoSites = {
   A: 'alanine',
   S: 'serine',
@@ -96,17 +106,27 @@ const AAPhosphoSites = {
   Y: 'tyrosine',
 };
 
+// Amino acids for SUMOylation modification
+const AASumoSites = {
+  K: 'lysine',
+};
+
 const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
   const proteinLocation = Number(peptideStart) + ptm.position - 1;
   const modifiedResidue = peptide.charAt(ptm.position - 1); // CharAt index starts from 0
-  return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
+  if (ptm.name === 'Phosphorylation') {
+    return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
+  } else if (ptm.name === 'SUMOylation') {
+    return `${proteinLocation} Sumoylated ${AASumoSites[modifiedResidue]}`;
+  }
+  return '';
 };
 
-const formatTooltip = (feature) => {
+const formatTooltip = (feature, taxId?: string) => {
   const evidenceHTML =
     feature.type === 'PROTEOMICS_PTM'
-      ? getPTMEvidence(feature.ptms)
+      ? getPTMEvidence(feature.ptms, taxId)
       : getEvidenceFromCodes(feature.evidences);
   const ptms =
     feature.type === 'PROTEOMICS_PTM' &&
@@ -187,25 +207,43 @@ const formatTooltip = (feature) => {
                           feature,
                           ptm
                         )}</b></li>
-                        <li style="text-indent: 2em">PubMed ID: <a href="https://europepmc.org/article/MED/${
+                        ${
                           ref.properties['Pubmed ID']
-                        }" style="color:#FFF" target="_blank">
-                        ${ref.properties['Pubmed ID']}</a>
-                        </li>
-                        <li style="text-indent: 2em"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${
+                            ? `<li style="text-indent: 2em">PubMed ID: <a href="https://europepmc.org/article/MED/${ref.properties['Pubmed ID']}" style="color:#FFF" target="_blank">${ref.properties['Pubmed ID']}</a></li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['Confidence score']
-                        }</li>
-                        <li style="text-indent: 2em">Universal Spectrum Id: 
-                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${
-                          ref.properties['Universal Spectrum Id']
-                        }" style="color:#FFF" target="_blank">View on ProteomeXchange</a>
-                        </li>
-                        <li style="text-indent: 2em">PSM Count (0.05 gFLR): ${
+                            ? `<li style="text-indent: 2em"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${ref.properties['Confidence score']}</li>`
+                            : ``
+                        }
+                        ${
+                          ref.properties['Sumo isoforms']
+                            ? `<li style="text-indent: 2em">SUMO family member: ${ref.properties['Sumo isoforms']}</li>`
+                            : ``
+                        }
+                        ${
+                          ref.properties['Organism part']
+                            ? `<li style="text-indent: 2em">Organism part: ${ref.properties['Organism part']}</li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['PSM Count (0.05 gFLR)']
-                        }</li>
-                        <li style="text-indent: 2em">Final site probability: ${
+                            ? `<li style="text-indent: 2em">PSM Count (0.05 gFLR): ${ref.properties['PSM Count (0.05 gFLR)']}</li>`
+                            : ``
+                        }
+                        ${
                           ref.properties['Final site probability']
-                        }</li>
+                            ? `<li style="text-indent: 2em">Final site probability: ${ref.properties['Final site probability']}</li>`
+                            : ``
+                        }
+                        ${
+                          ref.properties['Universal Spectrum Id']
+                            ? `<li style="text-indent: 2em; white-space: nowrap;">Universal Spectrum Id: 
+                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${ref.properties['Universal Spectrum Id']}" target="_blank">View on ProteomeXchange</a>
+                        </li>`
+                            : ``
+                        }                        
                         `
                     )
                     .join('')
