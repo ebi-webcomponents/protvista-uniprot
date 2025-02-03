@@ -156,6 +156,11 @@ const formatTooltip = (feature, taxId?: string) => {
 
   try {
     return `
+        ${
+          feature.type && feature.begin && feature.end
+            ? `<h4>${feature.type} ${feature.begin}-${feature.end}</h4><hr />`
+            : ''
+        }
         ${description ? `<h5>Description</h5><p>${description}</p>` : ``}
         ${
           feature.matchScore
@@ -251,7 +256,7 @@ const formatTooltip = (feature, taxId?: string) => {
                 .join('')}</ul>`
             : ''
         }
-          `;
+      `;
   } catch (error) {
     console.error(error);
     return '';

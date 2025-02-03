@@ -41,7 +41,9 @@ export type ProtvistaTrackConfig = {
       | 'alphafold-confidence-adapter'
       | 'alphamissense-pathogenicity-adapter'
       | 'alphamissense-heatmap-adapter'
-      | 'proteomics-ptm-adapter';
+      | 'proteomics-ptm-adapter'
+      | 'rna-editing-adapter'
+      | 'rna-editing-graph-adapter';
   }[];
   tooltip: string;
   color?: string;
@@ -673,6 +675,38 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Natural variant of the protein, including polymorphisms, variations between strains, isolates or cultivars, disease-associated mutations and RNA editing events',
+        },
+      ],
+    },
+    {
+      name: 'RNA_EDITING',
+      label: 'RNA Editing',
+      trackType: 'nightingale-linegraph-track',
+      tracks: [
+        {
+          name: 'rna_editing_graph',
+          label: 'Counts',
+          trackType: 'nightingale-linegraph-track',
+          data: [
+            {
+              adapter: 'rna-editing-graph-adapter',
+              url: `${proteinsApi}rna-editing/{accession}`,
+            },
+          ],
+          tooltip:
+            'RNA editing events leading to one or more amino acid changes compared to the translation of the non-edited RNA version.',
+        },
+        {
+          name: 'RNA Editing',
+          trackType: 'nightingale-variation',
+          data: [
+            {
+              adapter: 'rna-editing-adapter',
+              url: `${proteinsApi}rna-editing/{accession}`,
+            },
+          ],
+          tooltip:
+            'RNA editing events leading to one or more amino acid changes compared to the translation of the non-edited RNA version.',
         },
       ],
     },
