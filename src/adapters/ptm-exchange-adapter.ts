@@ -85,7 +85,7 @@ const convertPtmExchangePtms = (
       dbReferences?.map(({ properties }) => properties['Confidence score'])
     )
   );
-  let confidenceScore: string;
+  let confidenceScore: string | null = null;
 
   if (!confidenceScores.size) {
     console.log('PTM has no confidence score');
@@ -131,7 +131,8 @@ const convertPtmExchangePtms = (
     end: absolutePosition,
     shape: 'triangle',
     tooltipContent: tooltip,
-    color: ConfidenceScoreColors[confidenceScore] || 'black',
+    color:
+      (confidenceScore && ConfidenceScoreColors[confidenceScore]) || 'black',
   };
 };
 

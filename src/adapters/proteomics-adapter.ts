@@ -1,11 +1,11 @@
 import { renameProperties } from '../utils';
 import formatTooltip from '../tooltips/featureTooltip';
 
-const proteomicsTrackProperties = (feature) => {
+const proteomicsTrackProperties = (feature, taxId) => {
   return {
     category: 'PROTEOMICS',
     type: feature.unique ? 'unique' : 'non_unique',
-    tooltipContent: formatTooltip(feature),
+    tooltipContent: formatTooltip(feature, taxId),
   };
 };
 
@@ -59,12 +59,12 @@ const transformData = (data) => {
 
         return Object.assign(
           mergedFeatures,
-          proteomicsTrackProperties(mergedFeatures)
+          proteomicsTrackProperties(mergedFeatures, data.taxid)
         );
       }, []);
     } else {
       adaptedData = data.features.map((feature) => {
-        return Object.assign(feature, proteomicsTrackProperties(feature));
+        return Object.assign(feature, proteomicsTrackProperties(feature, data.taxid));
       });
     }
 
