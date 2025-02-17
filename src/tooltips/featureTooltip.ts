@@ -1,4 +1,5 @@
 import ecoMap from '../adapters/config/evidence';
+import { phosphorylate, sumoylate } from './ptmTooltip';
 
 const taxIdToPeptideAtlasBuildData = {
   '36329': { build: '542', organism: 'Plasmodium' },
@@ -98,27 +99,14 @@ const formatPTMPeptidoform = (peptide, ptms) => {
   return peptidoform;
 };
 
-// Amino acids for Phosphorylation modification
-const AAPhosphoSites = {
-  A: 'alanine',
-  S: 'serine',
-  T: 'threonine',
-  Y: 'tyrosine',
-};
-
-// Amino acids for SUMOylation modification
-const AASumoSites = {
-  K: 'lysine',
-};
-
 const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
   const proteinLocation = Number(peptideStart) + ptm.position - 1;
   const modifiedResidue = peptide.charAt(ptm.position - 1); // CharAt index starts from 0
   if (ptm.name === 'Phosphorylation') {
-    return `${proteinLocation} phospho${AAPhosphoSites[modifiedResidue]}`;
+    return `${proteinLocation} ${phosphorylate(modifiedResidue)}`;
   } else if (ptm.name === 'SUMOylation') {
-    return `${proteinLocation} Sumoylated ${AASumoSites[modifiedResidue]}`;
+    return `${proteinLocation} ${sumoylate(modifiedResidue)}`;
   }
   return '';
 };
