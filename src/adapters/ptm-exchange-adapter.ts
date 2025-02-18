@@ -1,3 +1,5 @@
+import formatTooltip from "../tooltips/ptmTooltip";
+
 type ProteomicsPtm = {
   accession: string;
   entryName: string;
@@ -34,7 +36,7 @@ type Xref = {
   url: string;
 };
 
-type PTM = {
+export type PTM = {
   name: string;
   position: number;
   sources: string[];
@@ -52,34 +54,11 @@ enum ConfidenceScoreColors {
   Bronze = '#a65708',
 }
 
-const aaToPhosphorylated = {
-  R: 'Phosphoarginine',
-  C: 'Phosphocysteine',
-  H: 'Phosphohistidine',
-  S: 'Phosphoserine',
-  T: 'Phosphothreonine',
-  Y: 'Phosphotyrosine',
-};
-
-const phosphorylate = (aa: string) => {
-  const AA = aa.toUpperCase();
-  if (AA in aaToPhosphorylated) {
-    return aaToPhosphorylated[AA as keyof typeof aaToPhosphorylated];
-  }
-  console.error(`${AA} not a valid amino acid for phosphorylation`);
-  return '';
-};
-
 const convertPtmExchangePtms = (
   ptms: PTM[],
   aa: string,
   absolutePosition: number
 ) => {
-  const evidences = [
-    ...ptms.flatMap(({ dbReferences }) =>
-      dbReferences?.flatMap(({ id }) => [id])
-    ),
-  ];
   const confidenceScores = new Set(
     ptms.flatMap(({ dbReferences }) =>
       dbReferences?.map(({ properties }) => properties['Confidence score'])
@@ -97,40 +76,13 @@ const convertPtmExchangePtms = (
     [confidenceScore] = confidenceScores;
   }
 
-  const tooltip = `
-  <h5>Description</h5><p>${phosphorylate(aa)}</p>
-  ${
-    confidenceScore
-      ? `<h5 data-article-id="mod_res_large_scale#confidence-score">Confidence Score</h5><p>${confidenceScore}</p>`
-      : ''
-  }
-  ${
-    evidences
-      ? `<h5>Evidence</h5><ul class="no-bullet">${evidences
-          .map((id) => {
-            const datasetID = id === 'Glue project' ? 'PXD012174' : id;
-            return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;
-              (<a href="https://proteomecentral.proteomexchange.org/dataset/${datasetID}" style="color:#FFF" target="_blank">ProteomeXchange</a>)
-              </li>
-              ${
-                id === 'Glue project'
-                  ? `<li title="publication" style="padding: .25rem 0">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" style="color:#FFF" target="_blank">PubMed</a>)</li>`
-                  : ''
-              }
-              `;
-          })
-          .join('')}</ul>`
-      : ''
-  }
-  `;
-
   return {
     source: 'PTMeXchange',
     type: 'MOD_RES_LS',
     start: absolutePosition,
     end: absolutePosition,
     shape: 'triangle',
-    tooltipContent: tooltip,
+    tooltipContent: formatTooltip(ptms, aa, confidenceScore),
     color:
       (confidenceScore && ConfidenceScoreColors[confidenceScore]) || 'black',
   };
