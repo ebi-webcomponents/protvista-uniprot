@@ -1565,6 +1565,14 @@
     d3 "7.9.0"
     lit "3.1.3"
 
+"@nightingale-elements/nightingale-new-core@^5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-new-core/-/nightingale-new-core-5.4.1.tgz#5bf2498bcc2537cc2ab0a279d9a65c28db104665"
+  integrity sha512-Wc4p+1b6RG711Gq44kUuIdL+VmsKxjgUQGbYFoWwhM+MjzJd/EDqoJUMJPZZr2ZpGa8or3bTNG82++HYBXQuHg==
+  dependencies:
+    d3 "7.9.0"
+    lit "3.1.3"
+
 "@nightingale-elements/nightingale-sequence-heatmap@5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-sequence-heatmap/-/nightingale-sequence-heatmap-5.4.0.tgz#4296449a9303e1bf5797657f32a825d93e81ce32"
@@ -1591,12 +1599,30 @@
     d3 "7.9.0"
     molstar "3.44.0"
 
+"@nightingale-elements/nightingale-track-canvas@5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-track-canvas/-/nightingale-track-canvas-5.4.1.tgz#078f7a8eaf5ba3cbb2f6e0c13d8f1d72e90a87e9"
+  integrity sha512-Lp5G4+dKFibg/zHvccat2nQuxl2n/OX4+uQycR69pOl3v4YJsnPcJM9disvYHYS6oJrthtp5yP4AvgJjXYIIGw==
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.4.1"
+    "@nightingale-elements/nightingale-track" "^5.4.1"
+    d3 "7.9.0"
+
 "@nightingale-elements/nightingale-track@5.4.0", "@nightingale-elements/nightingale-track@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-track/-/nightingale-track-5.4.0.tgz#f0cfa6f69e91c5f3748d7abccb9805500abfb8c7"
   integrity sha512-aBiEN8enm59ejZ4x2LrMLQazUyZ9pgWx0Q2ZJ+jAAWiRePmQpFNPNQl4J1jNmypnTCrPSRZ77S8e5R0be1kqMQ==
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.4.0"
+    d3 "7.9.0"
+    lodash-es "4.17.15"
+
+"@nightingale-elements/nightingale-track@^5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-track/-/nightingale-track-5.4.1.tgz#774d33420c727c12fb507a1a15480fb9a0d9d56f"
+  integrity sha512-dJCx/+Zk5tVa3iRCFPzrzYfR4diOkwTC+GFCKSX0j9x6bvtCDzCVP15+HIhzOAL0Nhm9sVLBqocGEazYj2UQ2A==
+  dependencies:
+    "@nightingale-elements/nightingale-new-core" "^5.4.1"
     d3 "7.9.0"
     lodash-es "4.17.15"
 
