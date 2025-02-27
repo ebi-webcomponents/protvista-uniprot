@@ -11,27 +11,37 @@ const colorHash = new ColorHash({
 
 const transformData = (data: InterProProteinSearch): TransformedInterPro => {
   try {
-    return data?.results?.map(({ metadata, proteins }) => ({
-      ...metadata,
-      locations: proteins[0].entry_protein_locations,
-      start: proteins[0].entry_protein_locations
+    return data?.results?.map(({ metadata, proteins }) => {
+      const start = proteins[0].entry_protein_locations
         ? Math.min(
             ...proteins[0].entry_protein_locations.map((location) =>
               Math.min(...location.fragments.map((fragment) => fragment.start))
             )
           )
-        : '',
-      end: proteins[0].entry_protein_locations
+        : '';
+
+      const end = proteins[0].entry_protein_locations
         ? Math.max(
             ...proteins[0].entry_protein_locations?.map((location) =>
               Math.max(...location.fragments.map((fragment) => fragment.end))
             )
           )
-        : '',
-      color: colorHash.hex(
-        metadata.accession.toLowerCase().split('').reverse().join('')
-      ),
-      tooltipContent: `
+        : '';
+
+      return {
+        ...metadata,
+        locations: proteins[0].entry_protein_locations,
+        start,
+        end,
+        color: colorHash.hex(
+          metadata.accession.toLowerCase().split('').reverse().join('')
+        ),
+        tooltipContent: `
+      ${
+        start && end
+          ? `<h4>InterPro Representative Domain ${start}-${end}</h4><hr />`
+          : ''
+      }
         <h5>Accession</h5>
         <p>
         <a
@@ -61,8 +71,9 @@ const transformData = (data: InterProProteinSearch): TransformedInterPro => {
             : ''
         }
       `,
-      length: proteins[0].protein_length,
-    }));
+        length: proteins[0].protein_length,
+      };
+    });
   } catch (error) {
     throw new Error('Failed transforming the data');
   }
