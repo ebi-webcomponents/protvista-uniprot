@@ -87,3 +87,9 @@ detail: {
     hasData: true
 }
 ```
+
+## Publishing
+
+```
+npm login; rm -rf node_modules dist; yarn; yarn build; yarn publish; git push
+```
