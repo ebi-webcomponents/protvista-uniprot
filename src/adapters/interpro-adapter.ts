@@ -1,5 +1,7 @@
 import ColorHash from 'color-hash';
 
+import formatTooltip from '../tooltips/interproTooltip';
+
 import { InterProProteinSearch, TransformedInterPro } from './types/interpro';
 
 // Copied from InterPro to replicate the same colours for the representative domains
@@ -36,41 +38,7 @@ const transformData = (data: InterProProteinSearch): TransformedInterPro => {
         color: colorHash.hex(
           metadata.accession.toLowerCase().split('').reverse().join('')
         ),
-        tooltipContent: `
-      ${
-        start && end
-          ? `<h4>InterPro Representative Domain ${start}-${end}</h4><hr />`
-          : ''
-      }
-        <h5>Accession</h5>
-        <p>
-        <a
-          target="_blank"
-          rel="noopener"
-          href="https://www.ebi.ac.uk/interpro/entry/${
-            metadata.source_database
-          }/${metadata.accession}/"
-        >
-        ${metadata.accession}
-        </a>
-        </p>
-        <h5>Name</h5>
-        <p>${metadata.name}</p>
-        ${
-          metadata.integrated
-            ? `<h5>Integrated into </h5>
-        <p>
-        <a
-          target="_blank"
-          rel="noopener"
-          href="https://www.ebi.ac.uk/interpro/entry/InterPro/${metadata.integrated}/"
-        >
-          ${metadata.integrated}
-        </a>
-        </p>`
-            : ''
-        }
-      `,
+        tooltipContent: formatTooltip(start, end, metadata),
         length: proteins[0].protein_length,
       };
     });
