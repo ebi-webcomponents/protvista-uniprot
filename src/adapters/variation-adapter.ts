@@ -7,7 +7,7 @@ import {
   VariationDatum,
 } from '@nightingale-elements/nightingale-variation';
 
-import formatTooltip from '../tooltips/variationTooltip';
+import formatTooltip from '../tooltips/variation-tooltip';
 
 export type TransformedVariant = VariationDatum & Variant;
 

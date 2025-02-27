@@ -1,5 +1,5 @@
 import { renameProperties } from '../utils';
-import formatTooltip from '../tooltips/featureTooltip';
+import formatTooltip from '../tooltips/feature-tooltip';
 
 const transformData = (data) => {
   let transformedData = [];

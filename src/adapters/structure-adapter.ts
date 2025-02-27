@@ -1,4 +1,4 @@
-import formatTooltip from '../tooltips/structureTooltip';
+import formatTooltip from '../tooltips/structure-tooltip';
 
 const featureType = 'PDBE_COVER';
 const featureCategory = 'STRUCTURE_COVERAGE';

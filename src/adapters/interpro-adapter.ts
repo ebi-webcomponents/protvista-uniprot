@@ -1,6 +1,6 @@
 import ColorHash from 'color-hash';
 
-import formatTooltip from '../tooltips/interproTooltip';
+import formatTooltip from '../tooltips/interpro-tooltip';
 
 import { InterProProteinSearch, TransformedInterPro } from './types/interpro';
 

@@ -1,7 +1,7 @@
 import { AminoAcid } from '@nightingale-elements/nightingale-variation';
 
 import { RnaEditing, TransformedRnaEditing } from './types/rna-editing';
-import formatTooltip from '../tooltips/rnaEditingTooltip';
+import formatTooltip from '../tooltips/rna-editing-tooltip';
 
 const transformData = ({
   sequence,

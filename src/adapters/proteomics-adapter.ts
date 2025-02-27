@@ -1,5 +1,5 @@
 import { renameProperties } from '../utils';
-import formatTooltip from '../tooltips/featureTooltip';
+import formatTooltip from '../tooltips/feature-tooltip';
 
 const proteomicsTrackProperties = (feature, taxId) => {
   return {
@@ -64,7 +64,10 @@ const transformData = (data) => {
       }, []);
     } else {
       adaptedData = data.features.map((feature) => {
-        return Object.assign(feature, proteomicsTrackProperties(feature, data.taxid));
+        return Object.assign(
+          feature,
+          proteomicsTrackProperties(feature, data.taxid)
+        );
       });
     }
 

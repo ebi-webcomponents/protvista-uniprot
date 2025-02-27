@@ -1,5 +1,5 @@
 import ecoMap from '../adapters/config/evidence';
-import { phosphorylate, sumoylate } from './ptmTooltip';
+import { phosphorylate, sumoylate } from './ptm-tooltip';
 
 const taxIdToPeptideAtlasBuildData = {
   '36329': { build: '542', organism: 'Plasmodium' },
