@@ -10,6 +10,7 @@ import NightingaleNavigation from '@nightingale-elements/nightingale-navigation'
 import NightingaleSequence from '@nightingale-elements/nightingale-sequence';
 import NightingaleColoredSequence from '@nightingale-elements/nightingale-colored-sequence';
 import NightingaleTrack from '@nightingale-elements/nightingale-track';
+import NightingaleTrackCanvas from '@nightingale-elements/nightingale-track-canvas';
 import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro-track';
 import NightingaleVariation from '@nightingale-elements/nightingale-variation';
 import NightingaleLinegraphTrack from '@nightingale-elements/nightingale-linegraph-track';
@@ -130,6 +131,7 @@ class ProtvistaUniprot extends LitElement {
   registerWebComponents() {
     loadComponent('nightingale-navigation', NightingaleNavigation);
     loadComponent('nightingale-track', NightingaleTrack);
+    loadComponent('nightingale-track-canvas', NightingaleTrackCanvas);
     loadComponent('nightingale-colored-sequence', NightingaleColoredSequence);
     loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
     loadComponent('nightingale-sequence', NightingaleSequence);
@@ -238,9 +240,9 @@ class ProtvistaUniprot extends LitElement {
   async _loadDataInComponents() {
     await frame();
     Object.entries(this.data).forEach(([id, data]) => {
-      const element: NightingaleTrack | null = document.getElementById(
+      const element: NightingaleTrackCanvas | null = document.getElementById(
         `track-${id}`
-      ) as NightingaleTrack;
+      ) as NightingaleTrackCanvas;
       // set data if it hasn't changed
       if (element && element.data !== data) {
         element.data = data;
@@ -268,7 +270,7 @@ class ProtvistaUniprot extends LitElement {
         for (const track of currentCategory.tracks) {
           const elementTrack = document.getElementById(
             `track-${id}-${track.name}`
-          ) as NightingaleTrack | null;
+          ) as NightingaleTrackCanvas | null;
           if (elementTrack) {
             elementTrack.data = this.data[`${id}-${track.name}`];
           }
@@ -676,6 +678,22 @@ class ProtvistaUniprot extends LitElement {
             use-ctrl-to-zoom
           >
           </nightingale-track>
+        `;
+      case 'nightingale-track-canvas':
+        return html`
+          <nightingale-track-canvas
+            length="${this.sequence?.length}"
+            height="40"
+            layout="${layout}"
+            color="${color}"
+            shape="${shape}"
+            display-start="${this.displayCoordinates?.start}"
+            display-end="${this.displayCoordinates?.end}"
+            id="track-${id}"
+            highlight-event="onclick"
+            use-ctrl-to-zoom
+          >
+          </nightingale-track-canvas>
         `;
       case 'nightingale-interpro-track':
         return html`
