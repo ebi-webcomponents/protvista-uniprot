@@ -757,7 +757,7 @@ const config: ProtvistaConfig = {
         {
           name: 'proteomics-ptm',
           label: 'PTM-containing peptide',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-adapter',
