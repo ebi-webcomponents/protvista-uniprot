@@ -181,7 +181,8 @@ const formatTooltip = (feature, taxId?: string) => {
           feature.peptide && feature.type !== 'PROTEOMICS_PTM'
             ? `<h5>Peptide</h5><p>${feature.peptide}</p>`
             : ``
-        } 
+        }
+        ${feature.unique ? `<h5>Unique</h5><p>${feature.unique ? 'Yes' : 'No'}</p>` : ``}
         ${
           feature.xrefs
             ? `<h5>Cross-references</h5>${formatXrefs(feature.xrefs)}`
