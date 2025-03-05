@@ -10,7 +10,7 @@ type Result = {
   proteins: Protein[];
 };
 
-type Metadata = {
+export type Metadata = {
   accession: string;
   name: string;
   source_database: string;

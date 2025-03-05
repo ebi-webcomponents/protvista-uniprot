@@ -1,4 +1,4 @@
-import formatTooltip from "../tooltips/ptmTooltip";
+import formatTooltip from '../tooltips/ptm-tooltip';
 
 type ProteomicsPtm = {
   accession: string;
@@ -82,7 +82,12 @@ const convertPtmExchangePtms = (
     start: absolutePosition,
     end: absolutePosition,
     shape: 'triangle',
-    tooltipContent: formatTooltip(ptms, aa, confidenceScore),
+    tooltipContent: formatTooltip(
+      `MOD_RES_LS ${absolutePosition}-${absolutePosition}`,
+      ptms,
+      aa,
+      confidenceScore
+    ),
     color:
       (confidenceScore && ConfidenceScoreColors[confidenceScore]) || 'black',
   };

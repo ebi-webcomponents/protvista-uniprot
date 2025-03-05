@@ -7,7 +7,7 @@ import {
 } from '@nightingale-elements/nightingale-variation';
 import groupBy from 'lodash-es/groupBy';
 
-import { formatXrefs, getEvidenceFromCodes } from './featureTooltip';
+import { formatXrefs, getEvidenceFromCodes } from './feature-tooltip';
 
 const getDiseaseAssociations = (associations: Association[]): string =>
   associations

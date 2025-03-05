@@ -33,7 +33,7 @@ export const sumoylate = (aa: string) => {
   return '';
 };
 
-const formatTooltip = (ptms: PTM[], aa: string, confidenceScore: string): string => {
+const formatTooltip = (title: string, ptms: PTM[], aa: string, confidenceScore: string): string => {
     const evidences = [
         ...ptms.flatMap(({ dbReferences }) =>
           dbReferences?.flatMap(({ id }) => [id])
@@ -55,6 +55,11 @@ const formatTooltip = (ptms: PTM[], aa: string, confidenceScore: string): string
       }
       
   return `
+  ${
+    title
+      ? `<h4>${title}</h4><hr />`
+      : ''
+  }
   <h5>Description</h5><p>${
     modification === 'Phosphorylation' ? phosphorylate(aa) : sumoylate(aa)
   }</p>
