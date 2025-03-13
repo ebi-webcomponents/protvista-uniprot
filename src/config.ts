@@ -16,7 +16,6 @@ const proteinsApiServices = {
 };
 
 export type TrackType =
-  | 'nightingale-track'
   | 'nightingale-track-canvas'
   | 'nightingale-interpro-track'
   | 'nightingale-colored-sequence'

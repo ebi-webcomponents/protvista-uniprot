@@ -66,7 +66,6 @@ export default css`
     background-color: #d9faff;
   }
 
-  nightingale-track,
   nightingale-track-canvas {
     border-top: 1px solid #d9faff;
   }

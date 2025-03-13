@@ -9,7 +9,6 @@ import NightingaleManager from '@nightingale-elements/nightingale-manager';
 import NightingaleNavigation from '@nightingale-elements/nightingale-navigation';
 import NightingaleSequence from '@nightingale-elements/nightingale-sequence';
 import NightingaleColoredSequence from '@nightingale-elements/nightingale-colored-sequence';
-import NightingaleTrack from '@nightingale-elements/nightingale-track';
 import NightingaleTrackCanvas from '@nightingale-elements/nightingale-track-canvas';
 import NightingaleInterproTrack from '@nightingale-elements/nightingale-interpro-track';
 import NightingaleVariation from '@nightingale-elements/nightingale-variation';
@@ -130,7 +129,6 @@ class ProtvistaUniprot extends LitElement {
 
   registerWebComponents() {
     loadComponent('nightingale-navigation', NightingaleNavigation);
-    loadComponent('nightingale-track', NightingaleTrack);
     loadComponent('nightingale-track-canvas', NightingaleTrackCanvas);
     loadComponent('nightingale-colored-sequence', NightingaleColoredSequence);
     loadComponent('nightingale-interpro-track', NightingaleInterproTrack);
@@ -663,22 +661,6 @@ class ProtvistaUniprot extends LitElement {
     // lit-html doesn't allow to have dynamic tag names, hence the switch/case
     // with repeated code
     switch (trackType) {
-      case 'nightingale-track':
-        return html`
-          <nightingale-track
-            length="${this.sequence?.length}"
-            height="40"
-            layout="${layout}"
-            color="${color}"
-            shape="${shape}"
-            display-start="${this.displayCoordinates?.start}"
-            display-end="${this.displayCoordinates?.end}"
-            id="track-${id}"
-            highlight-event="onclick"
-            use-ctrl-to-zoom
-          >
-          </nightingale-track>
-        `;
       case 'nightingale-track-canvas':
         return html`
           <nightingale-track-canvas
