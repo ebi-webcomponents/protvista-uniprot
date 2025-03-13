@@ -150,11 +150,6 @@ const formatTooltip = (feature, taxId?: string) => {
             : ''
         }
         ${description ? `<h5>Description</h5><p>${description}</p>` : ``}
-        ${
-          feature.matchScore
-            ? `<h5>Match score</h5><p>${feature.matchScore}%</p>`
-            : ``
-        }
         ${feature.ftId ? `<h5>Feature ID</h5><p>${feature.ftId}</p>` : ``}
         ${
           feature.alternativeSequence
