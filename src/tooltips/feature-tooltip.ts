@@ -114,15 +114,15 @@ const findModifiedResidueName = (feature, ptm) => {
 const formatTooltip = (feature, taxId?: string) => {
   const evidenceHTML =
     feature.type === 'PROTEOMICS_PTM'
-      ? getPTMEvidence(feature.ptms, taxId)
+      ? getPTMEvidence(feature.residuesToHighlight, taxId)
       : getEvidenceFromCodes(feature.evidences);
   const ptms =
     feature.type === 'PROTEOMICS_PTM' &&
-    feature.ptms.map((ptm) => findModifiedResidueName(feature, ptm));
+    feature.residuesToHighlight.map((ptm) => findModifiedResidueName(feature, ptm));
 
   const dataset =
     feature.type === 'PROTEOMICS_PTM' &&
-    feature.ptms.flatMap(({ dbReferences }) =>
+    feature.residuesToHighlight.flatMap(({ dbReferences }) =>
       dbReferences.map((ref) => ref.id)
     );
 
@@ -150,11 +150,6 @@ const formatTooltip = (feature, taxId?: string) => {
             : ''
         }
         ${description ? `<h5>Description</h5><p>${description}</p>` : ``}
-        ${
-          feature.matchScore
-            ? `<h5>Match score</h5><p>${feature.matchScore}%</p>`
-            : ``
-        }
         ${feature.ftId ? `<h5>Feature ID</h5><p>${feature.ftId}</p>` : ``}
         ${
           feature.alternativeSequence
@@ -173,7 +168,7 @@ const formatTooltip = (feature, taxId?: string) => {
           feature.peptide && feature.type === 'PROTEOMICS_PTM'
             ? `<h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">Peptidoform</h5><p>${formatPTMPeptidoform(
                 feature.peptide,
-                feature.ptms
+                feature.residuesToHighlight
               )}</p>`
             : ``
         }
@@ -190,7 +185,7 @@ const formatTooltip = (feature, taxId?: string) => {
         }
         ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
         ${
-          feature.ptms && dataset && !dataset.includes('Glue project')
+          feature.residues && dataset && !dataset.includes('Glue project')
             ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.ptms
                 .map((ptm) =>
                   ptm.dbReferences
