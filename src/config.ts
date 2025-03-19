@@ -16,7 +16,7 @@ const proteinsApiServices = {
 };
 
 export type TrackType =
-  | 'nightingale-track'
+  | 'nightingale-track-canvas'
   | 'nightingale-interpro-track'
   | 'nightingale-colored-sequence'
   | 'nightingale-variation'
@@ -73,13 +73,13 @@ const config: ProtvistaConfig = {
     {
       name: 'MOLECULE_PROCESSING',
       label: 'Molecule processing',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'signal',
           label: 'Signal peptide',
           filter: 'SIGNAL',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -92,7 +92,7 @@ const config: ProtvistaConfig = {
           name: 'chain',
           label: 'Chain',
           filter: 'CHAIN',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -106,7 +106,7 @@ const config: ProtvistaConfig = {
           name: 'transit',
           label: 'Transit peptide',
           filter: 'TRANSIT',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -119,7 +119,7 @@ const config: ProtvistaConfig = {
           name: 'init_met',
           label: 'Initiator methionine',
           filter: 'INIT_MET',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -134,7 +134,7 @@ const config: ProtvistaConfig = {
           name: 'propep',
           label: 'Propeptide',
           filter: 'PROPEP',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -148,7 +148,7 @@ const config: ProtvistaConfig = {
           name: 'peptide',
           label: 'Peptide',
           filter: 'PEPTIDE',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -163,13 +163,13 @@ const config: ProtvistaConfig = {
     {
       name: 'SEQUENCE_INFORMATION',
       label: 'Sequence information',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'compbias',
           label: 'Compositional bias',
           filter: 'COMPBIAS',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -183,7 +183,7 @@ const config: ProtvistaConfig = {
           name: 'conflict',
           label: 'Sequence conflict',
           filter: 'CONFLICT',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -195,7 +195,7 @@ const config: ProtvistaConfig = {
         {
           name: 'non_cons',
           filter: 'NON_CONS',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           label: 'Non-adjacent residues',
           data: [
             {
@@ -209,7 +209,7 @@ const config: ProtvistaConfig = {
         {
           name: 'non_ter',
           filter: 'NON_TER',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           label: 'Non-terminal residue',
           data: [
             {
@@ -223,7 +223,7 @@ const config: ProtvistaConfig = {
         {
           name: 'unsure',
           filter: 'UNSURE',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           label: 'Sequence uncertainty',
           data: [
             {
@@ -237,7 +237,7 @@ const config: ProtvistaConfig = {
         {
           name: 'non_std',
           filter: 'NON_STD',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           label: 'Non-standard residue',
           data: [
             {
@@ -252,13 +252,13 @@ const config: ProtvistaConfig = {
     {
       name: 'TOPOLOGY',
       label: 'Topology',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'topo_dom',
           label: 'Topological domain',
           filter: 'TOPO_DOM',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -272,7 +272,7 @@ const config: ProtvistaConfig = {
           name: 'transmem',
           label: 'Transmembrane',
           filter: 'TRANSMEM',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -285,7 +285,7 @@ const config: ProtvistaConfig = {
           name: 'intramem',
           label: 'Intramembrane',
           filter: 'INTRAMEM',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -300,13 +300,13 @@ const config: ProtvistaConfig = {
     {
       name: 'DOMAINS',
       label: 'Domains',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'domain',
           label: 'Domain',
           filter: 'DOMAIN',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -319,7 +319,7 @@ const config: ProtvistaConfig = {
         {
           name: 'InterPro representative domain',
           label: 'InterPro Representative Domain',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'interpro-adapter',
@@ -332,7 +332,7 @@ const config: ProtvistaConfig = {
           name: 'region',
           label: 'Region',
           filter: 'REGION',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -346,7 +346,7 @@ const config: ProtvistaConfig = {
           name: 'repeat',
           label: 'Repeat',
           filter: 'REPEAT',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -360,7 +360,7 @@ const config: ProtvistaConfig = {
           name: 'motif',
           label: 'Motif',
           filter: 'MOTIF',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -373,7 +373,7 @@ const config: ProtvistaConfig = {
           name: 'zn_fing',
           label: 'Zinc finger',
           filter: 'ZN_FING',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -388,13 +388,13 @@ const config: ProtvistaConfig = {
     {
       name: 'SITES',
       label: 'Sites',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'metal',
           label: 'Metal binding',
           filter: 'METAL',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -407,7 +407,7 @@ const config: ProtvistaConfig = {
           name: 'site',
           label: 'Site',
           filter: 'SITE',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -420,7 +420,7 @@ const config: ProtvistaConfig = {
           name: 'ca_bind',
           label: 'Calcium binding',
           filter: 'CA_BIND',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -433,7 +433,7 @@ const config: ProtvistaConfig = {
           name: 'dna_bind',
           label: 'DNA binding',
           filter: 'DNA_BIND',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -447,7 +447,7 @@ const config: ProtvistaConfig = {
           name: 'np_bind',
           label: 'Nucleotide binding',
           filter: 'NP_BIND',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -461,7 +461,7 @@ const config: ProtvistaConfig = {
           name: 'binding',
           label: 'Binding site',
           filter: 'BINDING',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -475,7 +475,7 @@ const config: ProtvistaConfig = {
           name: 'act_site',
           label: 'Active site',
           filter: 'ACT_SITE',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -490,13 +490,13 @@ const config: ProtvistaConfig = {
     {
       name: 'PTM',
       label: 'PTM',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'mod_res',
           label: 'Modified residue',
           filter: 'MOD_RES',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -510,7 +510,7 @@ const config: ProtvistaConfig = {
           name: 'mod_res_ls',
           label: 'Modified residue (large scale data)',
           filter: 'MOD_RES_LS',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-ptm-adapter',
@@ -523,7 +523,7 @@ const config: ProtvistaConfig = {
           name: 'carbohyd',
           label: 'Glycosylation',
           filter: 'CARBOHYD',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -536,7 +536,7 @@ const config: ProtvistaConfig = {
           name: 'disulfid',
           label: 'Disulfide bond',
           filter: 'DISULFID',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -550,7 +550,7 @@ const config: ProtvistaConfig = {
           name: 'crosslnk',
           label: 'Cross-link',
           filter: 'CROSSLNK',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -564,7 +564,7 @@ const config: ProtvistaConfig = {
           name: 'lipid',
           label: 'Lipidation',
           filter: 'LIPID',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -578,12 +578,12 @@ const config: ProtvistaConfig = {
     {
       name: 'EPITOPE',
       label: 'Epitopes',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'epitope',
           label: 'Epitope',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -597,12 +597,12 @@ const config: ProtvistaConfig = {
     {
       name: 'ANTIGEN',
       label: 'Antigenic sequences',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'antigen',
           label: 'Antibody binding sequences',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -616,13 +616,13 @@ const config: ProtvistaConfig = {
     {
       name: 'MUTAGENESIS',
       label: 'Mutagenesis',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'mutagen',
           label: 'Mutagenesis',
           filter: 'MUTAGEN',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -634,7 +634,7 @@ const config: ProtvistaConfig = {
         {
           name: 'othermutagen',
           label: 'Mutagenesis (large scale data)',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -713,13 +713,13 @@ const config: ProtvistaConfig = {
     {
       name: 'PROTEOMICS',
       label: 'Proteomics',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'unique',
           label: 'Unique peptide',
           filter: 'unique',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-adapter',
@@ -732,7 +732,7 @@ const config: ProtvistaConfig = {
           name: 'non_unique',
           label: 'Non-unique peptide',
           filter: 'non_unique',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-adapter',
@@ -744,7 +744,7 @@ const config: ProtvistaConfig = {
         {
           name: 'hpp',
           label: 'Human proteome project',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-adapter',
@@ -756,7 +756,7 @@ const config: ProtvistaConfig = {
         {
           name: 'proteomics-ptm',
           label: 'PTM-containing peptide',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'proteomics-adapter',
@@ -770,12 +770,12 @@ const config: ProtvistaConfig = {
     {
       name: 'STRUCTURE_COVERAGE',
       label: 'PDBe 3D structure coverage',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'pdbe_cover',
           label: 'PDBe coverage',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           tooltip: 'PDBe 3D structure coverage',
           data: [
             {
@@ -854,13 +854,13 @@ const config: ProtvistaConfig = {
     {
       name: 'STRUCTURAL',
       label: 'Structural features',
-      trackType: 'nightingale-track',
+      trackType: 'nightingale-track-canvas',
       tracks: [
         {
           name: 'helix',
           label: 'Helix',
           filter: 'HELIX',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -873,7 +873,7 @@ const config: ProtvistaConfig = {
           name: 'strand',
           label: 'Beta strand',
           filter: 'STRAND',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -886,7 +886,7 @@ const config: ProtvistaConfig = {
           name: 'turn',
           label: 'Turn',
           filter: 'TURN',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',
@@ -900,7 +900,7 @@ const config: ProtvistaConfig = {
           name: 'coiled',
           label: 'Coiled coil',
           filter: 'COILED',
-          trackType: 'nightingale-track',
+          trackType: 'nightingale-track-canvas',
           data: [
             {
               adapter: 'feature-adapter',

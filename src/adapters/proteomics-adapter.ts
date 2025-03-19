@@ -49,7 +49,7 @@ const transformData = (data) => {
           evidences: features[0].evidences,
           peptide: features[0].peptide,
           unique: features[0].unique,
-          ptms: features[0].ptms.map((ptm) => ({
+          residuesToHighlight: features[0].ptms.map((ptm) => ({
             name: ptm.name,
             position: ptm.position,
             sources: ptm.sources,
