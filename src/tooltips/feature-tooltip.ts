@@ -185,8 +185,8 @@ const formatTooltip = (feature, taxId?: string) => {
         }
         ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
         ${
-          feature.residues && dataset && !dataset.includes('Glue project')
-            ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.ptms
+          feature.residuesToHighlight && dataset && !dataset.includes('Glue project')
+            ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.residuesToHighlight
                 .map((ptm) =>
                   ptm.dbReferences
                     .map(
