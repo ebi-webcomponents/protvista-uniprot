@@ -4,7 +4,7 @@ const getStructuresHTML = (structureList) => {
                 .map(
                   (
                     structure
-                  ) => `<li style="margin: 0.25rem 0"><a style="color:#FFF" href='${structure.source.url}' target='_blank'>
+                  ) => `<li><a href='${structure.source.url}' target='_blank'>
               ${structure.source.id}
           </a> (${structure.start}-${structure.end})</li>`
                 )
