@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`structure data should merge Overlapping Intervals 1`] = `
-Array [
-  Object {
+[
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 0,
     "start": 0,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: X-ray. Resolution: 1.50 A. ",
         "end": 0,
-        "source": Object {
+        "source": {
           "id": "1AAP",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AAP",
         },
@@ -19,42 +19,42 @@ Array [
     ],
     "type": "PDBE_COVER",
   },
-  Object {
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 711,
     "start": 672,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: NMR. Chains: A=672-699. ",
         "end": 699,
-        "source": Object {
+        "source": {
           "id": "1AMB",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AMB",
         },
         "start": 672,
       },
-      Object {
+      {
         "description": "Method: NMR. Chains: A=672-699. ",
         "end": 699,
-        "source": Object {
+        "source": {
           "id": "1AMC",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AMC",
         },
         "start": 672,
       },
-      Object {
+      {
         "description": "Method: NMR. Chains: A=672-711. ",
         "end": 711,
-        "source": Object {
+        "source": {
           "id": "1AML",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AML",
         },
         "start": 672,
       },
-      Object {
+      {
         "description": "Method: NMR. Chains: A=672-711. ",
         "end": 711,
-        "source": Object {
+        "source": {
           "id": "1BA4",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1BA4",
         },
@@ -67,16 +67,16 @@ Array [
 `;
 
 exports[`structure data should turn structures into features 1`] = `
-Array [
-  Object {
+[
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 0,
     "start": 0,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: X-ray. Resolution: 1.50 A. ",
         "end": 0,
-        "source": Object {
+        "source": {
           "id": "1AAP",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AAP",
         },
@@ -85,15 +85,15 @@ Array [
     ],
     "type": "PDBE_COVER",
   },
-  Object {
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 699,
     "start": 672,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: NMR. Chains: A=672-699. ",
         "end": 699,
-        "source": Object {
+        "source": {
           "id": "1AMB",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AMB",
         },
@@ -102,15 +102,15 @@ Array [
     ],
     "type": "PDBE_COVER",
   },
-  Object {
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 699,
     "start": 672,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: NMR. Chains: A=672-699. ",
         "end": 699,
-        "source": Object {
+        "source": {
           "id": "1AMC",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AMC",
         },
@@ -119,15 +119,15 @@ Array [
     ],
     "type": "PDBE_COVER",
   },
-  Object {
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 711,
     "start": 672,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: NMR. Chains: A=672-711. ",
         "end": 711,
-        "source": Object {
+        "source": {
           "id": "1AML",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1AML",
         },
@@ -136,15 +136,15 @@ Array [
     ],
     "type": "PDBE_COVER",
   },
-  Object {
+  {
     "category": "STRUCTURE_COVERAGE",
     "end": 711,
     "start": 672,
-    "structures": Array [
-      Object {
+    "structures": [
+      {
         "description": "Method: NMR. Chains: A=672-711. ",
         "end": 711,
-        "source": Object {
+        "source": {
           "id": "1BA4",
           "url": "http://www.ebi.ac.uk/pdbe-srv/view/entry/1BA4",
         },

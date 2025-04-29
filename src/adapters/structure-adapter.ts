@@ -95,7 +95,6 @@ const transformData = (data) => {
     transformedData = mergeOverlappingIntervals(allFeatureStructures);
 
     transformedData.forEach((feature) => {
-      /* eslint-disable no-param-reassign */
       feature.tooltipContent = formatTooltip(feature);
     });
   }

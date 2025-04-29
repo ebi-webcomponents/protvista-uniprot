@@ -24,9 +24,9 @@ const transformData = (data: InterProProteinSearch): TransformedInterPro => {
 
       const end = proteins[0].entry_protein_locations
         ? Math.max(
-            ...proteins[0].entry_protein_locations?.map((location) =>
+            ...(proteins[0].entry_protein_locations?.map((location) =>
               Math.max(...location.fragments.map((fragment) => fragment.end))
-            )
+            ) || [])
           )
         : '';
 
@@ -43,7 +43,7 @@ const transformData = (data: InterProProteinSearch): TransformedInterPro => {
       };
     });
   } catch (error) {
-    throw new Error('Failed transforming the data');
+    throw new Error(`Failed transforming the data: ${error}`);
   }
 };
 

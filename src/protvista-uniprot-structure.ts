@@ -1,5 +1,4 @@
 import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import NightingaleStructure, {
@@ -338,7 +337,9 @@ class ProtvistaUniprotStructure extends LitElement {
                       @click=${(e) => this.toggleColorTheme(e)}
                       disabled=${this.alphamissenseAvailable ? nothing : 'true'}
                     />
-                    <label for="alphamissense" title=${this.alphamissenseAvailable
+                    <label
+                      for="alphamissense"
+                      title=${this.alphamissenseAvailable
                         ? ''
                         : 'Color by pathogenicity is disabled as there are no AlphaMissense predictions available for this model'}
                       >Pathogenicity

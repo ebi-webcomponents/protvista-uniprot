@@ -110,7 +110,6 @@ const transformData = (data: ProteomicsPtm) => {
                 ptm.position
               } - 1`
             );
-            // eslint-disable-next-line no-continue
             continue;
           }
           const aa = feature.peptide[ptm.position - 1];

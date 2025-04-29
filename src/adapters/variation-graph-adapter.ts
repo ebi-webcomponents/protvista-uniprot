@@ -12,12 +12,10 @@ const transformData = (data) => {
     for (const { start, association } of variants) {
       const index = +start;
       // skip if the variant is outside of bounds
-      // eslint-disable-next-line no-continue
       if (index < 1 || index > data.sequence.length) continue;
 
       total[index] += 1;
 
-      // eslint-disable-next-line no-continue
       if (!association) continue;
       const hasDisease = association.find(
         (association) => association.disease === true

@@ -1,5 +1,4 @@
 import { LitElement, html, svg } from 'lit';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { frame } from 'timing-functions';
