@@ -5,7 +5,6 @@ import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import svg from 'vite-plugin-svgo';
 import dts from 'vite-plugin-dts';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     viteCommonjs(),
@@ -24,7 +23,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    target: 'es2021',
+    target: 'ES2021',
     sourcemap: true,
     lib: {
       entry: 'src/index.ts',
