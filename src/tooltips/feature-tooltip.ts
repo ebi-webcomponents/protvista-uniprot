@@ -13,9 +13,9 @@ const taxIdToPeptideAtlasBuildData = {
 
 const formatSource = (source) => {
   if (source.name?.toLowerCase() === 'PubMed'.toLowerCase()) {
-    return `${source.id}&nbsp;(<a href='${source.url}' style="color:#FFF" target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' style="color:#FFF" target='_blank'>EuropePMC</a>)`;
+    return `${source.id}&nbsp;(<a href='${source.url}' target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' target='_blank'>EuropePMC</a>)`;
   }
-  const sourceLink = `&nbsp;<a href='${source.url}' style="color:#FFF" target='_blank'>${source.id}</a>`;
+  const sourceLink = `&nbsp;<a href='${source.url}' target='_blank'>${source.id}</a>`;
   if (source.name) {
     // Temporary until we get the expected value as 'PeptideAtlas' instead of 'HppPeptideAtlas'
     if (source.name.startsWith('Hpp')) {
@@ -33,11 +33,9 @@ export const getEvidenceFromCodes = (evidenceList) => {
           .map((ev) => {
             const ecoMatch = ecoMap.find((eco) => eco.name === ev.code);
             if (!ecoMatch) return ``;
-            return `<li title='${
-              ecoMatch.description
-            }' style="padding: .25rem 0">${ecoMatch.shortDescription}:&nbsp;${
-              ev.source ? formatSource(ev.source) : ''
-            }</li>`;
+            return `<li title='${ecoMatch.description}'>${
+              ecoMatch.shortDescription
+            }:&nbsp;${ev.source ? formatSource(ev.source) : ''}</li>`;
           })
           .join('')}</ul>
       `;
@@ -47,9 +45,9 @@ export const formatXrefs = (xrefs) => {
   return `<ul class="no-bullet">${xrefs
     .map(
       (xref) =>
-        `<li style="padding: .25rem 0">${xref.name} ${
+        `<li>${xref.name} ${
           xref.url
-            ? `<a href="${xref.url}" style="color:#FFF" target="_blank">${xref.id}</a>`
+            ? `<a href="${xref.url}" target="_blank">${xref.id}</a>`
             : `${xref.name} ${xref.id}`
         }</li>`
     )
@@ -69,10 +67,10 @@ const getPTMEvidence = (ptms, taxId) => {
     <ul class="no-bullet">${uniqueIds
       .map((id) => {
         const datasetID = id === 'Glue project' ? 'PXD012174' : id;
-        return `<li title='${datasetID}' style="padding: .25rem 0">${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" style="color:#FFF" target="_blank">ProteomeXchange</a>${
+        return `<li title='${datasetID}'>${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" target="_blank">ProteomeXchange</a>${
           id === 'Glue project'
-            ? `)</li><li title="publication" style="padding: .25rem 0">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" style="color:#FFF" target="_blank">PubMed</a>)</li>`
-            : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" style="color:#FFF" target="_blank">PeptideAtlas</a>)</li>`
+            ? `)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
+            : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" target="_blank">PeptideAtlas</a>)</li>`
         }`;
       })
       .join('')}</ul>
@@ -118,7 +116,9 @@ const formatTooltip = (feature, taxId?: string) => {
       : getEvidenceFromCodes(feature.evidences);
   const ptms =
     feature.type === 'PROTEOMICS_PTM' &&
-    feature.residuesToHighlight.map((ptm) => findModifiedResidueName(feature, ptm));
+    feature.residuesToHighlight.map((ptm) =>
+      findModifiedResidueName(feature, ptm)
+    );
 
   const dataset =
     feature.type === 'PROTEOMICS_PTM' &&
@@ -177,7 +177,11 @@ const formatTooltip = (feature, taxId?: string) => {
             ? `<h5>Peptide</h5><p>${feature.peptide}</p>`
             : ``
         }
-        ${feature.unique ? `<h5>Unique</h5><p>${feature.unique ? 'Yes' : 'No'}</p>` : ``}
+        ${
+          feature.unique
+            ? `<h5>Unique</h5><p>${feature.unique ? 'Yes' : 'No'}</p>`
+            : ``
+        }
         ${
           feature.xrefs
             ? `<h5>Cross-references</h5>${formatXrefs(feature.xrefs)}`
@@ -185,50 +189,52 @@ const formatTooltip = (feature, taxId?: string) => {
         }
         ${evidenceHTML ? `<h5>Evidence</h5>${evidenceHTML}` : ``}
         ${
-          feature.residuesToHighlight && dataset && !dataset.includes('Glue project')
-            ? `<hr /><h5 data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.residuesToHighlight
+          feature.residuesToHighlight &&
+          dataset &&
+          !dataset.includes('Glue project')
+            ? `<hr /><h5 class="margin-bottom" data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.residuesToHighlight
                 .map((ptm) =>
                   ptm.dbReferences
                     .map(
                       (ref) =>
                         `<li><b>${ref.id}</b></li>
-                        <li style="text-indent: 1em"><b>${findModifiedResidueName(
+                        <li class="text-indent-1"><b>${findModifiedResidueName(
                           feature,
                           ptm
                         )}</b></li>
                         ${
                           ref.properties['Pubmed ID']
-                            ? `<li style="text-indent: 2em">PubMed ID: <a href="https://europepmc.org/article/MED/${ref.properties['Pubmed ID']}" style="color:#FFF" target="_blank">${ref.properties['Pubmed ID']}</a></li>`
+                            ? `<li class="text-indent-2">PubMed ID: <a href="https://europepmc.org/article/MED/${ref.properties['Pubmed ID']}" target="_blank">${ref.properties['Pubmed ID']}</a></li>`
                             : ``
                         }
                         ${
                           ref.properties['Confidence score']
-                            ? `<li style="text-indent: 2em"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${ref.properties['Confidence score']}</li>`
+                            ? `<li class="text-indent-2"><span data-article-id="mod_res_large_scale#confidence-score">Confidence score</span>: ${ref.properties['Confidence score']}</li>`
                             : ``
                         }
                         ${
                           ref.properties['Sumo isoforms']
-                            ? `<li style="text-indent: 2em">SUMO family member: ${ref.properties['Sumo isoforms']}</li>`
+                            ? `<li class="text-indent-2">SUMO family member: ${ref.properties['Sumo isoforms']}</li>`
                             : ``
                         }
                         ${
                           ref.properties['Organism part']
-                            ? `<li style="text-indent: 2em">Organism part: ${ref.properties['Organism part']}</li>`
+                            ? `<li class="text-indent-2">Organism part: ${ref.properties['Organism part']}</li>`
                             : ``
                         }
                         ${
                           ref.properties['PSM Count (0.05 gFLR)']
-                            ? `<li style="text-indent: 2em">PSM Count (0.05 gFLR): ${ref.properties['PSM Count (0.05 gFLR)']}</li>`
+                            ? `<li class="text-indent-2">PSM Count (0.05 gFLR): ${ref.properties['PSM Count (0.05 gFLR)']}</li>`
                             : ``
                         }
                         ${
                           ref.properties['Final site probability']
-                            ? `<li style="text-indent: 2em">Final site probability: ${ref.properties['Final site probability']}</li>`
+                            ? `<li class="text-indent-2">Final site probability: ${ref.properties['Final site probability']}</li>`
                             : ``
                         }
                         ${
                           ref.properties['Universal Spectrum Id']
-                            ? `<li style="text-indent: 2em; white-space: nowrap;">Universal Spectrum Id: 
+                            ? `<li class="text-indent-2 nowrap">Universal Spectrum Id: 
                         <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${ref.properties['Universal Spectrum Id']}" target="_blank">View on ProteomeXchange</a>
                         </li>`
                             : ``
