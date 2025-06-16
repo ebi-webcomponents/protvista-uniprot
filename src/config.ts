@@ -851,67 +851,6 @@ const config: ProtvistaConfig = {
         },
       ],
     },
-    {
-      name: 'STRUCTURAL',
-      label: 'Structural features',
-      trackType: 'nightingale-track-canvas',
-      tracks: [
-        {
-          name: 'helix',
-          label: 'Helix',
-          filter: 'HELIX',
-          trackType: 'nightingale-track-canvas',
-          data: [
-            {
-              adapter: 'feature-adapter',
-              url: `${proteinsApiServices.features}{accession}`,
-            },
-          ],
-          tooltip: 'The positions of experimentally determined helical regions',
-        },
-        {
-          name: 'strand',
-          label: 'Beta strand',
-          filter: 'STRAND',
-          trackType: 'nightingale-track-canvas',
-          data: [
-            {
-              adapter: 'feature-adapter',
-              url: `${proteinsApiServices.features}{accession}`,
-            },
-          ],
-          tooltip: 'The positions of experimentally determined beta strands',
-        },
-        {
-          name: 'turn',
-          label: 'Turn',
-          filter: 'TURN',
-          trackType: 'nightingale-track-canvas',
-          data: [
-            {
-              adapter: 'feature-adapter',
-              url: `${proteinsApiServices.features}{accession}`,
-            },
-          ],
-          tooltip:
-            'The positions of experimentally determined hydrogen-bonded turns',
-        },
-        {
-          name: 'coiled',
-          label: 'Coiled coil',
-          filter: 'COILED',
-          trackType: 'nightingale-track-canvas',
-          data: [
-            {
-              adapter: 'feature-adapter',
-              url: `${proteinsApiServices.features}{accession}`,
-            },
-          ],
-          tooltip:
-            'Coiled coils are built by two or more alpha-helices that wind around each other to form a supercoil',
-        },
-      ],
-    },
   ],
 };
 
