@@ -1841,10 +1841,10 @@
     "@nightingale-elements/nightingale-new-core" "^5.6.0"
     d3 "7.9.0"
 
-"@nightingale-elements/nightingale-structure@5.6.0":
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-structure/-/nightingale-structure-5.6.0.tgz#604b663559dd0f733e4a6ba9e70b24ee6af98069"
-  integrity sha512-bBVmZh9z+dxznxZEAqfR6qIdFE4j3bwc08UnH5ldLwPTjWRlza7ez8w41Lz0MWbKRKbQvSn4MUP5aiYJuo58pA==
+"@nightingale-elements/nightingale-structure@5.6.1":
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/@nightingale-elements/nightingale-structure/-/nightingale-structure-5.6.1.tgz#cc5c4650f120a1a4d4a170c2911634720a7f971a"
+  integrity sha512-EiG+9H+YdqM8lg+xJBx1Im7U1/u9QcX/0+4hD+lscXsxmJyZMrasmmq43KIy5Q49ON+v4NPPO92N4MYRW2zCVA==
   dependencies:
     "@nightingale-elements/nightingale-new-core" "^5.6.0"
     d3 "7.9.0"
