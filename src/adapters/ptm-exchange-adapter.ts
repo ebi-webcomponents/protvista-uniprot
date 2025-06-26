@@ -59,38 +59,50 @@ const convertPtmExchangePtms = (
   aa: string,
   absolutePosition: number
 ) => {
-  const confidenceScores = new Set(
-    ptms.flatMap(({ dbReferences }) =>
-      dbReferences?.map(({ properties }) => properties['Confidence score'])
-    )
-  );
-  let confidenceScore: string | null = null;
-
-  if (!confidenceScores.size) {
-    console.log('PTM has no confidence score');
-  } else if (confidenceScores.size > 1) {
-    console.error(
-      `PTM has a mixture of confidence scores: ${Array.from(confidenceScores)}`
-    );
-  } else {
-    [confidenceScore] = confidenceScores;
+  const groupPtmsByModification: Record<string, PTM[]> = {};
+  for (const ptm of ptms) {
+    if (groupPtmsByModification[ptm.name]) {
+      groupPtmsByModification[ptm.name].push(ptm);
+    } else {
+      groupPtmsByModification[ptm.name] = [ptm];
+    }
   }
 
-  return {
-    source: 'PTMeXchange',
-    type: 'MOD_RES_LS',
-    start: absolutePosition,
-    end: absolutePosition,
-    shape: 'triangle',
-    tooltipContent: formatTooltip(
-      `MOD_RES_LS ${absolutePosition}-${absolutePosition}`,
-      ptms,
-      aa,
-      confidenceScore
-    ),
-    color:
-      (confidenceScore && ConfidenceScoreColors[confidenceScore]) || 'black',
-  };
+  return Object.values(groupPtmsByModification).map((groupedPtms) => {
+    const confidenceScores = new Set(
+      groupedPtms.flatMap(({ dbReferences }) =>
+        dbReferences?.map(({ properties }) => properties['Confidence score'])
+      )
+    );
+    let confidenceScore: string | null = null;
+    if (confidenceScores.size) {
+      if (confidenceScores.size > 1) {
+        console.error(
+          `PTMeXchange PTM has a mixture of confidence scores: ${Array.from(
+            confidenceScores
+          )}`
+        );
+      } else {
+        [confidenceScore] = confidenceScores;
+      }
+    }
+
+    return {
+      source: 'PTMeXchange',
+      type: 'MOD_RES_LS',
+      start: absolutePosition,
+      end: absolutePosition,
+      shape: 'triangle',
+      tooltipContent: formatTooltip(
+        `MOD_RES_LS ${absolutePosition}-${absolutePosition}`,
+        groupedPtms,
+        aa,
+        confidenceScore
+      ),
+      color:
+        (confidenceScore && ConfidenceScoreColors[confidenceScore]) || 'black',
+    };
+  });
 };
 
 const transformData = (data: ProteomicsPtm) => {
@@ -130,7 +142,7 @@ const transformData = (data: ProteomicsPtm) => {
       return Object.entries(absolutePositionToPtms).map(
         ([absolutePosition, { ptms, aa }]) =>
           convertPtmExchangePtms(ptms, aa, +absolutePosition)
-      );
+      ).flat();
     }
   }
   return [];
