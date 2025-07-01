@@ -23,7 +23,7 @@ const foldseekLink = `https://search.foldseek.com/search`;
 
 type ProcessedStructureData = {
   id: string;
-  source: 'PDBe' | 'AlphaFold';
+  source: 'PDB' | 'AlphaFold';
   method: string;
   resolution?: string;
   chain?: string;
@@ -33,43 +33,32 @@ type ProcessedStructureData = {
 };
 
 const processPDBData = (data: StructureData): ProcessedStructureData[] =>
-  data.structures
-    .filter(({ summary }) => summary.provider === 'PDBe')
-    .sort((refA, refB) =>
-      refA.summary.model_identifier.localeCompare(refB.summary.model_identifier)
-    )
-    .map(({ summary }) => {
-      if (!summary) {
+  data.dbReferences
+    .filter((xref) => xref.type === 'PDB')
+    .sort((refA, refB) => refA.id.localeCompare(refB.id))
+    .map(({ id, properties }) => {
+      if (!properties) {
         return;
       }
-      const {
-        model_identifier,
-        entities,
-        uniprot_start,
-        uniprot_end,
-        resolution,
-        experimental_method,
-      } = summary;
+      const { chains, resolution, method } = properties;
 
       let chain;
-      if (entities) {
-        const chainIds = [];
-        entities.forEach((entity) => {
-          if (entity.identifier_category === 'UNIPROT') {
-            chainIds.push(entity.chain_ids);
-          }
-        });
-        chain = chainIds.flat().sort().join('/');
+      let positions;
+      if (chains) {
+        const tokens = chains.split('=');
+        if (tokens.length === 2) {
+          [chain, positions] = tokens;
+        }
       }
       const output: ProcessedStructureData = {
-        id: model_identifier,
-        source: 'PDBe',
-        method: experimental_method,
-        resolution,
-        downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${model_identifier.toLowerCase()}.ent`,
+        id,
+        source: 'PDB',
+        method,
+        resolution: !resolution || resolution === '-' ? undefined : resolution,
+        downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
         chain,
-        positions: `${uniprot_start}:${uniprot_end}`,
-        protvistaFeatureId: model_identifier,
+        positions,
+        protvistaFeatureId: id,
       };
       return output;
     })
@@ -187,8 +176,8 @@ class ProtvistaUniprotStructure extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     if (!this.accession) return;
-    // do we need this? https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
-    const pdbUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?provider=pdbe`;
+    // https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
+    const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
     const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldURl]);
@@ -408,11 +397,13 @@ class ProtvistaUniprotStructure extends LitElement {
                         <td data-filter="method" data-filter-value="${method}">
                           ${method}
                         </td>
-                        <td>${resolution ? `${resolution}Å` : ''}</td>
+                        <td>
+                          ${resolution ? resolution.replace('A', 'Å') : ''}
+                        </td>
                         <td>${chain || ''}</td>
                         <td>${positions || ''}</td>
                         <td>
-                          ${source === 'PDBe'
+                          ${source === 'PDB'
                             ? html`
                                 ${PDBLinks.map((pdbLink) => {
                                   return html`
@@ -437,8 +428,8 @@ class ProtvistaUniprotStructure extends LitElement {
                                 >
                                 ·
                                 ${foldseekURL(
-                                  source === 'PDBe' ? id : this.accession,
-                                  source === 'PDBe' ? 'PDBe' : 'AlphaFoldDB'
+                                  source === 'PDB' ? id : this.accession,
+                                  source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
                                 )}`
                             : ''}
                         </td>
