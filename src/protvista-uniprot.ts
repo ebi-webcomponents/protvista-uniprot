@@ -16,6 +16,7 @@ import NightingaleSequenceHeatmap from '@nightingale-elements/nightingale-sequen
 import NightingaleFilter, {
   Filter,
 } from '@nightingale-elements/nightingale-filter';
+import { amColorScale } from '@nightingale-elements/nightingale-structure';
 
 // adapters
 import featureAdapter from './adapters/feature-adapter';
@@ -294,6 +295,11 @@ class ProtvistaUniprot extends LitElement {
                 ...new Set(heatmapData.map((hotMapItem) => hotMapItem.yValue)),
               ] as string[];
               heatmapComponent.setHeatmapData(xDomain, yDomain, heatmapData);
+              heatmapComponent.updateComplete.then(() => {
+                heatmapComponent.heatmapInstance.setColor((d) =>
+                  amColorScale(d.score)
+                );
+              });
             }
           }
         }
