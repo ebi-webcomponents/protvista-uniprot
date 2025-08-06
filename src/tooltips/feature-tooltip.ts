@@ -246,7 +246,9 @@ const formatTooltip = (feature, taxId?: string) => {
                         ${
                           ref.properties['Universal Spectrum Id']
                             ? `<li class="text-indent-2 nowrap margin-bottom">Universal Spectrum Id: 
-                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${ref.properties['Universal Spectrum Id']}" target="_blank">View on ProteomeXchange</a>
+                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${encodeURIComponent(
+                          ref.properties['Universal Spectrum Id']
+                        )}" target="_blank">View on ProteomeXchange</a>
                         </li>`
                             : ``
                         }                        
