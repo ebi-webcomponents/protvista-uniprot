@@ -20,11 +20,10 @@ const PDBLinks = [
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
 
-// Other excluded providers from 3D beacons apart from 'PDBe' and 'AlphaFold DB' are
-// 'SASBDB', 'isoformio' => Model URL has .pdb extension
+// Filter PDBe and AlphaFold models from 3d beacons response as we fetch them separately from their respective API's
+// SASBDB, isoformio => Model URL has .pdb extension
 // hedgelab, levylab => yet to find an example and test
-// TODO: Disable AF confidence colouring for AlphaFill models
-const sourcesFrom3DBeacons = [
+const testedSourcesFrom3DBeacons = [
   'SWISS-MODEL',
   'ModelArchive',
   'PED',
@@ -163,10 +162,8 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
   }));
 
 const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
-  // Filter PDBe and AlphaFold models from 3d beacons response as we fetch them separately from their respective API's
-  const excludedProviders = ['PDBe', 'AlphaFold DB'];
   const otherStructures = data.structures.filter(
-    ({ summary }) => !excludedProviders.includes(summary.provider)
+    ({ summary }) => testedSourcesFrom3DBeacons.includes(summary.provider)
   );
   return otherStructures.map(({ summary }) => ({
     id: summary['model_identifier'],
@@ -348,7 +345,7 @@ class ProtvistaUniprotStructure extends LitElement {
     source?: string;
     downloadLink?: string;
   }) {
-    if (sourcesFrom3DBeacons.includes(source)) {
+    if (testedSourcesFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
       this.structureId = undefined;
     } else {
