@@ -285,13 +285,20 @@ class ProtvistaUniprotStructure extends LitElement {
     const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
-
     this.loading = false;
+
+    const pdbData = processPDBData(rawData[pdbUrl] || []);
+    let afData = [];
+    // Check if AF sequence matches UniProt sequence
+    if (
+      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl][0]?.sequence
+    ) {
+      afData = processAFData(rawData[alphaFoldUrl] || []);
+    }
+    const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
+
     // TODO: return if no data at all
     // if (!payload) return;
-    const pdbData = processPDBData(rawData[pdbUrl] || []);
-    const afData = processAFData(rawData[alphaFoldUrl] || []);
-    const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
 
     const data = [...pdbData, ...afData, ...beaconsData];
     if (!data || !data.length) return;
