@@ -20,15 +20,16 @@ const PDBLinks = [
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
 
-// Filter PDBe and AlphaFold models from 3d beacons response as we fetch them separately from their respective API's
-// SASBDB, isoformio => Model URL has .pdb extension
-// levylab => yet to find an example and test
-const testedSourcesFrom3DBeacons = [
+// Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
+const providersFrom3DBeacons = [
   'SWISS-MODEL',
   'ModelArchive',
   'PED',
+  'SASBDB',
+  'isoform.io',
   'AlphaFill',
   'HEGELAB',
+  'levylab',
 ];
 
 type UniProtKBData = {
@@ -163,8 +164,8 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
   }));
 
 const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
-  const otherStructures = data.structures.filter(
-    ({ summary }) => testedSourcesFrom3DBeacons.includes(summary.provider)
+  const otherStructures = data.structures.filter(({ summary }) =>
+    providersFrom3DBeacons.includes(summary.provider)
   );
   return otherStructures.map(({ summary }) => ({
     id: summary['model_identifier'],
@@ -280,6 +281,7 @@ class ProtvistaUniprotStructure extends LitElement {
     // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
     const pdbUrl = `https://rest.uniprot.org/uniprotkb/${this.accession}`;
     const alphaFoldUrl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
+    // exclude_provider accepts only value hence 'pdbe' as majority of the models are from there.
     const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
@@ -346,7 +348,7 @@ class ProtvistaUniprotStructure extends LitElement {
     source?: string;
     downloadLink?: string;
   }) {
-    if (testedSourcesFrom3DBeacons.includes(source)) {
+    if (providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
       this.structureId = undefined;
     } else {
