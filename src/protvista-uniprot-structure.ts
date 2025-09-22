@@ -22,12 +22,13 @@ const foldseekLink = `https://search.foldseek.com/search`;
 
 // Filter PDBe and AlphaFold models from 3d beacons response as we fetch them separately from their respective API's
 // SASBDB, isoformio => Model URL has .pdb extension
-// hedgelab, levylab => yet to find an example and test
+// levylab => yet to find an example and test
 const testedSourcesFrom3DBeacons = [
   'SWISS-MODEL',
   'ModelArchive',
   'PED',
   'AlphaFill',
+  'HEGELAB',
 ];
 
 type UniProtKBData = {
