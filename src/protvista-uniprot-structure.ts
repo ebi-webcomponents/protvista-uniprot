@@ -279,7 +279,7 @@ class ProtvistaUniprotStructure extends LitElement {
     // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
     const pdbUrl = `https://rest.uniprot.org/uniprotkb/${this.accession}`;
     const alphaFoldUrl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
-    const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json`;
+    const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
 
