@@ -1,9 +1,8 @@
 import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import NightingaleStructure, {
   PredictionData,
-  StructureData,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { fetchAll, loadComponent } from './utils';
@@ -21,26 +20,111 @@ const PDBLinks = [
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
 
+// Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
+const providersFrom3DBeacons = [
+  'SWISS-MODEL',
+  'ModelArchive',
+  'PED',
+  'SASBDB',
+  'isoform.io',
+  'AlphaFill',
+  'HEGELAB',
+  'levylab',
+];
+
+type UniProtKBData = {
+  uniProtKBCrossReferences: UniProtKBCrossReference[];
+  sequence: Sequence;
+};
+
+type UniProtKBCrossReference = {
+  database: string;
+  id: string;
+  properties: Record<string, string>[];
+};
+
+type Sequence = {
+  value: string;
+  length: number;
+  molWeight: number;
+  crc64: string;
+  md5: string;
+};
+
+type BeaconsData = {
+  uniprot_entry: {
+    ac: string;
+    id: string;
+    uniprot_checksum: string;
+    sequence_length: number;
+    segment_start: number;
+    segment_end: number;
+  };
+  structures: {
+    summary: {
+      model_identifier: string;
+      model_category: string;
+      model_url: string;
+      model_format: string;
+      model_type: string | null;
+      model_page_url: string;
+      provider: string;
+      number_of_conformers: number | null;
+      ensemble_sample_url: string | null;
+      ensemble_sample_format: string | null;
+      created: string;
+      sequence_identity: number;
+      uniprot_start: number;
+      uniprot_end: number;
+      coverage: number;
+      experimental_method: string | null;
+      resolution: number | null;
+      confidence_type: string;
+      confidence_version: string | null;
+      confidence_avg_local_score: number;
+      oligomeric_state: string | null;
+      preferred_assembly_id: string | null;
+      entities: {
+        entity_type: string;
+        entity_poly_type: string;
+        identifier: string;
+        identifier_category: string;
+        description: string;
+        chain_ids: string[];
+      }[];
+    };
+  }[];
+};
+
 type ProcessedStructureData = {
   id: string;
-  source: 'PDB' | 'AlphaFold';
-  method: string;
+  source: string;
+  method?: string;
   resolution?: string;
   chain?: string;
   positions?: string;
   downloadLink?: string;
+  sourceDBLink?: string;
   protvistaFeatureId: string;
 };
 
-const processPDBData = (data: StructureData): ProcessedStructureData[] =>
-  data.dbReferences
-    .filter((xref) => xref.type === 'PDB')
+const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
+  data.uniProtKBCrossReferences
+    .filter((xref) => xref.database === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
     .map(({ id, properties }) => {
       if (!properties) {
         return;
       }
-      const { chains, resolution, method } = properties;
+
+      const propertyMap = properties.reduce((acc, item) => {
+        acc[item.key] = item.value;
+        return acc;
+      }, {} as Record<string, string>);
+
+      const method = propertyMap['Method'];
+      const resolution = propertyMap['Resolution'];
+      const chains = propertyMap['Chains'];
 
       let chain;
       let positions;
@@ -78,6 +162,20 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
     protvistaFeatureId: d.entryId,
     downloadLink: d.pdbUrl,
   }));
+
+const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
+  const otherStructures = data.structures.filter(({ summary }) =>
+    providersFrom3DBeacons.includes(summary.provider)
+  );
+  return otherStructures.map(({ summary }) => ({
+    id: summary['model_identifier'],
+    source: summary.provider,
+    positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
+    protvistaFeatureId: summary['model_identifier'],
+    downloadLink: summary['model_url'],
+    sourceDBLink: summary['model_page_url'],
+  }));
+};
 
 const AFMetaInfo = html`
   <strong>Model Confidence:</strong>
@@ -151,6 +249,9 @@ class ProtvistaUniprotStructure extends LitElement {
   private loading?: boolean;
   private alphamissenseAvailable?: boolean;
 
+  @state()
+  private modelUrl = '';
+
   constructor() {
     super();
     loadComponent('nightingale-structure', NightingaleStructure);
@@ -176,22 +277,34 @@ class ProtvistaUniprotStructure extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     if (!this.accession) return;
-    // https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/${this.accession}
-    const pdbUrl = `https://www.ebi.ac.uk/proteins/api/proteins/${this.accession}`;
-    const alphaFoldURl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
 
-    const rawData = await fetchAll([pdbUrl, alphaFoldURl]);
+    // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
+    const pdbUrl = `https://rest.uniprot.org/uniprotkb/${this.accession}`;
+    const alphaFoldUrl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
+    // exclude_provider accepts only value hence 'pdbe' as majority of the models are from there.
+    const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`;
 
+    const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
     this.loading = false;
+
+    const pdbData = processPDBData(rawData[pdbUrl] || []);
+    let afData = [];
+    // Check if AF sequence matches UniProt sequence
+    if (
+      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl][0]?.sequence
+    ) {
+      afData = processAFData(rawData[alphaFoldUrl] || []);
+    }
+    const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
+
     // TODO: return if no data at all
     // if (!payload) return;
-    const pdbData = processPDBData(rawData[pdbUrl] || []);
-    const afData = processAFData(rawData[alphaFoldURl] || []);
-    const data = [...pdbData, ...afData];
+
+    const data = [...pdbData, ...afData, ...beaconsData];
     if (!data || !data.length) return;
 
     this.data = data;
-    this.alphamissenseAvailable = rawData[alphaFoldURl].some(
+    this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
       (data) => data.amAnnotationsUrl
     );
   }
@@ -233,12 +346,25 @@ class ProtvistaUniprotStructure extends LitElement {
     }
   }
 
-  onTableRowClick({ id }: { id: string }) {
-    this.structureId = id;
-    if (this.structureId.startsWith('AF-')) {
-      this.metaInfo = AFMetaInfo;
+  onTableRowClick({
+    id,
+    source,
+    downloadLink,
+  }: {
+    id: string;
+    source?: string;
+    downloadLink?: string;
+  }) {
+    if (providersFrom3DBeacons.includes(source)) {
+      this.modelUrl = downloadLink;
+      this.structureId = undefined;
     } else {
-      this.metaInfo = undefined;
+      this.structureId = id;
+      if (this.structureId.startsWith('AF-')) {
+        this.metaInfo = AFMetaInfo;
+      } else {
+        this.metaInfo = undefined;
+      }
     }
   }
 
@@ -358,7 +484,10 @@ class ProtvistaUniprotStructure extends LitElement {
                 protein-accession=${this.accession}
                 color-theme=${this.colorTheme}
               ></nightingale-structure>`
-            : html``}
+            : html`<nightingale-structure
+                model-url=${this.modelUrl}
+                color-theme=${this.colorTheme}
+              ></nightingale-structure>`}
         </div>
         <div class="protvista-uniprot-structure__table">
           ${this.data && this.data.length
@@ -386,9 +515,11 @@ class ProtvistaUniprotStructure extends LitElement {
                         chain,
                         positions,
                         downloadLink,
+                        sourceDBLink,
                       }) => html`<tr
                         data-id="${id}"
-                        @click="${() => this.onTableRowClick({ id })}"
+                        @click="${() =>
+                          this.onTableRowClick({ id, source, downloadLink })}"
                       >
                         <td data-filter="source" data-filter-value="${source}">
                           <strong>${source}</strong>
@@ -415,23 +546,31 @@ class ProtvistaUniprotStructure extends LitElement {
                                   (prev, curr) => html` ${prev} · ${curr} `
                                 )}
                               `
-                            : html`<a href="${alphaFoldLink}${this.accession}"
+                            : ``}
+                          ${source === 'AlphaFold'
+                            ? html`<a href="${alphaFoldLink}${this.accession}"
                                 >AlphaFold</a
-                              >`}
+                              >`
+                            : ``}
+                          ${sourceDBLink
+                            ? html`<a href="${sourceDBLink}">${source}</a>`
+                            : ``}
                         </td>
                         <td>
                           ${downloadLink
                             ? html`<a
-                                  href="${downloadLink}"
-                                  class="download-link"
-                                  >${svg`${unsafeHTML(downloadIcon)}`}</a
-                                >
-                                ·
-                                ${foldseekURL(
-                                  source === 'PDB' ? id : this.accession,
-                                  source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
-                                )}`
+                                href="${downloadLink}"
+                                class="download-link"
+                                >${svg`${unsafeHTML(downloadIcon)}`}</a
+                              > `
                             : ''}
+                          ${source === 'PDB' || source === 'AlphaFold'
+                            ? html`·
+                              ${foldseekURL(
+                                source === 'PDB' ? id : this.accession,
+                                source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
+                              )}`
+                            : ``}
                         </td>
                       </tr>`
                     )}

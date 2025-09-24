@@ -1,7 +1,7 @@
 {
   "name": "protvista-uniprot",
   "description": "ProtVista tool for the UniProt website",
-  "version": "4.3.8",
+  "version": "4.4.0",
   "files": [
     "dist",
     "src"
@@ -37,7 +37,7 @@
     "@nightingale-elements/nightingale-navigation": "5.6.0",
     "@nightingale-elements/nightingale-sequence": "5.6.0",
     "@nightingale-elements/nightingale-sequence-heatmap": "5.6.2",
-    "@nightingale-elements/nightingale-structure": "5.6.2",
+    "@nightingale-elements/nightingale-structure": "5.7.0",
     "@nightingale-elements/nightingale-track-canvas": "5.6.0",
     "@nightingale-elements/nightingale-variation": "5.6.0",
     "color-hash": "2.0.2",
