@@ -1,5 +1,10 @@
 import ecoMap from '../adapters/config/evidence';
-import { phosphorylate, sumoylate } from './ptm-tooltip';
+import {
+  acetylate,
+  phosphorylate,
+  sumoylate,
+  ubiquitinate,
+} from './ptm-tooltip';
 
 const taxIdToPeptideAtlasBuildData = {
   '36329': { build: '542', organism: 'Plasmodium' },
@@ -101,12 +106,18 @@ const findModifiedResidueName = (feature, ptm) => {
   const { peptide, begin: peptideStart } = feature;
   const proteinLocation = Number(peptideStart) + ptm.position - 1;
   const modifiedResidue = peptide.charAt(ptm.position - 1); // CharAt index starts from 0
-  if (ptm.name === 'Phosphorylation') {
-    return `${proteinLocation} ${phosphorylate(modifiedResidue)}`;
-  } else if (ptm.name === 'SUMOylation') {
-    return `${proteinLocation} ${sumoylate(modifiedResidue)}`;
+  switch (ptm.name) {
+    case 'Phosphorylation':
+      return `${proteinLocation} ${phosphorylate(modifiedResidue)}`;
+    case 'SUMOylation':
+      return `${proteinLocation} ${sumoylate(modifiedResidue)}`;
+    case 'Ubiquitinylation':
+      return `${proteinLocation} ${ubiquitinate(modifiedResidue)}`;
+    case 'Acetylation':
+      return `${proteinLocation} ${acetylate(modifiedResidue)}`;
+    default:
+      return '';
   }
-  return '';
 };
 
 const formatTooltip = (feature, taxId?: string) => {
@@ -234,8 +245,10 @@ const formatTooltip = (feature, taxId?: string) => {
                         }
                         ${
                           ref.properties['Universal Spectrum Id']
-                            ? `<li class="text-indent-2 nowrap">Universal Spectrum Id: 
-                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${ref.properties['Universal Spectrum Id']}" target="_blank">View on ProteomeXchange</a>
+                            ? `<li class="text-indent-2 nowrap margin-bottom">Universal Spectrum Id: 
+                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${encodeURIComponent(
+                          ref.properties['Universal Spectrum Id']
+                        )}" target="_blank">View on ProteomeXchange</a>
                         </li>`
                             : ``
                         }                        

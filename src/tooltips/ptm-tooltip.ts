@@ -1,6 +1,10 @@
 import { PTM } from '../adapters/ptm-exchange-adapter';
 
-type Modification = 'Phosphorylation' | 'SUMOylation';
+type Modification =
+  | 'Phosphorylation'
+  | 'SUMOylation'
+  | 'Ubiquitinylation'
+  | 'Acetylation';
 
 const aaToPhosphorylated = {
   R: 'Phosphoarginine',
@@ -13,6 +17,31 @@ const aaToPhosphorylated = {
 
 const aaToSumoylated = {
   K: 'Sumoylated lysine',
+};
+
+const aaToUbiquitinated = {
+  K: 'Ubiquitinated lysine',
+  S: 'Ubiquitinated serine',
+  T: 'Ubiquitinated threonine',
+  C: 'Ubiquitinated cysteine',
+};
+
+const aaToAcetylated = {
+  S: 'Acetylserine',
+  A: 'Acetylalanine',
+  G: 'Acetylglycine',
+  T: 'Acetylthreonine',
+  V: 'Acetylvaline',
+  C: 'Acetylcysteine',
+  E: 'Acetylglutamin acid',
+  D: 'Acetylaspartic acid',
+  N: 'Acetylasparagine',
+  Q: 'Acetylglutamine',
+  L: 'Acetyllucine',
+  I: 'Acetlyisolucine',
+  W: 'Acetyltryptophan',
+  F: 'Acetylphenylalanine',
+  K: 'Acetyllysine',
 };
 
 export const phosphorylate = (aa: string) => {
@@ -31,6 +60,39 @@ export const sumoylate = (aa: string) => {
   }
   console.error(`${AA} not a valid amino acid for SUMOylation`);
   return '';
+};
+
+export const ubiquitinate = (aa: string) => {
+  const AA = aa.toUpperCase();
+  if (AA in aaToUbiquitinated) {
+    return aaToUbiquitinated[AA as keyof typeof aaToUbiquitinated];
+  }
+  console.error(`${AA} not a valid amino acid for Ubiquitinylation`);
+  return '';
+};
+
+export const acetylate = (aa: string) => {
+  const AA = aa.toUpperCase();
+  if (AA in aaToAcetylated) {
+    return aaToAcetylated[AA as keyof typeof aaToAcetylated];
+  }
+  console.error(`${AA} not a valid amino acid for Acetylation`);
+  return '';
+};
+
+const getDescription = (modification: Modification, aa: string) => {
+  switch (modification) {
+    case 'Phosphorylation':
+      return phosphorylate(aa);
+    case 'SUMOylation':
+      return sumoylate(aa);
+    case 'Ubiquitinylation':
+      return ubiquitinate(aa);
+    case 'Acetylation':
+      return acetylate(aa);
+    default:
+      return '';
+  }
 };
 
 const formatTooltip = (
@@ -52,7 +114,7 @@ const formatTooltip = (
   if (modifications.size) {
     if (modifications.size > 1) {
       console.error(
-        `PTMeXchange PTM has a mixture of modifications: ${Array.from(
+        `The ptms are grouped by modification, but more than one type detected: ${Array.from(
           modifications
         )}`
       );
@@ -63,9 +125,7 @@ const formatTooltip = (
 
   return `
   ${title ? `<h4>${title}</h4><hr />` : ''}
-  <h5>Description</h5><p>${
-    modification === 'Phosphorylation' ? phosphorylate(aa) : sumoylate(aa)
-  }</p>
+  <h5>Description</h5><p>${getDescription(modification, aa)}</p>
   ${
     confidenceScore
       ? `<h5 data-article-id="mod_res_large_scale#confidence-score">Confidence Score</h5><p>${confidenceScore}</p>`
