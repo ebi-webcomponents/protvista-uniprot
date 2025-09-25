@@ -304,7 +304,7 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!data || !data.length) return;
 
     this.data = data;
-    this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
+    this.alphamissenseAvailable = rawData[alphaFoldUrl]?.some(
       (data) => data.amAnnotationsUrl
     );
   }
