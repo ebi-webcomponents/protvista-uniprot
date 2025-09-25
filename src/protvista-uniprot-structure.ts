@@ -484,10 +484,13 @@ class ProtvistaUniprotStructure extends LitElement {
                 protein-accession=${this.accession}
                 color-theme=${this.colorTheme}
               ></nightingale-structure>`
-            : html`<nightingale-structure
+            : html``}
+          ${this.modelUrl
+            ? html`<nightingale-structure
                 model-url=${this.modelUrl}
                 color-theme=${this.colorTheme}
-              ></nightingale-structure>`}
+              ></nightingale-structure>`
+            : html``}
         </div>
         <div class="protvista-uniprot-structure__table">
           ${this.data && this.data.length
