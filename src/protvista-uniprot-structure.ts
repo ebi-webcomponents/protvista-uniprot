@@ -164,17 +164,17 @@ const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
   }));
 
 const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
-  const otherStructures = data.structures.filter(({ summary }) =>
+  const otherStructures = data?.structures?.filter(({ summary }) =>
     providersFrom3DBeacons.includes(summary.provider)
   );
-  return otherStructures.map(({ summary }) => ({
+  return otherStructures?.map(({ summary }) => ({
     id: summary['model_identifier'],
     source: summary.provider,
     positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
     protvistaFeatureId: summary['model_identifier'],
     downloadLink: summary['model_url'],
     sourceDBLink: summary['model_page_url'],
-  }));
+  })) || [];
 };
 
 const AFMetaInfo = html`
@@ -294,6 +294,9 @@ class ProtvistaUniprotStructure extends LitElement {
       rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl]?.[0]?.sequence
     ) {
       afData = processAFData(rawData[alphaFoldUrl] || []);
+      this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
+      (data) => data.amAnnotationsUrl
+    );
     }
     const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
 
@@ -304,9 +307,6 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!data || !data.length) return;
 
     this.data = data;
-    this.alphamissenseAvailable = rawData[alphaFoldUrl]?.some(
-      (data) => data.amAnnotationsUrl
-    );
   }
 
   disconnectedCallback() {
