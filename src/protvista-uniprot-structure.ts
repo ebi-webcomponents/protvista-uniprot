@@ -291,7 +291,7 @@ class ProtvistaUniprotStructure extends LitElement {
     let afData = [];
     // Check if AF sequence matches UniProt sequence
     if (
-      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl][0]?.sequence
+      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl]?.[0]?.sequence
     ) {
       afData = processAFData(rawData[alphaFoldUrl] || []);
     }
