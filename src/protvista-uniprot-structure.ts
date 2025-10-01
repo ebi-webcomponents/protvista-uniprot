@@ -370,6 +370,7 @@ class ProtvistaUniprotStructure extends LitElement {
     if (providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
       this.structureId = undefined;
+      this.metaInfo = undefined;
     } else {
       this.structureId = id;
       this.modelUrl = undefined;
