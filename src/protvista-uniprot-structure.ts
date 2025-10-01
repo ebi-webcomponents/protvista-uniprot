@@ -32,6 +32,17 @@ const providersFrom3DBeacons = [
   'levylab',
 ];
 
+const sourceMethods = new Map([
+  ['SWISS-MODEL', 'Modeling'],
+  ['ModelArchive', 'Modeling'],
+  ['PED', 'Modeling'],
+  ['SASBDB', 'SAS'],
+  ['isoform.io', 'Predicted'],
+  ['AlphaFill', 'Predicted'],
+  ['HEGELAB', 'Modeling'],
+  ['levylab', 'Modeling'],
+]);
+
 type UniProtKBData = {
   uniProtKBCrossReferences: UniProtKBCrossReference[];
   sequence: Sequence;
@@ -170,6 +181,7 @@ const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
   return otherStructures?.map(({ summary }) => ({
     id: summary['model_identifier'],
     source: summary.provider,
+    method: sourceMethods.get(summary.provider),
     positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
     protvistaFeatureId: summary['model_identifier'],
     downloadLink: summary['model_url'],
@@ -360,6 +372,7 @@ class ProtvistaUniprotStructure extends LitElement {
       this.structureId = undefined;
     } else {
       this.structureId = id;
+      this.modelUrl = undefined;
       if (this.structureId.startsWith('AF-')) {
         this.metaInfo = AFMetaInfo;
       } else {
