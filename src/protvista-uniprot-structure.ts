@@ -178,16 +178,21 @@ const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
   const otherStructures = data?.structures?.filter(({ summary }) =>
     providersFrom3DBeacons.includes(summary.provider)
   );
-  return otherStructures?.map(({ summary }) => ({
-    id: summary['model_identifier'],
-    source: summary.provider,
-    method: sourceMethods.get(summary.provider),
-    positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
-    protvistaFeatureId: summary['model_identifier'],
-    downloadLink: summary['model_url'],
-    // isoform.io does not have a model page url. Link to their homepage instead.
-    sourceDBLink: summary.provider === 'isoform.io' ? 'https://www.isoform.io/home' : summary['model_page_url'],
-  })) || [];
+  return (
+    otherStructures?.map(({ summary }) => ({
+      id: summary['model_identifier'],
+      source: summary.provider,
+      method: sourceMethods.get(summary.provider),
+      positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
+      protvistaFeatureId: summary['model_identifier'],
+      downloadLink: summary['model_url'],
+      // isoform.io does not have a model page url. Link to their homepage instead.
+      sourceDBLink:
+        summary.provider === 'isoform.io'
+          ? 'https://www.isoform.io/home'
+          : summary['model_page_url'],
+    })) || []
+  );
 };
 
 const AFMetaInfo = html`
@@ -308,8 +313,8 @@ class ProtvistaUniprotStructure extends LitElement {
     ) {
       afData = processAFData(rawData[alphaFoldUrl] || []);
       this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
-      (data) => data.amAnnotationsUrl
-    );
+        (data) => data.amAnnotationsUrl
+      );
     }
     const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
 
@@ -370,6 +375,7 @@ class ProtvistaUniprotStructure extends LitElement {
   }) {
     if (providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
+      // Reset the rest
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
@@ -504,7 +510,6 @@ class ProtvistaUniprotStructure extends LitElement {
           ${this.modelUrl
             ? html`<nightingale-structure
                 model-url=${this.modelUrl}
-                color-theme=${this.colorTheme}
               ></nightingale-structure>`
             : html``}
         </div>
