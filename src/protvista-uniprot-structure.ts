@@ -372,6 +372,7 @@ class ProtvistaUniprotStructure extends LitElement {
       this.modelUrl = downloadLink;
       this.structureId = undefined;
       this.metaInfo = undefined;
+      this.colorTheme = 'alphafold';
     } else {
       this.structureId = id;
       this.modelUrl = undefined;
