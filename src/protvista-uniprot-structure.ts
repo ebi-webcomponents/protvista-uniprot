@@ -185,7 +185,8 @@ const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
     positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
     protvistaFeatureId: summary['model_identifier'],
     downloadLink: summary['model_url'],
-    sourceDBLink: summary['model_page_url'],
+    // isoform.io does not have a model page url. Link to their homepage instead.
+    sourceDBLink: summary.provider === 'isoform.io' ? 'https://www.isoform.io/home' : summary['model_page_url'],
   })) || [];
 };
 
