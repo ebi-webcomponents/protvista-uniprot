@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from './types/alphafold';
+import { AlphaFoldPayload } from '@nightingale-elements/nightingale-structure';
 
 // from color scale B:0,H:0.1132,V:0.2264,L:0.3395,A:0.4527,l:0.5895,h:0.7264,p:0.8632,P:1
 const certainlyBenign = 0;
@@ -95,7 +95,7 @@ const loadAndParseAnnotations = async (url: string): Promise<string> => {
     const rawCSV = await payload.text();
     return parseCSV(rawCSV);
   } catch (e) {
-    console.error('Could not load AlphaMissense pathogenicity', e);
+    console.error('Could not load AlphaMissense pathogenicity score', e);
   }
 };
 
@@ -106,14 +106,22 @@ type PartialProtein = {
 };
 
 const transformData = async (
-  data: AlphafoldPayload,
+  data: AlphaFoldPayload,
   protein: PartialProtein
 ) => {
-  const { amAnnotationsUrl, uniprotSequence } = data?.[0] || {};
-  if (amAnnotationsUrl && uniprotSequence === protein.sequence.sequence) {
-    const variationData = await loadAndParseAnnotations(amAnnotationsUrl);
-    // return confidenceData?.confidenceCategory.join('');
-    return variationData;
+  const alphaFoldSequenceMatch = data?.filter(
+    ({ sequence, amAnnotationsUrl }) =>
+      protein.sequence.sequence === sequence && amAnnotationsUrl
+  );
+  if (alphaFoldSequenceMatch.length === 1) {
+    const heatmapData = await loadAndParseAnnotations(
+      alphaFoldSequenceMatch[0].amAnnotationsUrl
+    );
+    return heatmapData;
+  } else if (alphaFoldSequenceMatch.length > 1) {
+    console.warn(
+      `Found more than one matches (${alphaFoldSequenceMatch.length}) for AlphaMissense pathogenicity score against protein sequence: ${protein.sequence}`
+    );
   }
 };
 

@@ -815,8 +815,10 @@ const config: ProtvistaConfig = {
       name: 'ALPHAMISSENSE_PATHOGENICITY',
       label: 'AlphaMissense',
       trackType: 'nightingale-colored-sequence',
-      scale: 'B:0,H:0.1132,V:0.2264,L:0.3395,A:0.4527,l:0.5895,h:0.7264,p:0.8632,P:1',
-      'color-range': '#2166ac:0,#4290bf:0.1132,#8cbcd4:0.2264,#c3d6e0:0.3395,#e2e2e2:0.4527,#edcdba:0.5895,#e99e7c:0.7264,#d15e4b:0.8632,#b2182b:1',
+      scale:
+        'B:0,H:0.1132,V:0.2264,L:0.3395,A:0.4527,l:0.5895,h:0.7264,p:0.8632,P:1',
+      'color-range':
+        '#2166ac:0,#4290bf:0.1132,#8cbcd4:0.2264,#c3d6e0:0.3395,#e2e2e2:0.4527,#edcdba:0.5895,#e99e7c:0.7264,#d15e4b:0.8632,#b2182b:1',
       tracks: [
         {
           name: 'alphamissense_pathogenicity',
@@ -836,13 +838,13 @@ const config: ProtvistaConfig = {
         {
           name: 'alphamissense_pathogenicity_heatmap',
           label: 'AlphaMissense Pathogenicity',
-          labelUrl: 'https://alphafold.ebi.ac.uk/entry/{accession}',
+          labelUrl: `${alphafoldEntry}{accession}`,
           trackType: 'nightingale-sequence-heatmap',
           data: [
             {
               adapter: 'alphamissense-heatmap-adapter',
               url: [
-                'https://alphafold.ebi.ac.uk/api/prediction/{accession}',
+                `${alphafoldApi}/prediction/{accession}`,
                 `${proteinsApiServices.proteins}{accession}`,
               ],
             },

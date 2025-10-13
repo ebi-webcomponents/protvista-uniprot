@@ -2,7 +2,7 @@ import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import NightingaleStructure, {
-  PredictionData,
+  AlphaFoldPayload,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { fetchAll, loadComponent } from './utils';
@@ -164,7 +164,7 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
         transformedItem !== undefined
     );
 
-const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
+const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
   data.map((d) => ({
     id: d.entryId,
     source: 'AlphaFold',

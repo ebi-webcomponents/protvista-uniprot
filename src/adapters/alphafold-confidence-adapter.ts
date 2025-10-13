@@ -1,4 +1,4 @@
-import { AlphafoldPayload } from './types/alphafold';
+import { AlphaFoldPayload } from '@nightingale-elements/nightingale-structure';
 
 type AlphafoldConfidencePayload = {
   residueNumber: Array<number>;
@@ -6,7 +6,7 @@ type AlphafoldConfidencePayload = {
   confidenceCategory: Array<string>;
 };
 
-const getConfidenceURLFromPayload = (data: AlphafoldPayload) => {
+const getConfidenceURLFromPayload = (data: AlphaFoldPayload) => {
   const cifURL = data?.[0]?.cifUrl;
   return cifURL?.length
     ? cifURL.replace('-model', '-confidence').replace('.cif', '.json')
@@ -31,12 +31,17 @@ type PartialProtein = {
 };
 
 const transformData = async (
-  data: AlphafoldPayload,
+  data: AlphaFoldPayload,
   protein: PartialProtein
 ) => {
   const confidenceUrl = getConfidenceURLFromPayload(data);
-  const { uniprotSequence } = data?.[0] || {};
-  if (confidenceUrl && uniprotSequence === protein.sequence.sequence) {
+  if (!confidenceUrl) {
+    return;
+  }
+  const alphaFoldSequenceMatch = data?.filter(
+    ({ sequence }) => protein.sequence.sequence === sequence
+  );
+  if (alphaFoldSequenceMatch.length) {
     const confidenceData = await loadConfidence(confidenceUrl);
     return confidenceData?.confidenceCategory.join('');
   }
