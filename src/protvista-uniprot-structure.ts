@@ -308,14 +308,16 @@ class ProtvistaUniprotStructure extends LitElement {
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     let afData = [];
     // Check if AF sequence matches UniProt sequence
-    if (
-      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl]?.[0]?.sequence
-    ) {
-      afData = processAFData(rawData[alphaFoldUrl] || []);
-      this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
+    const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
+      ({ sequence }) => rawData[pdbUrl].sequence?.value === sequence
+    );
+    if (alphaFoldSequenceMatch.length) {
+      afData = processAFData(alphaFoldSequenceMatch);
+      this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
         (data) => data.amAnnotationsUrl
       );
     }
+
     const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
 
     // TODO: return if no data at all
