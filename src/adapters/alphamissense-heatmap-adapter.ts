@@ -58,7 +58,7 @@ const transformData = async (
     return heatmapData;
   } else if (alphaFoldSequenceMatch.length > 1) {
     console.warn(
-      `Found ${alphaFoldSequenceMatch.length} matches for AlphaMissense pathogenicity against protein sequence: ${protein.sequence}`
+      `Found more than one matches (${alphaFoldSequenceMatch.length}) for AlphaMissense pathogenicity against protein sequence: ${protein.sequence}`
     );
   }
 };
