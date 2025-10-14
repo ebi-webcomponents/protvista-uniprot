@@ -166,11 +166,11 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
 
 const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
   data.map((d) => ({
-    id: d.entryId,
+    id: d.modelEntityId,
     source: 'AlphaFold',
     method: 'Predicted',
-    positions: `${d.uniprotStart}-${d.uniprotEnd}`,
-    protvistaFeatureId: d.entryId,
+    positions: `${d.sequenceStart}-${d.sequenceEnd}`,
+    protvistaFeatureId: d.modelEntityId,
     downloadLink: d.pdbUrl,
   }));
 
