@@ -844,7 +844,7 @@ const config: ProtvistaConfig = {
             {
               adapter: 'alphamissense-heatmap-adapter',
               url: [
-                `${alphafoldApi}/prediction/{accession}`,
+                `${alphafoldApi}prediction/{accession}`,
                 `${proteinsApiServices.proteins}{accession}`,
               ],
             },
