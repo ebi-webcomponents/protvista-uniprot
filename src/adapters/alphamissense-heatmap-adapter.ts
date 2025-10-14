@@ -1,8 +1,9 @@
+import { AlphaFoldPayload } from '@nightingale-elements/nightingale-structure';
+
 import {
   cellSplitter,
   rowSplitter,
 } from './alphamissense-pathogenicity-adapter';
-import { AlphafoldPayload } from './types/alphafold';
 
 const parseCSV = (rawText: string): Array<Record<string, string>> => {
   const data = [];
@@ -43,13 +44,22 @@ type PartialProtein = {
 };
 
 const transformData = async (
-  data: AlphafoldPayload,
+  data: AlphaFoldPayload,
   protein: PartialProtein
 ) => {
-  const { amAnnotationsUrl, uniprotSequence } = data?.[0] || {};
-  if (amAnnotationsUrl && uniprotSequence === protein.sequence.sequence) {
-    const heatmapData = await loadAndParseAnnotations(amAnnotationsUrl);
+  const alphaFoldSequenceMatch = data?.filter(
+    ({ sequence, amAnnotationsUrl }) =>
+      protein.sequence.sequence === sequence && amAnnotationsUrl
+  );
+  if (alphaFoldSequenceMatch.length === 1) {
+    const heatmapData = await loadAndParseAnnotations(
+      alphaFoldSequenceMatch[0].amAnnotationsUrl
+    );
     return heatmapData;
+  } else if (alphaFoldSequenceMatch.length > 1) {
+    console.warn(
+      `Found more than one matches (${alphaFoldSequenceMatch.length}) for AlphaMissense pathogenicity against protein sequence: ${protein.sequence}`
+    );
   }
 };
 

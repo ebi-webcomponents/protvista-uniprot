@@ -2,7 +2,7 @@ import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import NightingaleStructure, {
-  PredictionData,
+  AlphaFoldPayload,
 } from '@nightingale-elements/nightingale-structure';
 import ProtvistaDatatable from 'protvista-datatable';
 import { fetchAll, loadComponent } from './utils';
@@ -164,13 +164,13 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
         transformedItem !== undefined
     );
 
-const processAFData = (data: PredictionData[]): ProcessedStructureData[] =>
+const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
   data.map((d) => ({
-    id: d.entryId,
+    id: d.modelEntityId,
     source: 'AlphaFold',
     method: 'Predicted',
-    positions: `${d.uniprotStart}-${d.uniprotEnd}`,
-    protvistaFeatureId: d.entryId,
+    positions: `${d.sequenceStart}-${d.sequenceEnd}`,
+    protvistaFeatureId: d.modelEntityId,
     downloadLink: d.pdbUrl,
   }));
 
@@ -308,14 +308,16 @@ class ProtvistaUniprotStructure extends LitElement {
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     let afData = [];
     // Check if AF sequence matches UniProt sequence
-    if (
-      rawData[pdbUrl].sequence?.value === rawData[alphaFoldUrl]?.[0]?.sequence
-    ) {
-      afData = processAFData(rawData[alphaFoldUrl] || []);
-      this.alphamissenseAvailable = rawData[alphaFoldUrl].some(
+    const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
+      ({ sequence }) => rawData[pdbUrl].sequence?.value === sequence
+    );
+    if (alphaFoldSequenceMatch.length) {
+      afData = processAFData(alphaFoldSequenceMatch);
+      this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
         (data) => data.amAnnotationsUrl
       );
     }
+
     const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
 
     // TODO: return if no data at all
