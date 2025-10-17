@@ -6,12 +6,8 @@ type AlphafoldConfidencePayload = {
   confidenceCategory: Array<string>;
 };
 
-const getConfidenceURLFromPayload = (data: AlphaFoldPayload) => {
-  const cifURL = data?.[0]?.cifUrl;
-  return cifURL?.length
-    ? cifURL.replace('-model', '-confidence').replace('.cif', '.json')
-    : null;
-};
+const getConfidenceURLFromPayload = (af: AlphaFoldPayload[number]) =>
+  af.cifUrl?.replace('-model', '-confidence').replace('.cif', '.json');
 
 const loadConfidence = async (
   url: string
@@ -34,16 +30,22 @@ const transformData = async (
   data: AlphaFoldPayload,
   protein: PartialProtein
 ) => {
-  const confidenceUrl = getConfidenceURLFromPayload(data);
-  if (!confidenceUrl) {
-    return;
-  }
   const alphaFoldSequenceMatch = data?.filter(
     ({ sequence }) => protein.sequence.sequence === sequence
   );
-  if (alphaFoldSequenceMatch.length) {
+  if (alphaFoldSequenceMatch.length === 1) {
+    const confidenceUrl = getConfidenceURLFromPayload(
+      alphaFoldSequenceMatch[0]
+    );
+    if (!confidenceUrl) {
+      return;
+    }
     const confidenceData = await loadConfidence(confidenceUrl);
     return confidenceData?.confidenceCategory.join('');
+  } else if (alphaFoldSequenceMatch.length > 1) {
+    console.warn(
+      `Found more than one matches (${alphaFoldSequenceMatch.length}) for AlphaFold confidence adapter against protein sequence: ${protein.sequence}`
+    );
   }
 };
 
