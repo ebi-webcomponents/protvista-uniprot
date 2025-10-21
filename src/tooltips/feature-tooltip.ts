@@ -65,7 +65,7 @@ const getPTMEvidence = (ptms, taxId) => {
     dbReferences.map((ref) => ref.id)
   );
   const uniqueIds = [...new Set(ids.flat())];
-  // Urls in the payload are not relevant. For 'Glue project' dataset (PXD012174), publication reference is hardcoded. Need to be checked in 2025_04
+  // For 'Glue project' dataset (PXD012174), publication reference is hardcoded.
   const proteomexchange =
     'https://proteomecentral.proteomexchange.org/dataset/';
   return `
@@ -73,7 +73,7 @@ const getPTMEvidence = (ptms, taxId) => {
       .map((id) => {
         return `<li title='${id}'>${id}&nbsp;(<a href="${proteomexchange}${id}" target="_blank">ProteomeXchange</a>${
           id === 'PXD012174'
-            ? `)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
+            ? `&nbsp;<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" target="_blank">PRIDE</a>)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
             : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" target="_blank">PeptideAtlas</a>)</li>`
         }`;
       })
@@ -201,7 +201,7 @@ const formatTooltip = (feature, taxId?: string) => {
         ${
           feature.residuesToHighlight &&
           dataset &&
-          !dataset.includes('Glue project') // 2025_04 check if still needed
+          !dataset.includes('PXD012174') // Exclude 'Glue project' dataset as it is from PRIDE and it doesn't have PTM statistical attributes
             ? `<hr /><h5 class="margin-bottom" data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.residuesToHighlight
                 .map((ptm) =>
                   ptm.dbReferences
