@@ -65,16 +65,15 @@ const getPTMEvidence = (ptms, taxId) => {
     dbReferences.map((ref) => ref.id)
   );
   const uniqueIds = [...new Set(ids.flat())];
-  // Urls in the payload are not relevant. For 'Glue project' dataset, Dataset ID and publication reference is hardcoded. Need to be checked in 2024 if it still exists in the payload
+  // For 'Glue project' dataset (PXD012174), publication reference is hardcoded.
   const proteomexchange =
     'https://proteomecentral.proteomexchange.org/dataset/';
   return `
     <ul class="no-bullet">${uniqueIds
       .map((id) => {
-        const datasetID = id === 'Glue project' ? 'PXD012174' : id;
-        return `<li title='${datasetID}'>${datasetID}&nbsp;(<a href="${proteomexchange}${datasetID}" target="_blank">ProteomeXchange</a>${
-          id === 'Glue project'
-            ? `)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
+        return `<li title='${id}'>${id}&nbsp;(<a href="${proteomexchange}${id}" target="_blank">ProteomeXchange</a>${
+          id === 'PXD012174'
+            ? `&nbsp;<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" target="_blank">PRIDE</a>)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
             : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" target="_blank">PeptideAtlas</a>)</li>`
         }`;
       })
@@ -202,7 +201,7 @@ const formatTooltip = (feature, taxId?: string) => {
         ${
           feature.residuesToHighlight &&
           dataset &&
-          !dataset.includes('Glue project')
+          !dataset.includes('PXD012174') // Exclude 'Glue project' dataset as it is from PRIDE and it doesn't have PTM statistical attributes
             ? `<hr /><h5 class="margin-bottom" data-article-id="mod_res_large_scale#what-is-the-goldsilverbronze-criterion">PTM statistical attributes</h5><ul class="no-bullet">${feature.residuesToHighlight
                 .map((ptm) =>
                   ptm.dbReferences
