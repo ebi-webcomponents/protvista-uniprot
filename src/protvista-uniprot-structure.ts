@@ -311,7 +311,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
       ({ sequence }) => rawData[pdbUrl].sequence?.value === sequence
     );
-    if (alphaFoldSequenceMatch.length) {
+    if (alphaFoldSequenceMatch?.length) {
       afData = processAFData(alphaFoldSequenceMatch);
       this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
         (data) => data.amAnnotationsUrl
