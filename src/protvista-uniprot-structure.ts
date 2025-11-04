@@ -120,7 +120,7 @@ type ProcessedStructureData = {
 };
 
 const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
-  data.uniProtKBCrossReferences
+  data.uniProtKBCrossReferences ? data.uniProtKBCrossReferences
     .filter((xref) => xref.database === 'PDB')
     .sort((refA, refB) => refA.id.localeCompare(refB.id))
     .map(({ id, properties }) => {
@@ -162,7 +162,7 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
         transformedItem: ProcessedStructureData | undefined
       ): transformedItem is ProcessedStructureData =>
         transformedItem !== undefined
-    );
+    ) : [];
 
 const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
   data.map((d) => ({
@@ -260,6 +260,7 @@ const styleId = 'protvista-styles';
 @customElement('protvista-uniprot-structure')
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
+  sequence?: string;
   data?: ProcessedStructureData[];
   structureId?: string;
   metaInfo?: TemplateResult;
@@ -285,6 +286,7 @@ class ProtvistaUniprotStructure extends LitElement {
     return {
       accession: { type: String },
       structureId: { type: String },
+      sequence: { type: String },
       data: { type: Object },
       loading: { type: Boolean },
       colorTheme: { type: String },
@@ -309,7 +311,7 @@ class ProtvistaUniprotStructure extends LitElement {
     let afData = [];
     // Check if AF sequence matches UniProt sequence
     const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
-      ({ sequence }) => rawData[pdbUrl].sequence?.value === sequence
+      ({ sequence: afSequence }) => rawData[pdbUrl]?.sequence?.value === afSequence || this.sequence === afSequence
     );
     if (alphaFoldSequenceMatch?.length) {
       afData = processAFData(alphaFoldSequenceMatch);
