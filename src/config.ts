@@ -1,7 +1,7 @@
 const proteinsApi = 'https://www.ebi.ac.uk/proteins/api/';
 const alphafoldApi = 'https://alphafold.ebi.ac.uk/api/';
 const alphafoldEntry = 'https://alphafold.ebi.ac.uk/entry/';
-const interproApi = 'https://www.ebi.ac.uk/interpro/api/';
+const interproApi = 'https://www.ebi.ac.uk/interpro/wwwapi/';
 
 const proteinsApiServices = {
   proteins: `${proteinsApi}proteins/`,
