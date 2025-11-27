@@ -51,6 +51,7 @@ export type ProtvistaTrackConfig = {
   scale?: string;
   filterComponent?: 'nightingale-filter';
   'color-range'?: string;
+  helpPage?: string;
 };
 
 type ProtvistaCategory = {
@@ -62,6 +63,7 @@ type ProtvistaCategory = {
   shape?: string; //TODO: eventually replace with list
   scale?: string;
   'color-range'?: string;
+  helpPage?: string;
 };
 
 export type ProtvistaConfig = {
@@ -87,6 +89,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'N-terminal signal peptide',
+          helpPage: 'signal',
         },
         {
           name: 'chain',
@@ -101,6 +104,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             '(aka mature region). This describes the extent of a polypeptide chain in the mature protein following processing',
+          helpPage: 'chain',
         },
         {
           name: 'transit',
@@ -114,6 +118,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'This describes the extent of a transit peptide',
+          helpPage: 'transit',
         },
         {
           name: 'init_met',
@@ -129,6 +134,7 @@ const config: ProtvistaConfig = {
 
           tooltip:
             'This indicates that the initiator methionine is cleaved from the mature protein',
+          helpPage: 'init_met',
         },
         {
           name: 'propep',
@@ -143,6 +149,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Part of a protein that is cleaved during maturation or activation',
+          helpPage: 'propep',
         },
         {
           name: 'peptide',
@@ -157,6 +164,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'The position and length of an active peptide in the mature protein',
+          helpPage: 'peptide',
         },
       ],
     },
@@ -178,6 +186,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Position of regions of compositional bias within the protein and the particular amino acids that are over-represented within those regions',
+          helpPage: 'compbias',
         },
         {
           name: 'conflict',
@@ -191,6 +200,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Sequence discrepancies of unknown origin',
+          helpPage: 'conflict',
         },
         {
           name: 'non_cons',
@@ -205,6 +215,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Indicates that two residues in a sequence are not consecutive and that there is an undetermined number of unsequenced residues between them',
+          helpPage: 'non_cons',
         },
         {
           name: 'non_ter',
@@ -219,6 +230,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'The sequence is incomplete. The residue is not the terminal residue of the complete protein',
+          helpPage: 'non_ter',
         },
         {
           name: 'unsure',
@@ -233,6 +245,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Regions of a sequence for which the authors are unsure about the sequence assignment',
+          helpPage: 'unsure',
         },
         {
           name: 'non_std',
@@ -246,6 +259,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Non-standard amino acids (selenocysteine and pyrrolysine)',
+          helpPage: 'non_std',
         },
       ],
     },
@@ -267,6 +281,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Location of non-membrane regions of membrane-spanning proteins',
+          helpPage: 'topo_dom',
         },
         {
           name: 'transmem',
@@ -280,6 +295,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Extent of a membrane-spanning region',
+          helpPage: 'transmem',
         },
         {
           name: 'intramem',
@@ -294,6 +310,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Extent of a region located in a membrane without crossing it',
+          helpPage: 'intramem',
         },
       ],
     },
@@ -315,6 +332,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Specific combination of secondary structures organized into a characteristic three-dimensional structure or fold',
+          helpPage: 'domain',
         },
         {
           name: 'InterPro representative domain',
@@ -327,6 +345,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'InterPro representative domains',
+          helpPage: 'InterPro_rep_domain',
         },
         {
           name: 'region',
@@ -341,6 +360,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Regions in multifunctional enzymes or fusion proteins, or characteristics of a region, e.g., protein-protein interactions mediation',
+          helpPage: 'region',
         },
         {
           name: 'repeat',
@@ -355,6 +375,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Repeated sequence motifs or repeated domains within the protein',
+          helpPage: 'repeat',
         },
         {
           name: 'motif',
@@ -368,6 +389,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Short conserved sequence motif of biological significance',
+          helpPage: 'motif',
         },
         {
           name: 'zn_fing',
@@ -382,6 +404,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Small, functional, independently folded domain that coordinates one or more zinc ions',
+          helpPage: 'zn_fing',
         },
       ],
     },
@@ -402,6 +425,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Binding site for a metal ion',
+          helpPage: 'binding',
         },
         {
           name: 'site',
@@ -415,6 +439,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Any interesting single amino acid site on the sequence',
+          helpPage: 'site',
         },
         {
           name: 'ca_bind',
@@ -428,6 +453,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Calcium-binding regions, such as the EF-hand motif',
+          helpPage: 'binding',
         },
         {
           name: 'dna_bind',
@@ -442,6 +468,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'DNA-binding domains such as AP2/ERF domain, the ETS domain, the Fork-Head domain, the HMG box and the Myb domain',
+          helpPage: 'dna_bind',
         },
         {
           name: 'np_bind',
@@ -456,6 +483,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             '(aka flavin-binding). Region in the protein which binds nucleotide phosphates',
+          helpPage: 'binding',
         },
         {
           name: 'binding',
@@ -470,6 +498,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Binding site for any chemical group (co-enzyme, prosthetic group, etc.)',
+          helpPage: 'binding',
         },
         {
           name: 'act_site',
@@ -484,6 +513,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Amino acid(s) directly involved in the activity of an enzyme',
+          helpPage: 'act_site',
         },
       ],
     },
@@ -505,6 +535,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Modified residues such as phosphorylation, acetylation, acylation, methylation',
+          helpPage: 'mod_res',
         },
         {
           name: 'mod_res_ls',
@@ -518,6 +549,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Modified residues from Large scale studies',
+          helpPage: 'mod_res_large_scale',
         },
         {
           name: 'carbohyd',
@@ -531,6 +563,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Covalently attached glycan group(s)',
+          helpPage: 'carbohyd',
         },
         {
           name: 'disulfid',
@@ -545,6 +578,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'The positions of cysteine residues participating in disulphide bonds',
+          helpPage: 'disulfid',
         },
         {
           name: 'crosslnk',
@@ -559,6 +593,7 @@ const config: ProtvistaConfig = {
           ],
           tooltip:
             'Covalent linkages of various types formed between two proteins or between two parts of the same protein',
+          helpPage: 'crosslnk',
         },
         {
           name: 'lipid',
@@ -572,6 +607,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Covalently attached lipid group(s)',
+          helpPage: 'lipid',
         },
       ],
     },
@@ -591,6 +627,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage: 'epitopes',
         },
       ],
     },
@@ -610,6 +647,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage: 'Antibody_binding_sequences',
         },
       ],
     },
@@ -630,6 +668,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Site which has been experimentally altered by mutagenesis',
+          helpPage: 'mutagen',
         },
         {
           name: 'othermutagen',
@@ -642,6 +681,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: 'Site which has been experimentally altered by mutagenesis',
+          helpPage: 'mutagen',
         },
       ],
     },
@@ -649,6 +689,7 @@ const config: ProtvistaConfig = {
       name: 'VARIATION',
       label: 'Variants',
       trackType: 'nightingale-linegraph-track',
+      helpPage: 'variant_viewer',
       tracks: [
         {
           name: 'variation_graph',
@@ -682,6 +723,7 @@ const config: ProtvistaConfig = {
       name: 'RNA_EDITING',
       label: 'RNA Editing',
       trackType: 'nightingale-linegraph-track',
+      helpPage: 'rna_editing',
       tracks: [
         {
           name: 'rna_editing_graph',
@@ -727,6 +769,8 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage:
+            'proteomics#1-data-from-public-mass-spectrometry-based-proteomics-resources',
         },
         {
           name: 'non_unique',
@@ -740,6 +784,8 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage:
+            'proteomics#1-data-from-public-mass-spectrometry-based-proteomics-resources',
         },
         {
           name: 'hpp',
@@ -752,6 +798,7 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage: 'proteomics#3-human-proteome-project',
         },
         {
           name: 'proteomics-ptm',
@@ -764,6 +811,8 @@ const config: ProtvistaConfig = {
             },
           ],
           tooltip: '',
+          helpPage:
+            'proteomics#4-post-translational-modification-ptm-data-derived-from-large-scale-mass-spectrometry-ms-datasets',
         },
       ],
     },
@@ -783,6 +832,7 @@ const config: ProtvistaConfig = {
               url: `${proteinsApiServices.proteins}{accession}`,
             },
           ],
+          helpPage: 'structure_section#structure-coverage',
         },
       ],
     },
@@ -792,6 +842,7 @@ const config: ProtvistaConfig = {
       trackType: 'nightingale-colored-sequence',
       scale: 'H:90,M:70,L:50,D:0',
       'color-range': '#ff7d45:0,#ffdb13:50,#65cbf3:70,#0053d6:90,#0053d6:100',
+      helpPage: 'structure_section#alphafold-structural-models',
       tracks: [
         {
           name: 'alphafold_confidence',
@@ -819,6 +870,8 @@ const config: ProtvistaConfig = {
         'B:0,H:0.1132,V:0.2264,L:0.3395,A:0.4527,l:0.5895,h:0.7264,p:0.8632,P:1',
       'color-range':
         '#2166ac:0,#4290bf:0.1132,#8cbcd4:0.2264,#c3d6e0:0.3395,#e2e2e2:0.4527,#edcdba:0.5895,#e99e7c:0.7264,#d15e4b:0.8632,#b2182b:1',
+      helpPage:
+        'structure_section#alphamissense-prediction-of-genetic-variation-consequence-in-the-feature-viewer',
       tracks: [
         {
           name: 'alphamissense_pathogenicity',
