@@ -86,4 +86,15 @@ export default css`
   .feature {
     cursor: pointer;
   }
+
+  .proforma {
+    padding-left: 4em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .mod-link {
+    white-space: nowrap;
+  }
 `;

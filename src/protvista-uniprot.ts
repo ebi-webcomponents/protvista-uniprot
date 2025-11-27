@@ -441,7 +441,11 @@ class ProtvistaUniprot extends LitElement {
                   data-category-toggle="${category.name}"
                   @click="${this.handleCategoryClick}"
                 >
-                  ${category.label}
+                  ${category.helpPage
+                    ? html`<span data-article-id="${category.helpPage}"
+                        >${category.label}</span
+                      >`
+                    : category.label}
                 </div>
                 <div
                   data-id="category_${category.name}"
@@ -491,7 +495,11 @@ class ProtvistaUniprot extends LitElement {
                                 )}"
                                 >${track.label}</a
                               >`) ||
-                            track.label}
+                            (track.helpPage
+                              ? html`<span data-article-id="${track.helpPage}"
+                                  >${track.label}</span
+                                >`
+                              : track.label)}
                           </div>
                           <div
                             class="track-content"

@@ -341,8 +341,8 @@ class ProtvistaUniprotStructure extends LitElement {
     ) as ProtvistaDatatable;
     if (!protvistaDatatableElt?.selectedid && this.data?.[0]) {
       // Select the first element in the table
-      this.onTableRowClick({ id: this.data[0].id });
-      protvistaDatatableElt.selectedid = this.structureId;
+      this.onTableRowClick({ id: this.data[0].id, source: this.data[0].source, downloadLink: this.data[0].downloadLink });
+      protvistaDatatableElt.selectedid = this.data[0].id;
     }
   }
 

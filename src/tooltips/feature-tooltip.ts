@@ -16,6 +16,28 @@ const taxIdToPeptideAtlasBuildData = {
   '185431': { build: '590', organism: 'T Brucei' },
 };
 
+const unimodIdMapping = {
+  'Glu-&gt;pyro-Glu': 27,
+  'Ammonia-loss': 385,
+  NQTGG: 2084,
+  Formyl: 122,
+  Carbamidomethyl: 4,
+  Ubiquitination: 121,
+  TMT6plex: 737,
+  Phospho: 21,
+  iTRAQ8plex: 730,
+  Deamidated: 7,
+  'Pyro-QQTGG': 2083,
+  QQTGG: 2082,
+  GlyGly: 121,
+  Oxidation: 35,
+  'Gln-&gt;pyro-Glu': 28,
+  Dehydrated: 23,
+  DVFQQQTGG: 2085,
+  Acetyl: 1,
+  iTRAQ4plex: 214,
+};
+
 const formatSource = (source) => {
   if (source.name?.toLowerCase() === 'PubMed'.toLowerCase()) {
     return `${source.id}&nbsp;(<a href='${source.url}' target='_blank'>${source.name}</a>&nbsp;<a href='${source.alternativeUrl}' target='_blank'>EuropePMC</a>)`;
@@ -99,6 +121,17 @@ const formatPTMPeptidoform = (peptide, ptms) => {
   // Add last remaining part of the peptide if any
   peptidoform = `${peptidoform}${peptide.slice(lastModPosition)}`;
   return peptidoform;
+};
+
+const formatProformaWithLink = (proforma = '') => {
+  return proforma.replace(/\[([^\]]+)\]/g, (_, modification) => {
+    const id = unimodIdMapping[modification];
+    if (!id) {
+      console.error('Unimod ID not found for modification:', modification);
+      return `[${modification}]`;
+    }
+    return `<span class="mod-link">[<a href="https://www.unimod.org/modifications_view.php?editid1=${id}" target="_blank">${modification}</a>]</span>`;
+  });
 };
 
 const findModifiedResidueName = (feature, ptm) => {
@@ -244,14 +277,21 @@ const formatTooltip = (feature, taxId?: string) => {
                         }
                         ${
                           ref.properties['Universal Spectrum Id']
-                            ? `<li class="text-indent-2 nowrap margin-bottom">Universal Spectrum Id: 
-                        <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${encodeURIComponent(
-                          ref.properties['Universal Spectrum Id']
-                        )}" target="_blank">View on ProteomeXchange</a>
-                        </li>`
+                            ? `<li class="text-indent-2 nowrap">Universal Spectrum Id: 
+                                <a href="http://proteomecentral.proteomexchange.org/usi/?usi=${encodeURIComponent(
+                                  ref.properties['Universal Spectrum Id']
+                                )}" target="_blank">View on ProteomeXchange</a>
+                              </li>`
                             : ``
-                        }                        
-                        `
+                        }
+                        ${
+                          ref.properties['Proforma']
+                            ? `<li class="nowrap margin-bottom"><div class="text-indent-2">Experimental Peptidoform:</div><div class="proforma">
+                                  ${formatProformaWithLink(
+                                  ref.properties['Proforma']
+                                  )}</div></li>`
+                            : ``
+                        }`
                     )
                     .join('')
                 )
