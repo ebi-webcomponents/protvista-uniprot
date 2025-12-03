@@ -586,7 +586,12 @@ class ProtvistaUniprot extends LitElement {
 
   handleCategoryClick(e: MouseEvent) {
     const target = e.target as Element;
-    const toggle = target.getAttribute('data-category-toggle');
+
+    const toggle =
+      target.getAttribute('data-category-toggle') ||
+      (target instanceof HTMLSpanElement &&
+        target.parentElement?.getAttribute('data-category-toggle'));
+        
     if (toggle && !target.classList.contains('open')) {
       target.classList.add('open');
       this.openCategories = [...this.openCategories, toggle];
