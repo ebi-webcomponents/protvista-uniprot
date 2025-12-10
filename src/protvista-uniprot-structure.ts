@@ -185,29 +185,50 @@ const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
 
 const process3DBeaconsData = (
   data: BeaconsData,
-  filterByProvidersList: boolean = true
+  accession: string | undefined,
+  checksum: string | undefined
 ): ProcessedStructureData[] => {
-  const otherStructures = filterByProvidersList
+  // If accession is provided without checksum, filter by whitelisted providers
+  const filterByProviders = !!accession && !checksum;
+
+  let structures = filterByProviders
     ? data?.structures?.filter(({ summary }) =>
         providersFrom3DBeacons.includes(summary.provider)
       )
-    : data?.structures.sort((a, b) => b.summary.confidence_avg_local_score - a.summary.confidence_avg_local_score);
+    : data?.structures?.sort(
+        (a, b) =>
+          b.summary.confidence_avg_local_score -
+          a.summary.confidence_avg_local_score
+      );
+
+  if (accession && checksum && structures) {
+    const matchIndex = structures.findIndex(({ summary }) =>
+      summary.model_identifier.includes(accession)
+    );
+
+    if (matchIndex !== -1) {
+      structures = [
+        structures[matchIndex],
+        ...structures.slice(0, matchIndex),
+        ...structures.slice(matchIndex + 1),
+      ];
+    }
+  }
 
   return (
-    otherStructures?.map(({ summary }) => ({
-      id: summary['model_identifier'],
+    structures?.map(({ summary }) => ({
+      id: summary.model_identifier,
       source: summary.provider,
       method: sourceMethods.get(summary.provider),
-      positions: `${summary['uniprot_start'] || 1}-${
-        summary['uniprot_end'] || data.entry?.sequence.length
+      positions: `${summary.uniprot_start || 1}-${
+        summary.uniprot_end || data.entry?.sequence.length
       }`,
-      protvistaFeatureId: summary['model_identifier'],
-      downloadLink: summary['model_url'],
-      // isoform.io does not have a model page url. Link to their homepage instead.
+      protvistaFeatureId: summary.model_identifier,
+      downloadLink: summary.model_url,
       sourceDBLink:
         summary.provider === 'isoform.io'
           ? 'https://www.isoform.io/home'
-          : summary['model_page_url'],
+          : summary.model_page_url,
     })) || []
   );
 };
@@ -318,17 +339,20 @@ class ProtvistaUniprotStructure extends LitElement {
     if (!this.accession && !this.checksum) return;
 
     // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
-    const pdbUrl = this.accession
-      ? `https://rest.uniprot.org/uniprotkb/${this.accession}`
-      : '';
+    const pdbUrl =
+      this.accession && !this.checksum
+        ? `https://rest.uniprot.org/uniprotkb/${this.accession}`
+        : '';
     // AlphaMissense predictions are only available in AF predictions endpoint
-    const alphaFoldUrl = this.accession
-      ? `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`
-      : '';
+    const alphaFoldUrl =
+      this.accession && !this.checksum
+        ? `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`
+        : '';
     // exclude_provider accepts only value hence 'pdbe' as majority of the models are from there if querying by accession
-    const beaconsUrl = this.accession
-      ? `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
-      : `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/v2/sequence/?id=${this.checksum}&type=md5`;
+    const beaconsUrl =
+      this.accession && !this.checksum
+        ? `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
+        : `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/v2/sequence/?id=${this.checksum}&type=md5`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
     this.loading = false;
@@ -350,7 +374,8 @@ class ProtvistaUniprotStructure extends LitElement {
 
     const beaconsData = process3DBeaconsData(
       rawData[beaconsUrl] || [],
-      !!this.accession
+      this.accession,
+      this.checksum
     );
 
     // TODO: return if no data at all
