@@ -33,7 +33,7 @@ const providersFrom3DBeacons = [
 ];
 
 const sourceMethods = new Map([
-  ['AlphaFold DB', 'Predicted'],
+  ['GDM', 'Predicted'],
   ['SWISS-MODEL', 'Modeling'],
   ['ModelArchive', 'Modeling'],
   ['PED', 'Modeling'],
@@ -418,7 +418,7 @@ class ProtvistaUniprotStructure extends LitElement {
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
-      if (source === 'AlphaFold DB') {
+      if (source === 'GDM') {
         this.metaInfo = AFMetaInfo;
       }
     } else {
