@@ -191,7 +191,7 @@ const process3DBeaconsData = (
     ? data?.structures?.filter(({ summary }) =>
         providersFrom3DBeacons.includes(summary.provider)
       )
-    : data?.structures;
+    : data?.structures.sort((a, b) => b.summary.confidence_avg_local_score - a.summary.confidence_avg_local_score);
 
   return (
     otherStructures?.map(({ summary }) => ({
