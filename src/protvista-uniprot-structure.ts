@@ -229,6 +229,9 @@ const process3DBeaconsData = (
         summary.provider === 'isoform.io'
           ? 'https://www.isoform.io/home'
           : summary.model_page_url,
+      chain:
+        summary.entities?.flatMap((entity) => entity.chain_ids).join(', ') ||
+        undefined,
     })) || []
   );
 };
