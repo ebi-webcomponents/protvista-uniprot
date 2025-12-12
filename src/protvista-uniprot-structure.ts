@@ -33,6 +33,7 @@ const providersFrom3DBeacons = [
 ];
 
 const sourceMethods = new Map([
+  ['AlphaFold DB', 'Predicted'],
   ['SWISS-MODEL', 'Modeling'],
   ['ModelArchive', 'Modeling'],
   ['PED', 'Modeling'],
@@ -63,13 +64,18 @@ type Sequence = {
 };
 
 type BeaconsData = {
-  uniprot_entry: {
+  uniprot_entry?: {
     ac: string;
     id: string;
     uniprot_checksum: string;
     sequence_length: number;
     segment_start: number;
     segment_end: number;
+  };
+  entry?: {
+    sequence: string;
+    checksum: string;
+    checksum_type: string;
   };
   structures: {
     summary: {
@@ -120,49 +126,52 @@ type ProcessedStructureData = {
 };
 
 const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
-  data.uniProtKBCrossReferences ? data.uniProtKBCrossReferences
-    .filter((xref) => xref.database === 'PDB')
-    .sort((refA, refB) => refA.id.localeCompare(refB.id))
-    .map(({ id, properties }) => {
-      if (!properties) {
-        return;
-      }
+  data.uniProtKBCrossReferences
+    ? data.uniProtKBCrossReferences
+        .filter((xref) => xref.database === 'PDB')
+        .sort((refA, refB) => refA.id.localeCompare(refB.id))
+        .map(({ id, properties }) => {
+          if (!properties) {
+            return;
+          }
 
-      const propertyMap = properties.reduce((acc, item) => {
-        acc[item.key] = item.value;
-        return acc;
-      }, {} as Record<string, string>);
+          const propertyMap = properties.reduce((acc, item) => {
+            acc[item.key] = item.value;
+            return acc;
+          }, {} as Record<string, string>);
 
-      const method = propertyMap['Method'];
-      const resolution = propertyMap['Resolution'];
-      const chains = propertyMap['Chains'];
+          const method = propertyMap['Method'];
+          const resolution = propertyMap['Resolution'];
+          const chains = propertyMap['Chains'];
 
-      let chain;
-      let positions;
-      if (chains) {
-        const tokens = chains.split('=');
-        if (tokens.length === 2) {
-          [chain, positions] = tokens;
-        }
-      }
-      const output: ProcessedStructureData = {
-        id,
-        source: 'PDB',
-        method,
-        resolution: !resolution || resolution === '-' ? undefined : resolution,
-        downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
-        chain,
-        positions,
-        protvistaFeatureId: id,
-      };
-      return output;
-    })
-    .filter(
-      (
-        transformedItem: ProcessedStructureData | undefined
-      ): transformedItem is ProcessedStructureData =>
-        transformedItem !== undefined
-    ) : [];
+          let chain;
+          let positions;
+          if (chains) {
+            const tokens = chains.split('=');
+            if (tokens.length === 2) {
+              [chain, positions] = tokens;
+            }
+          }
+          const output: ProcessedStructureData = {
+            id,
+            source: 'PDB',
+            method,
+            resolution:
+              !resolution || resolution === '-' ? undefined : resolution,
+            downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
+            chain,
+            positions,
+            protvistaFeatureId: id,
+          };
+          return output;
+        })
+        .filter(
+          (
+            transformedItem: ProcessedStructureData | undefined
+          ): transformedItem is ProcessedStructureData =>
+            transformedItem !== undefined
+        )
+    : [];
 
 const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
   data.map((d) => ({
@@ -174,23 +183,55 @@ const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
     downloadLink: d.pdbUrl,
   }));
 
-const process3DBeaconsData = (data: BeaconsData): ProcessedStructureData[] => {
-  const otherStructures = data?.structures?.filter(({ summary }) =>
-    providersFrom3DBeacons.includes(summary.provider)
-  );
+const process3DBeaconsData = (
+  data: BeaconsData,
+  accession: string | undefined,
+  checksum: string | undefined
+): ProcessedStructureData[] => {
+  // If accession is provided without checksum, filter by whitelisted providers
+  const filterByProviders = !!accession && !checksum;
+
+  let structures = filterByProviders
+    ? data?.structures?.filter(({ summary }) =>
+        providersFrom3DBeacons.includes(summary.provider)
+      )
+    : data?.structures?.sort(
+        (a, b) =>
+          b.summary.confidence_avg_local_score -
+          a.summary.confidence_avg_local_score
+      );
+
+  if (accession && checksum && structures) {
+    const matchIndex = structures.findIndex(({ summary }) =>
+      summary.model_identifier.includes(accession)
+    );
+
+    if (matchIndex !== -1) {
+      structures = [
+        structures[matchIndex],
+        ...structures.slice(0, matchIndex),
+        ...structures.slice(matchIndex + 1),
+      ];
+    }
+  }
+
   return (
-    otherStructures?.map(({ summary }) => ({
-      id: summary['model_identifier'],
+    structures?.map(({ summary }) => ({
+      id: summary.model_identifier,
       source: summary.provider,
       method: sourceMethods.get(summary.provider),
-      positions: `${summary['uniprot_start']}-${summary['uniprot_end']}`,
-      protvistaFeatureId: summary['model_identifier'],
-      downloadLink: summary['model_url'],
-      // isoform.io does not have a model page url. Link to their homepage instead.
+      positions: `${summary.uniprot_start || 1}-${
+        summary.uniprot_end || data.entry?.sequence.length
+      }`,
+      protvistaFeatureId: summary.model_identifier,
+      downloadLink: summary.model_url,
       sourceDBLink:
         summary.provider === 'isoform.io'
           ? 'https://www.isoform.io/home'
-          : summary['model_page_url'],
+          : summary.model_page_url,
+      chain:
+        summary.entities?.flatMap((entity) => entity.chain_ids).join(', ') ||
+        undefined,
     })) || []
   );
 };
@@ -261,6 +302,7 @@ const styleId = 'protvista-styles';
 class ProtvistaUniprotStructure extends LitElement {
   accession?: string;
   sequence?: string;
+  checksum?: string;
   data?: ProcessedStructureData[];
   structureId?: string;
   metaInfo?: TemplateResult;
@@ -286,6 +328,7 @@ class ProtvistaUniprotStructure extends LitElement {
     return {
       accession: { type: String },
       structureId: { type: String },
+      checksum: { type: String },
       sequence: { type: String },
       data: { type: Object },
       loading: { type: Boolean },
@@ -296,13 +339,23 @@ class ProtvistaUniprotStructure extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    if (!this.accession) return;
+    if (!this.accession && !this.checksum) return;
 
     // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
-    const pdbUrl = `https://rest.uniprot.org/uniprotkb/${this.accession}`;
-    const alphaFoldUrl = `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`;
-    // exclude_provider accepts only value hence 'pdbe' as majority of the models are from there.
-    const beaconsUrl = `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`;
+    const pdbUrl =
+      this.accession && !this.checksum
+        ? `https://rest.uniprot.org/uniprotkb/${this.accession}`
+        : '';
+    // AlphaMissense predictions are only available in AF predictions endpoint
+    const alphaFoldUrl =
+      this.accession && !this.checksum
+        ? `https://alphafold.ebi.ac.uk/api/prediction/${this.accession}`
+        : '';
+    // exclude_provider accepts only value hence 'pdbe' as majority of the models are from there if querying by accession
+    const beaconsUrl =
+      this.accession && !this.checksum
+        ? `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
+        : `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/v2/sequence/?id=${this.checksum}&type=md5`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
     this.loading = false;
@@ -311,7 +364,9 @@ class ProtvistaUniprotStructure extends LitElement {
     let afData = [];
     // Check if AF sequence matches UniProt sequence
     const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
-      ({ sequence: afSequence }) => rawData[pdbUrl]?.sequence?.value === afSequence || this.sequence === afSequence
+      ({ sequence: afSequence }) =>
+        rawData[pdbUrl]?.sequence?.value === afSequence ||
+        this.sequence === afSequence
     );
     if (alphaFoldSequenceMatch?.length) {
       afData = processAFData(alphaFoldSequenceMatch);
@@ -320,7 +375,11 @@ class ProtvistaUniprotStructure extends LitElement {
       );
     }
 
-    const beaconsData = process3DBeaconsData(rawData[beaconsUrl] || []);
+    const beaconsData = process3DBeaconsData(
+      rawData[beaconsUrl] || [],
+      this.accession,
+      this.checksum
+    );
 
     // TODO: return if no data at all
     // if (!payload) return;
@@ -341,7 +400,11 @@ class ProtvistaUniprotStructure extends LitElement {
     ) as ProtvistaDatatable;
     if (!protvistaDatatableElt?.selectedid && this.data?.[0]) {
       // Select the first element in the table
-      this.onTableRowClick({ id: this.data[0].id, source: this.data[0].source, downloadLink: this.data[0].downloadLink });
+      this.onTableRowClick({
+        id: this.data[0].id,
+        source: this.data[0].source,
+        downloadLink: this.data[0].downloadLink,
+      });
       protvistaDatatableElt.selectedid = this.data[0].id;
     }
   }
@@ -377,12 +440,15 @@ class ProtvistaUniprotStructure extends LitElement {
     source?: string;
     downloadLink?: string;
   }) {
-    if (providersFrom3DBeacons.includes(source)) {
+    if (this.checksum || providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
       // Reset the rest
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
+      if (source === 'AlphaFold DB') {
+        this.metaInfo = AFMetaInfo;
+      }
     } else {
       this.structureId = id;
       this.modelUrl = undefined;
@@ -613,7 +679,8 @@ class ProtvistaUniprotStructure extends LitElement {
             : html``}
           ${!this.data && !this.loading
             ? html`<div class="protvista-no-results">
-                No structure information available for ${this.accession}
+                No structure information available
+                ${this.accession ? `for ${this.accession}` : ''}
               </div>`
             : html``}
         </div>
