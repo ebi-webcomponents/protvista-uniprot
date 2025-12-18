@@ -19,6 +19,7 @@ const PDBLinks = [
 ];
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
+const uniprotKBLink = 'https://www.uniprot.org/uniprotkb/';
 
 // Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
 const providersFrom3DBeacons = [
@@ -123,7 +124,15 @@ type ProcessedStructureData = {
   downloadLink?: string;
   sourceDBLink?: string;
   protvistaFeatureId: string;
+  isoform?: TemplateResult;
 };
+
+type IsoformIdSequence = [
+  {
+    isoformId: string;
+    sequence: string;
+  }
+];
 
 const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
   data.uniProtKBCrossReferences
@@ -173,15 +182,31 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
         )
     : [];
 
-const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
-  data.map((d) => ({
-    id: d.modelEntityId,
-    source: 'AlphaFold',
-    method: 'Predicted',
-    positions: `${d.sequenceStart}-${d.sequenceEnd}`,
-    protvistaFeatureId: d.modelEntityId,
-    downloadLink: d.pdbUrl,
-  }));
+const processAFData = (
+  data: AlphaFoldPayload,
+  accession?: string,
+  isoforms?: IsoformIdSequence
+): ProcessedStructureData[] =>
+  data.map((d) => {
+    const isoformMatch = isoforms?.find(
+      ({ sequence }) => d.sequence === sequence
+    );
+    const isoformElement = isoformMatch
+      ? html`<a
+          href="${uniprotKBLink}${accession}/entry/#${isoformMatch.isoformId}"
+          >${isoformMatch.isoformId}</a
+        >`
+      : null;
+    return {
+      id: d.modelEntityId,
+      source: 'AlphaFold',
+      method: 'Predicted',
+      positions: `${d.sequenceStart}-${d.sequenceEnd}`,
+      protvistaFeatureId: d.modelEntityId,
+      downloadLink: d.pdbUrl,
+      isoform: isoformElement,
+    };
+  });
 
 const process3DBeaconsData = (
   data: BeaconsData,
@@ -307,6 +332,7 @@ class ProtvistaUniprotStructure extends LitElement {
   structureId?: string;
   metaInfo?: TemplateResult;
   colorTheme?: string;
+  isoforms?: IsoformIdSequence;
   private loading?: boolean;
   private alphamissenseAvailable?: boolean;
 
@@ -334,6 +360,7 @@ class ProtvistaUniprotStructure extends LitElement {
       loading: { type: Boolean },
       colorTheme: { type: String },
       alphamissenseAvailable: { type: Boolean },
+      isoforms: { type: Object, attribute: false },
     };
   }
 
@@ -362,17 +389,37 @@ class ProtvistaUniprotStructure extends LitElement {
 
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     let afData = [];
-    // Check if AF sequence matches UniProt sequence
-    const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
-      ({ sequence: afSequence }) =>
-        rawData[pdbUrl]?.sequence?.value === afSequence ||
-        this.sequence === afSequence
-    );
-    if (alphaFoldSequenceMatch?.length) {
-      afData = processAFData(alphaFoldSequenceMatch);
-      this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
+    
+    if (this.isoforms && rawData[alphaFoldUrl]?.length) {
+      // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
+      const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
+        ({ sequence: afSequence }) =>
+          this.isoforms?.some(({ sequence }) => afSequence === sequence) ||
+          rawData[pdbUrl]?.sequence?.value === afSequence
+      );
+
+      afData = processAFData(
+        alphaFoldSequenceMatches,
+        this.accession,
+        this.isoforms
+      );
+      // TODO: amAnnotationsUrl is present only for canonical isoform currently. Handle that
+      this.alphamissenseAvailable = alphaFoldSequenceMatches.some(
         (data) => data.amAnnotationsUrl
       );
+    } else {
+      // Check if AF sequence matches UniProt sequence
+      const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
+        ({ sequence: afSequence }) =>
+          rawData[pdbUrl]?.sequence?.value === afSequence ||
+          this.sequence === afSequence
+      );
+      if (alphaFoldSequenceMatch?.length) {
+        afData = processAFData(alphaFoldSequenceMatch);
+        this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
+          (data) => data.amAnnotationsUrl
+        );
+      }
     }
 
     const beaconsData = process3DBeaconsData(
@@ -591,6 +638,7 @@ class ProtvistaUniprotStructure extends LitElement {
                     <tr>
                       <th data-filter="source">Source</th>
                       <th>Identifier</th>
+                      ${this.isoforms ? html`<th>Isoform</th>` : ''}
                       <th data-filter="method">Method</th>
                       <th>Resolution</th>
                       <th>Chain</th>
@@ -610,6 +658,7 @@ class ProtvistaUniprotStructure extends LitElement {
                         positions,
                         downloadLink,
                         sourceDBLink,
+                        isoform,
                       }) => html`<tr
                         data-id="${id}"
                         @click="${() =>
@@ -619,6 +668,7 @@ class ProtvistaUniprotStructure extends LitElement {
                           <strong>${source}</strong>
                         </td>
                         <td>${id}</td>
+                        ${this.isoforms ? html`<td>${isoform}</td>` : ''}
                         <td data-filter="method" data-filter-value="${method}">
                           ${method}
                         </td>
