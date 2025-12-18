@@ -124,6 +124,7 @@ type ProcessedStructureData = {
   downloadLink?: string;
   sourceDBLink?: string;
   protvistaFeatureId: string;
+  amAnnotationsUrl?: string;
   isoform?: TemplateResult;
 };
 
@@ -204,6 +205,7 @@ const processAFData = (
       positions: `${d.sequenceStart}-${d.sequenceEnd}`,
       protvistaFeatureId: d.modelEntityId,
       downloadLink: d.pdbUrl,
+      amAnnotationsUrl: d.amAnnotationsUrl,
       isoform: isoformElement,
     };
   });
@@ -389,7 +391,7 @@ class ProtvistaUniprotStructure extends LitElement {
 
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     let afData = [];
-    
+
     if (this.isoforms && rawData[alphaFoldUrl]?.length) {
       // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
       const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
@@ -403,10 +405,8 @@ class ProtvistaUniprotStructure extends LitElement {
         this.accession,
         this.isoforms
       );
-      // TODO: amAnnotationsUrl is present only for canonical isoform currently. Handle that
-      this.alphamissenseAvailable = alphaFoldSequenceMatches.some(
-        (data) => data.amAnnotationsUrl
-      );
+      
+      this.alphamissenseAvailable = !!afData?.[0].amAnnotationsUrl;
     } else {
       // Check if AF sequence matches UniProt sequence
       const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
@@ -482,10 +482,12 @@ class ProtvistaUniprotStructure extends LitElement {
     id,
     source,
     downloadLink,
+    amAnnotationsUrl,
   }: {
     id: string;
     source?: string;
     downloadLink?: string;
+    amAnnotationsUrl?: string;
   }) {
     if (this.checksum || providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
@@ -499,8 +501,11 @@ class ProtvistaUniprotStructure extends LitElement {
     } else {
       this.structureId = id;
       this.modelUrl = undefined;
-      if (this.structureId.startsWith('AF-')) {
+      if (
+        this.structureId.startsWith('AF-')
+      ) {
         this.metaInfo = AFMetaInfo;
+        this.alphamissenseAvailable = !!amAnnotationsUrl;
       } else {
         this.metaInfo = undefined;
       }
@@ -659,10 +664,16 @@ class ProtvistaUniprotStructure extends LitElement {
                         downloadLink,
                         sourceDBLink,
                         isoform,
+                        amAnnotationsUrl,
                       }) => html`<tr
                         data-id="${id}"
                         @click="${() =>
-                          this.onTableRowClick({ id, source, downloadLink })}"
+                          this.onTableRowClick({
+                            id,
+                            source,
+                            downloadLink,
+                            amAnnotationsUrl,
+                          })}"
                       >
                         <td data-filter="source" data-filter-value="${source}">
                           <strong>${source}</strong>
