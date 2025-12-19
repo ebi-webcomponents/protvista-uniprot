@@ -208,7 +208,14 @@ const processAFData = (
       amAnnotationsUrl: d.amAnnotationsUrl,
       isoform: isoformElement,
     };
-  });
+  }).sort((a, b) => {
+  const getIsoformNum = (s) => {
+    const match = s.match(/-(\d+)-F1$/);
+    return match ? Number(match[1]) : 0;
+  };
+
+  return getIsoformNum(a.id) - getIsoformNum(b.id);
+});
 
 const process3DBeaconsData = (
   data: BeaconsData,
