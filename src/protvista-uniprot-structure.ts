@@ -135,6 +135,11 @@ type IsoformIdSequence = [
   }
 ];
 
+const getIsoformNum = (s) => {
+  const match = s.match(/-(\d+)-F1$/);
+  return match ? Number(match[1]) : 0;
+};
+
 const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
   data.uniProtKBCrossReferences
     ? data.uniProtKBCrossReferences
@@ -188,34 +193,31 @@ const processAFData = (
   accession?: string,
   isoforms?: IsoformIdSequence
 ): ProcessedStructureData[] =>
-  data.map((d) => {
-    const isoformMatch = isoforms?.find(
-      ({ sequence }) => d.sequence === sequence
-    );
-    const isoformElement = isoformMatch
-      ? html`<a
-          href="${uniprotKBLink}${accession}/entry/#${isoformMatch.isoformId}"
-          >${isoformMatch.isoformId}</a
-        >`
-      : null;
-    return {
-      id: d.modelEntityId,
-      source: 'AlphaFold',
-      method: 'Predicted',
-      positions: `${d.sequenceStart}-${d.sequenceEnd}`,
-      protvistaFeatureId: d.modelEntityId,
-      downloadLink: d.pdbUrl,
-      amAnnotationsUrl: d.amAnnotationsUrl,
-      isoform: isoformElement,
-    };
-  }).sort((a, b) => {
-  const getIsoformNum = (s) => {
-    const match = s.match(/-(\d+)-F1$/);
-    return match ? Number(match[1]) : 0;
-  };
-
-  return getIsoformNum(a.id) - getIsoformNum(b.id);
-});
+  data
+    .map((d) => {
+      const isoformMatch = isoforms?.find(
+        ({ sequence }) => d.sequence === sequence
+      );
+      const isoformElement = isoformMatch
+        ? html`<a
+            href="${uniprotKBLink}${accession}/entry/#${isoformMatch.isoformId}"
+            >${isoformMatch.isoformId}</a
+          >`
+        : null;
+      return {
+        id: d.modelEntityId,
+        source: 'AlphaFold',
+        method: 'Predicted',
+        positions: `${d.sequenceStart}-${d.sequenceEnd}`,
+        protvistaFeatureId: d.modelEntityId,
+        downloadLink: d.pdbUrl,
+        amAnnotationsUrl: d.amAnnotationsUrl,
+        isoform: isoformElement,
+      };
+    })
+    .sort((a, b) => {
+      return getIsoformNum(a.id) - getIsoformNum(b.id);
+    });
 
 const process3DBeaconsData = (
   data: BeaconsData,
@@ -412,7 +414,7 @@ class ProtvistaUniprotStructure extends LitElement {
         this.accession,
         this.isoforms
       );
-      
+
       this.alphamissenseAvailable = !!afData?.[0].amAnnotationsUrl;
     } else {
       // Check if AF sequence matches UniProt sequence
@@ -508,9 +510,7 @@ class ProtvistaUniprotStructure extends LitElement {
     } else {
       this.structureId = id;
       this.modelUrl = undefined;
-      if (
-        this.structureId.startsWith('AF-')
-      ) {
+      if (this.structureId.startsWith('AF-')) {
         this.metaInfo = AFMetaInfo;
         this.alphamissenseAvailable = !!amAnnotationsUrl;
       } else {
