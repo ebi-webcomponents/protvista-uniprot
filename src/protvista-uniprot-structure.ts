@@ -19,6 +19,7 @@ const PDBLinks = [
 ];
 const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
+const uniprotKBLink = 'https://www.uniprot.org/uniprotkb/';
 
 // Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
 const providersFrom3DBeacons = [
@@ -123,6 +124,20 @@ type ProcessedStructureData = {
   downloadLink?: string;
   sourceDBLink?: string;
   protvistaFeatureId: string;
+  amAnnotationsUrl?: string;
+  isoform?: TemplateResult;
+};
+
+type IsoformIdSequence = [
+  {
+    isoformId: string;
+    sequence: string;
+  }
+];
+
+const getIsoformNum = (s) => {
+  const match = s.match(/-(\d+)-F1$/);
+  return match ? Number(match[1]) : 0;
 };
 
 const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
@@ -173,15 +188,39 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
         )
     : [];
 
-const processAFData = (data: AlphaFoldPayload): ProcessedStructureData[] =>
-  data.map((d) => ({
-    id: d.modelEntityId,
-    source: 'AlphaFold',
-    method: 'Predicted',
-    positions: `${d.sequenceStart}-${d.sequenceEnd}`,
-    protvistaFeatureId: d.modelEntityId,
-    downloadLink: d.pdbUrl,
-  }));
+const processAFData = (
+  data: AlphaFoldPayload,
+  accession?: string,
+  isoforms?: IsoformIdSequence,
+  canonicalSequence?: string,
+): ProcessedStructureData[] =>
+  data
+    .map((d) => {
+      const isoformMatch = isoforms?.find(
+        ({ sequence }) => d.sequence === sequence
+      );
+
+      const isCanonical = isoformMatch.sequence === canonicalSequence;
+      const isoformElement = isoformMatch
+        ? html`<a
+            href="${uniprotKBLink}${accession}/entry#${isoformMatch.isoformId}"
+            >${isoformMatch.isoformId} ${isCanonical ? '(Canonical)' : ''}</a
+          >`
+        : null;
+      return {
+        id: d.modelEntityId,
+        source: 'AlphaFold',
+        method: 'Predicted',
+        positions: `${d.sequenceStart}-${d.sequenceEnd}`,
+        protvistaFeatureId: d.modelEntityId,
+        downloadLink: d.pdbUrl,
+        amAnnotationsUrl: d.amAnnotationsUrl,
+        isoform: isoformElement,
+      };
+    })
+    .sort((a, b) => {
+      return getIsoformNum(a.id) - getIsoformNum(b.id);
+    });
 
 const process3DBeaconsData = (
   data: BeaconsData,
@@ -307,6 +346,7 @@ class ProtvistaUniprotStructure extends LitElement {
   structureId?: string;
   metaInfo?: TemplateResult;
   colorTheme?: string;
+  isoforms?: IsoformIdSequence;
   private loading?: boolean;
   private alphamissenseAvailable?: boolean;
 
@@ -334,6 +374,7 @@ class ProtvistaUniprotStructure extends LitElement {
       loading: { type: Boolean },
       colorTheme: { type: String },
       alphamissenseAvailable: { type: Boolean },
+      isoforms: { type: Object, attribute: false },
     };
   }
 
@@ -362,17 +403,35 @@ class ProtvistaUniprotStructure extends LitElement {
 
     const pdbData = processPDBData(rawData[pdbUrl] || []);
     let afData = [];
-    // Check if AF sequence matches UniProt sequence
-    const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
-      ({ sequence: afSequence }) =>
-        rawData[pdbUrl]?.sequence?.value === afSequence ||
-        this.sequence === afSequence
-    );
-    if (alphaFoldSequenceMatch?.length) {
-      afData = processAFData(alphaFoldSequenceMatch);
-      this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
-        (data) => data.amAnnotationsUrl
+
+    if (this.isoforms && rawData[alphaFoldUrl]?.length) {
+      // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
+      const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
+        ({ sequence: afSequence }) =>
+          this.isoforms?.some(({ sequence }) => afSequence === sequence) 
       );
+
+      afData = processAFData(
+        alphaFoldSequenceMatches,
+        this.accession,
+        this.isoforms,
+        rawData[pdbUrl]?.sequence?.value
+      );
+
+      this.alphamissenseAvailable = !!afData?.[0].amAnnotationsUrl;
+    } else {
+      // Check if AF sequence matches UniProt sequence
+      const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
+        ({ sequence: afSequence }) =>
+          rawData[pdbUrl]?.sequence?.value === afSequence ||
+          this.sequence === afSequence
+      );
+      if (alphaFoldSequenceMatch?.length) {
+        afData = processAFData(alphaFoldSequenceMatch);
+        this.alphamissenseAvailable = alphaFoldSequenceMatch.some(
+          (data) => data.amAnnotationsUrl
+        );
+      }
     }
 
     const beaconsData = process3DBeaconsData(
@@ -435,10 +494,12 @@ class ProtvistaUniprotStructure extends LitElement {
     id,
     source,
     downloadLink,
+    amAnnotationsUrl,
   }: {
     id: string;
     source?: string;
     downloadLink?: string;
+    amAnnotationsUrl?: string;
   }) {
     if (this.checksum || providersFrom3DBeacons.includes(source)) {
       this.modelUrl = downloadLink;
@@ -454,6 +515,7 @@ class ProtvistaUniprotStructure extends LitElement {
       this.modelUrl = undefined;
       if (this.structureId.startsWith('AF-')) {
         this.metaInfo = AFMetaInfo;
+        this.alphamissenseAvailable = !!amAnnotationsUrl;
       } else {
         this.metaInfo = undefined;
       }
@@ -591,6 +653,7 @@ class ProtvistaUniprotStructure extends LitElement {
                     <tr>
                       <th data-filter="source">Source</th>
                       <th>Identifier</th>
+                      ${this.isoforms ? html`<th>Isoform</th>` : ''}
                       <th data-filter="method">Method</th>
                       <th>Resolution</th>
                       <th>Chain</th>
@@ -610,15 +673,23 @@ class ProtvistaUniprotStructure extends LitElement {
                         positions,
                         downloadLink,
                         sourceDBLink,
+                        isoform,
+                        amAnnotationsUrl,
                       }) => html`<tr
                         data-id="${id}"
                         @click="${() =>
-                          this.onTableRowClick({ id, source, downloadLink })}"
+                          this.onTableRowClick({
+                            id,
+                            source,
+                            downloadLink,
+                            amAnnotationsUrl,
+                          })}"
                       >
                         <td data-filter="source" data-filter-value="${source}">
                           <strong>${source}</strong>
                         </td>
                         <td>${id}</td>
+                        ${this.isoforms ? html`<td>${isoform}</td>` : ''}
                         <td data-filter="method" data-filter-value="${method}">
                           ${method}
                         </td>
