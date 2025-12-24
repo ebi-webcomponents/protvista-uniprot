@@ -191,17 +191,20 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
 const processAFData = (
   data: AlphaFoldPayload,
   accession?: string,
-  isoforms?: IsoformIdSequence
+  isoforms?: IsoformIdSequence,
+  canonicalSequence?: string,
 ): ProcessedStructureData[] =>
   data
     .map((d) => {
       const isoformMatch = isoforms?.find(
         ({ sequence }) => d.sequence === sequence
       );
+
+      const isCanonical = isoformMatch.sequence === canonicalSequence;
       const isoformElement = isoformMatch
         ? html`<a
             href="${uniprotKBLink}${accession}/entry/#${isoformMatch.isoformId}"
-            >${isoformMatch.isoformId}</a
+            >${isoformMatch.isoformId} ${isCanonical ? '(Canonical)' : ''}</a
           >`
         : null;
       return {
@@ -405,14 +408,14 @@ class ProtvistaUniprotStructure extends LitElement {
       // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
       const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
         ({ sequence: afSequence }) =>
-          this.isoforms?.some(({ sequence }) => afSequence === sequence) ||
-          rawData[pdbUrl]?.sequence?.value === afSequence
+          this.isoforms?.some(({ sequence }) => afSequence === sequence) 
       );
 
       afData = processAFData(
         alphaFoldSequenceMatches,
         this.accession,
-        this.isoforms
+        this.isoforms,
+        rawData[pdbUrl]?.sequence?.value
       );
 
       this.alphamissenseAvailable = !!afData?.[0].amAnnotationsUrl;
