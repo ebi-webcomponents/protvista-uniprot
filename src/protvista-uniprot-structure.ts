@@ -203,7 +203,7 @@ const processAFData = (
       const isCanonical = isoformMatch.sequence === canonicalSequence;
       const isoformElement = isoformMatch
         ? html`<a
-            href="${uniprotKBLink}${accession}/entry/#${isoformMatch.isoformId}"
+            href="${uniprotKBLink}${accession}/entry#${isoformMatch.isoformId}"
             >${isoformMatch.isoformId} ${isCanonical ? '(Canonical)' : ''}</a
           >`
         : null;
