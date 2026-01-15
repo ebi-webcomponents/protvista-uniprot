@@ -398,7 +398,7 @@ class ProtvistaUniprotStructure extends LitElement {
     const beaconsUrl =
       this.accession && !this.checksum
         ? `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/uniprot/summary/${this.accession}.json?exclude_provider=pdbe`
-        : `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/v2/sequence/?id=${this.checksum}&type=md5`;
+        : `https://www.ebi.ac.uk/pdbe/pdbe-kb/3dbeacons/api/v2/sequence/summary?id=${this.checksum}&type=md5`;
 
     const rawData = await fetchAll([pdbUrl, alphaFoldUrl, beaconsUrl]);
     this.loading = false;
