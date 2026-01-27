@@ -14,6 +14,7 @@ const taxIdToPeptideAtlasBuildData = {
   '559292': { build: '586', organism: 'Yeast' },
   '4577': { build: '591', organism: 'Maize' },
   '185431': { build: '590', organism: 'T Brucei' },
+  '508771': { build: '601', organism : 'T Gondii'},
 };
 
 const unimodIdMapping = {
