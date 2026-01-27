@@ -96,8 +96,12 @@ const getPTMEvidence = (ptms, taxId) => {
         return `<li title='${id}'>${id}&nbsp;(<a href="${proteomexchange}${id}" target="_blank">ProteomeXchange</a>${
           id === 'PXD012174'
             ? `&nbsp;<a href="https://www.ebi.ac.uk/pride/archive/projects/${id}" target="_blank">PRIDE</a>)</li><li title="publication">Publication:&nbsp;31819260&nbsp;(<a href="https://pubmed.ncbi.nlm.nih.gov/31819260" target="_blank">PubMed</a>)</li>`
-            : `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" target="_blank">PeptideAtlas</a>)</li>`
-        }`;
+            : ``
+        }${
+          taxId && taxIdToPeptideAtlasBuildData[taxId]
+            ? `&nbsp;<a href="https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/buildDetails?atlas_build_id=${taxIdToPeptideAtlasBuildData[taxId].build}" target="_blank">PeptideAtlas</a>`
+            : ``
+        })</li>`;
       })
       .join('')}</ul>
   `;
@@ -288,7 +292,7 @@ const formatTooltip = (feature, taxId?: string) => {
                           ref.properties['Proforma']
                             ? `<li class="nowrap margin-bottom"><div class="text-indent-2">Experimental Peptidoform:</div><div class="proforma">
                                   ${formatProformaWithLink(
-                                  ref.properties['Proforma']
+                                    ref.properties['Proforma']
                                   )}</div></li>`
                             : ``
                         }`
