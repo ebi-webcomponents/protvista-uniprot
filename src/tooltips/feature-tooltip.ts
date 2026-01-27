@@ -6,6 +6,8 @@ import {
   ubiquitinate,
 } from './ptm-tooltip';
 
+// Original mapping in src/main/java/uk/ac/ebi/uniprot/tools/proteomics/reader/ptm/PtmXchangeTsvReader.java.
+// from the GitLab repository https://gitlab.ebi.ac.uk/uniprot/framework/unp.fw.tools/
 const taxIdToPeptideAtlasBuildData = {
   '36329': { build: '542', organism: 'Plasmodium' },
   '39947': { build: '539', organism: 'Rice' },
