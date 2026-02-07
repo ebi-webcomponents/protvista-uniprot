@@ -48,13 +48,23 @@ export class ProtvistaUniprotDatatable<
     :host {
       display: block;
       width: 100%;
-      overflow-x: auto;
       font-family: inherit;
+    }
+    .scroll-container {
+      max-height: var(--protvista-datatable-max-height, 420px);
+      overflow-y: auto;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     th {
       text-align: left;
@@ -219,70 +229,72 @@ export class ProtvistaUniprotDatatable<
     const columns = this.columns;
 
     return html`
-      <table>
-        <thead>
-          <tr>
-            ${columns.map(
-              (col) => html`
-                <th scope="col">
-                  <div class="header-content">
-                    <span>${col.label}</span>
-                    ${col.filterable
-                      ? html`
-                          <select
-                            aria-label=${ifDefined(
-                              col.label ? `Filter ${col.label}` : undefined
-                            )}
-                            data-key=${String(col.key)}
-                            .value=${this.filters[String(col.key)] ?? ''}
-                            @change=${this.onFilterChange}
-                            @click=${this.onFilterClick}
-                          >
-                            <option value="">All</option>
-                            ${(
-                              this.uniqueValuesByKey[String(col.key)] ?? []
-                            ).map(
-                              (val) =>
-                                html`<option value=${val}>${val}</option>`
-                            )}
-                          </select>
-                        `
-                      : nothing}
-                  </div>
-                </th>
-              `
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          ${repeat(
-            filteredData,
-            (row) => this.getRowId(row),
-            (row, index) => html`
-              <tr
-                data-index=${index}
-                class=${this.getRowId(row) === (this.selectedId ?? '')
-                  ? 'active'
-                  : ''}
-                @click=${this.onRowClick}
-              >
-                ${columns.map(
-                  (col) => html`<td>${this.renderCell(col, row)}</td>`
-                )}
-              </tr>
-            `
-          )}
-          ${filteredData.length === 0
-            ? html`
-                <tr>
-                  <td colspan=${columns.length} class="no-results">
-                    No matching results found
-                  </td>
+      <div class="scroll-container">
+        <table>
+          <thead>
+            <tr>
+              ${columns.map(
+                (col) => html`
+                  <th scope="col">
+                    <div class="header-content">
+                      <span>${col.label}</span>
+                      ${col.filterable
+                        ? html`
+                            <select
+                              aria-label=${ifDefined(
+                                col.label ? `Filter ${col.label}` : undefined
+                              )}
+                              data-key=${String(col.key)}
+                              .value=${this.filters[String(col.key)] ?? ''}
+                              @change=${this.onFilterChange}
+                              @click=${this.onFilterClick}
+                            >
+                              <option value="">All</option>
+                              ${(
+                                this.uniqueValuesByKey[String(col.key)] ?? []
+                              ).map(
+                                (val) =>
+                                  html`<option value=${val}>${val}</option>`
+                              )}
+                            </select>
+                          `
+                        : nothing}
+                    </div>
+                  </th>
+                `
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            ${repeat(
+              filteredData,
+              (row) => this.getRowId(row),
+              (row, index) => html`
+                <tr
+                  data-index=${index}
+                  class=${this.getRowId(row) === (this.selectedId ?? '')
+                    ? 'active'
+                    : ''}
+                  @click=${this.onRowClick}
+                >
+                  ${columns.map(
+                    (col) => html`<td>${this.renderCell(col, row)}</td>`
+                  )}
                 </tr>
               `
-            : nothing}
-        </tbody>
-      </table>
+            )}
+            ${filteredData.length === 0
+              ? html`
+                  <tr>
+                    <td colspan=${columns.length} class="no-results">
+                      No matching results found
+                    </td>
+                  </tr>
+                `
+              : nothing}
+          </tbody>
+        </table>
+      </div>
     `;
   }
 }
