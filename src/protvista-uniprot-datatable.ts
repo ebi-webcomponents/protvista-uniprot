@@ -58,6 +58,19 @@ export class ProtvistaUniprotDatatable<
       display: block;
       width: 100%;
       font-family: inherit;
+
+      --protvista-dt-primary: #0053d6;
+      --protvista-dt-text-head: #1a1a1a;
+      --protvista-dt-text-body: #2c2c2c;
+      --protvista-dt-text-muted: #444444;
+      --protvista-dt-text-input: #333333;
+      --protvista-dt-bg-base: #ffffff;
+      --protvista-dt-bg-header: #f8f8f8;
+      --protvista-dt-bg-hover: #f1f7ff;
+      --protvista-dt-bg-active: #e6f3ff;
+      --protvista-dt-border: #e0e0e0;
+      --protvista-dt-border-input: #767676;
+      --protvista-dt-shadow-header: #cccccc;
     }
 
     .scroll-container {
@@ -65,21 +78,26 @@ export class ProtvistaUniprotDatatable<
       overflow-y: auto;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      border: 1px solid #eee;
+      border: 1px solid var(--protvista-dt-border);
+      background: var(--protvista-dt-bg-base);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
+      color: var(--protvista-dt-text-body);
     }
 
     thead th {
       position: sticky;
       top: 0;
-      z-index: 1;
-      background: #f9f9f9;
+      z-index: 2;
+      background: var(--protvista-dt-bg-header);
       text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      box-shadow: 0 1px 0 var(--protvista-dt-shadow-header);
     }
 
     th {
@@ -87,12 +105,13 @@ export class ProtvistaUniprotDatatable<
       padding: 0.75rem 0.5rem;
       white-space: nowrap;
       vertical-align: top;
-      font-weight: 600;
+      font-weight: 700;
+      color: var(--protvista-dt-text-head);
     }
 
     td {
-      padding: 0.5rem;
-      border-bottom: 1px solid #eee;
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid var(--protvista-dt-border);
       vertical-align: middle;
     }
 
@@ -103,18 +122,21 @@ export class ProtvistaUniprotDatatable<
     }
 
     tbody tr:hover {
-      background-color: #f0f8ff;
+      background-color: var(--protvista-dt-bg-hover);
     }
 
     tbody tr:focus-visible {
-      background-color: #f0f8ff;
-      outline: 2px solid #0053d6;
+      background-color: var(--protvista-dt-bg-hover);
+      outline: 2px solid var(--protvista-dt-primary);
       outline-offset: -2px;
+      position: relative;
+      z-index: 1;
     }
 
     tbody tr.active {
-      background-color: #e6f3ff;
-      box-shadow: inset 4px 0 0 #0053d6;
+      background-color: var(--protvista-dt-bg-active);
+      box-shadow: inset 4px 0 0 var(--protvista-dt-primary);
+      font-weight: 500;
     }
 
     .header-content {
@@ -125,18 +147,24 @@ export class ProtvistaUniprotDatatable<
 
     select {
       display: block;
-      padding: 0.25rem;
+      padding: 0.4rem;
       font-size: 0.85rem;
       width: 100%;
-      border: 1px solid #ccc;
+      border: 1px solid var(--protvista-dt-border-input);
       border-radius: 4px;
-      background-color: white;
+      background-color: var(--protvista-dt-bg-base);
+      color: var(--protvista-dt-text-input);
+    }
+
+    select:focus {
+      outline: 2px solid var(--protvista-dt-primary);
+      border-color: var(--protvista-dt-primary);
     }
 
     .no-results {
       text-align: center;
       padding: 3rem;
-      color: #777;
+      color: var(--protvista-dt-text-muted);
       font-style: italic;
     }
   `;
