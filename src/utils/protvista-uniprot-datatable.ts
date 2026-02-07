@@ -52,8 +52,7 @@ export function computeFilteredData<T extends Record<string, unknown>>(
 
 export function computeUniqueValuesByKey<T extends Record<string, unknown>>(
   data: ReadonlyArray<T>,
-  columns: ReadonlyArray<FilterableColumn>,
-  getValue: (row: T, key: string) => string = getCellStringValue
+  columns: ReadonlyArray<FilterableColumn>
 ): Record<string, string[]> {
   const result: Record<string, string[]> = {};
 
@@ -64,7 +63,7 @@ export function computeUniqueValuesByKey<T extends Record<string, unknown>>(
     const values = new Set<string>();
 
     for (const row of data) {
-      const val = getValue(row, key);
+      const val = getCellStringValue(row, key);
       if (val) values.add(val);
     }
 

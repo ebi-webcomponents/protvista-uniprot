@@ -13,7 +13,6 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import {
   computeFilteredData,
   computeUniqueValuesByKey,
-  findRowFromEvent,
   getRowId,
   resolvePath,
   safeDisplayValue,
@@ -60,6 +59,7 @@ export class ProtvistaUniprotDatatable<
       width: 100%;
       font-family: inherit;
     }
+
     .scroll-container {
       max-height: var(--protvista-datatable-max-height, 400px);
       overflow-y: auto;
@@ -67,11 +67,13 @@ export class ProtvistaUniprotDatatable<
       -webkit-overflow-scrolling: touch;
       border: 1px solid #eee;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.9rem;
     }
+
     thead th {
       position: sticky;
       top: 0;
@@ -79,6 +81,7 @@ export class ProtvistaUniprotDatatable<
       background: #f9f9f9;
       text-transform: uppercase;
     }
+
     th {
       text-align: left;
       padding: 0.75rem 0.5rem;
@@ -86,33 +89,40 @@ export class ProtvistaUniprotDatatable<
       vertical-align: top;
       font-weight: 600;
     }
+
     td {
       padding: 0.5rem;
       border-bottom: 1px solid #eee;
       vertical-align: middle;
     }
+
     tbody tr {
       cursor: pointer;
       transition: background-color 0.15s ease-in-out;
       outline: none;
     }
+
     tbody tr:hover {
       background-color: #f0f8ff;
     }
+
     tbody tr:focus-visible {
       background-color: #f0f8ff;
       outline: 2px solid #0053d6;
       outline-offset: -2px;
     }
+
     tbody tr.active {
       background-color: #e6f3ff;
       box-shadow: inset 4px 0 0 #0053d6;
     }
+
     .header-content {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
+
     select {
       display: block;
       padding: 0.25rem;
@@ -122,6 +132,7 @@ export class ProtvistaUniprotDatatable<
       border-radius: 4px;
       background-color: white;
     }
+
     .no-results {
       text-align: center;
       padding: 3rem;
@@ -140,6 +151,7 @@ export class ProtvistaUniprotDatatable<
         }))
       );
     }
+
     if (changed.has('data') || changed.has('filters')) {
       this.filteredData = computeFilteredData(this.data, this.filters);
     }
@@ -155,19 +167,100 @@ export class ProtvistaUniprotDatatable<
     );
   }
 
+  private focusRowById(id: string) {
+    const tr = this.renderRoot.querySelector<HTMLTableRowElement>(
+      `tbody tr[data-id="${CSS.escape(id)}"]`
+    );
+    tr?.focus();
+  }
+
+  private getActiveIndex(rows: ReadonlyArray<T>): number {
+    if (!rows.length) return -1;
+
+    const activeEl = this.shadowRoot?.activeElement as HTMLElement | null;
+    const focusedTr = activeEl?.closest?.(
+      'tr[data-id]'
+    ) as HTMLTableRowElement | null;
+
+    if (focusedTr?.dataset.id) {
+      const focusedId = focusedTr.dataset.id;
+      const idx = rows.findIndex(
+        (r) => getRowId(r, this.rowIdKey) === focusedId
+      );
+      if (idx !== -1) return idx;
+    }
+
+    if (this.selectedId) {
+      const idx = rows.findIndex(
+        (r) => getRowId(r, this.rowIdKey) === this.selectedId
+      );
+      if (idx !== -1) return idx;
+    }
+
+    return 0;
+  }
+
+  private selectIndex(nextIndex: number) {
+    const rows = this.filteredData;
+    if (nextIndex < 0 || nextIndex >= rows.length) return;
+
+    const row = rows[nextIndex];
+    const id = getRowId(row, this.rowIdKey);
+    if (!id) return;
+
+    this.selectedId = id;
+    this.dispatchRowClick(row);
+
+    void this.updateComplete.then(() => this.focusRowById(id));
+  }
+
   private onTBodyClick = (e: Event) => {
-    const found = findRowFromEvent(e, this.filteredData, this.rowIdKey);
-    if (found?.row) this.dispatchRowClick(found.row);
+    const tr = e
+      .composedPath()
+      .find((n) => n instanceof HTMLTableRowElement) as
+      | HTMLTableRowElement
+      | undefined;
+
+    const id = tr?.dataset?.id;
+    if (!id) return;
+
+    const idx = this.filteredData.findIndex(
+      (r) => getRowId(r, this.rowIdKey) === id
+    );
+    if (idx !== -1) this.selectIndex(idx);
   };
 
   private onTBodyKeyDown = (e: KeyboardEvent) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const rows = this.filteredData;
+    if (!rows.length) return;
 
-    const found = findRowFromEvent(e, this.filteredData, this.rowIdKey);
-    if (!found?.row) return;
+    const current = this.getActiveIndex(rows);
 
-    e.preventDefault();
-    this.dispatchRowClick(found.row);
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        this.selectIndex(Math.min(current + 1, rows.length - 1));
+        return;
+      case 'ArrowUp':
+        e.preventDefault();
+        this.selectIndex(Math.max(current - 1, 0));
+        return;
+      case 'Home':
+        e.preventDefault();
+        this.selectIndex(0);
+        return;
+      case 'End':
+        e.preventDefault();
+        this.selectIndex(rows.length - 1);
+        return;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        this.selectIndex(current);
+        return;
+      default:
+        return;
+    }
   };
 
   private onFilterChange = (e: Event) => {
@@ -183,6 +276,13 @@ export class ProtvistaUniprotDatatable<
     else nextFilters[key] = value;
 
     this.filters = nextFilters;
+
+    if (this.selectedId) {
+      const exists = this.filteredData.some(
+        (r) => getRowId(r, this.rowIdKey) === this.selectedId
+      );
+      if (!exists) this.selectedId = undefined;
+    }
   };
 
   private onFilterClick = (e: Event) => {
@@ -246,7 +346,12 @@ export class ProtvistaUniprotDatatable<
             </tr>
           </thead>
 
-          <tbody @click=${this.onTBodyClick} @keydown=${this.onTBodyKeyDown}>
+          <tbody
+            role="listbox"
+            aria-label="Results"
+            @click=${this.onTBodyClick}
+            @keydown=${this.onTBodyKeyDown}
+          >
             ${repeat(
               this.filteredData,
               (row, index) => getRowId(row, this.rowIdKey) || String(index),
@@ -258,8 +363,9 @@ export class ProtvistaUniprotDatatable<
                   <tr
                     data-id=${id || ''}
                     class=${isActive ? 'active' : ''}
-                    tabindex=${isActive ? '0' : '-1'}
+                    role="option"
                     aria-selected=${isActive ? 'true' : 'false'}
+                    tabindex=${isActive ? '0' : '-1'}
                   >
                     ${this.columns.map(
                       (col) => html`<td>${this.renderCell(col, row)}</td>`
