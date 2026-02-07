@@ -44,7 +44,6 @@ const transformData = (data: InterProProteinSearch): TransformedInterPro => {
     });
   } catch (error) {
     const err = new Error(`Failed transforming the data: ${error}`);
-    (err as Error & { cause: unknown }).cause = error;
     throw err;
   }
 };
