@@ -53,6 +53,11 @@ export class ProtvistaUniprotDatatable<
   @state()
   private uniqueValuesByKey: Record<string, string[]> = {};
 
+  @state()
+  private focusedRowId?: string;
+
+  private pendingFocusId?: string;
+
   static override styles = css`
     :host {
       display: block;
@@ -136,7 +141,6 @@ export class ProtvistaUniprotDatatable<
     tbody tr.active {
       background-color: var(--protvista-dt-bg-active);
       box-shadow: inset 4px 0 0 var(--protvista-dt-primary);
-      font-weight: 500;
     }
 
     .header-content {
@@ -191,25 +195,39 @@ export class ProtvistaUniprotDatatable<
           this.selectedId = undefined;
         }
       }
+
+      if (this.focusedRowId) {
+        const focusStillExists = this.filteredData.some(
+          (r) => getRowId(r, this.rowIdKey) === this.focusedRowId
+        );
+        if (!focusStillExists) {
+          this.focusedRowId = undefined;
+        }
+      }
+    }
+
+    if (changed.has('selectedId')) {
+      const hasFocus = this.matches(':focus-within');
+      if (!hasFocus) {
+        this.focusedRowId = this.selectedId;
+      }
     }
   }
 
   protected override updated(changed: PropertyValues) {
     if (
-      (changed.has('filters') || changed.has('data')) &&
-      !this.selectedId &&
-      this.filteredData.length
+      (changed.has('filters') ||
+        changed.has('data') ||
+        changed.has('selectedId')) &&
+      this.filteredData.length &&
+      this.matches(':focus-within')
     ) {
-      void this.updateComplete.then(() => {
-        const firstFocusable =
-          this.renderRoot.querySelector<HTMLTableRowElement>(
-            'tbody tr[tabindex="0"]'
-          ) ??
-          this.renderRoot.querySelector<HTMLTableRowElement>(
-            'tbody tr[data-id]'
-          );
-        firstFocusable?.focus();
-      });
+      const focusable =
+        this.renderRoot.querySelector<HTMLTableRowElement>(
+          'tbody tr[tabindex="0"]'
+        ) ??
+        this.renderRoot.querySelector<HTMLTableRowElement>('tbody tr[data-id]');
+      focusable?.focus();
     }
   }
 
@@ -224,24 +242,28 @@ export class ProtvistaUniprotDatatable<
   }
 
   private focusRowById(id: string) {
-    const tr = this.renderRoot.querySelector<HTMLTableRowElement>(
-      `tbody tr[data-id="${CSS.escape(id)}"]`
-    );
-    tr?.focus();
+    this.focusedRowId = id;
+    this.pendingFocusId = id;
+
+    void this.updateComplete.then(() => {
+      if (this.pendingFocusId !== id) return;
+
+      const tr = this.renderRoot.querySelector<HTMLTableRowElement>(
+        `tbody tr[data-id="${CSS.escape(id)}"]`
+      );
+      const activeEl = (this.shadowRoot?.activeElement ||
+        document.activeElement) as HTMLElement | null;
+
+      if (tr && activeEl !== tr) tr.focus();
+    });
   }
 
-  private getActiveIndex(rows: ReadonlyArray<T>): number {
+  private getFocusIndex(rows: ReadonlyArray<T>): number {
     if (!rows.length) return -1;
 
-    const activeEl = (this.shadowRoot?.activeElement ||
-      document.activeElement) as HTMLElement | null;
-    const focusedTr = activeEl?.closest?.(
-      'tr[data-id]'
-    ) as HTMLTableRowElement | null;
-
-    if (focusedTr?.dataset.id) {
+    if (this.focusedRowId) {
       const idx = rows.findIndex(
-        (r) => getRowId(r, this.rowIdKey) === focusedTr.dataset.id
+        (r) => getRowId(r, this.rowIdKey) === this.focusedRowId
       );
       if (idx !== -1) return idx;
     }
@@ -256,7 +278,7 @@ export class ProtvistaUniprotDatatable<
     return 0;
   }
 
-  private selectIndex(nextIndex: number) {
+  private moveFocus(nextIndex: number) {
     const rows = this.filteredData;
     if (nextIndex < 0 || nextIndex >= rows.length) return;
 
@@ -264,10 +286,21 @@ export class ProtvistaUniprotDatatable<
     const id = getRowId(row, this.rowIdKey);
     if (!id) return;
 
-    this.selectedId = id;
-    this.dispatchRowClick(row);
+    this.focusRowById(id);
+  }
 
-    void this.updateComplete.then(() => this.focusRowById(id));
+  private selectCurrentFocus() {
+    const rows = this.filteredData;
+    const currentIdx = this.getFocusIndex(rows);
+    if (currentIdx === -1) return;
+
+    const row = rows[currentIdx];
+    const id = getRowId(row, this.rowIdKey);
+    if (!id) return;
+
+    this.selectedId = id;
+    this.focusedRowId = id;
+    this.dispatchRowClick(row);
   }
 
   private onTBodyClick = (e: Event) => {
@@ -280,39 +313,47 @@ export class ProtvistaUniprotDatatable<
     const id = tr?.dataset?.id;
     if (!id) return;
 
-    const idx = this.filteredData.findIndex(
+    const row = this.filteredData.find(
       (r) => getRowId(r, this.rowIdKey) === id
     );
-    if (idx !== -1) this.selectIndex(idx);
+    if (!row) return;
+
+    this.selectedId = id;
+    this.focusedRowId = id;
+    this.dispatchRowClick(row);
+
+    const activeEl = (this.shadowRoot?.activeElement ||
+      document.activeElement) as HTMLElement | null;
+    if (activeEl !== tr) tr?.focus();
   };
 
   private onTBodyKeyDown = (e: KeyboardEvent) => {
     const rows = this.filteredData;
     if (!rows.length) return;
 
-    const current = this.getActiveIndex(rows);
+    const current = this.getFocusIndex(rows);
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        this.selectIndex(Math.min(current + 1, rows.length - 1));
+        this.moveFocus(Math.min(current + 1, rows.length - 1));
         return;
       case 'ArrowUp':
         e.preventDefault();
-        this.selectIndex(Math.max(current - 1, 0));
+        this.moveFocus(Math.max(current - 1, 0));
         return;
       case 'Home':
         e.preventDefault();
-        this.selectIndex(0);
+        this.moveFocus(0);
         return;
       case 'End':
         e.preventDefault();
-        this.selectIndex(rows.length - 1);
+        this.moveFocus(rows.length - 1);
         return;
       case 'Enter':
       case ' ':
         e.preventDefault();
-        this.selectIndex(current);
+        this.selectCurrentFocus();
         return;
       default:
         return;
@@ -332,6 +373,8 @@ export class ProtvistaUniprotDatatable<
     else nextFilters[key] = value;
 
     this.filters = nextFilters;
+    this.focusedRowId = undefined;
+    this.pendingFocusId = undefined;
   };
 
   private onFilterClick = (e: Event) => {
@@ -407,8 +450,15 @@ export class ProtvistaUniprotDatatable<
               (row, index) => {
                 const id = getRowId(row, this.rowIdKey);
                 const isSelected = id === this.selectedId;
-                const isFocusable =
-                  isSelected || (!this.selectedId && index === 0);
+
+                let isFocusable = false;
+                if (this.focusedRowId) {
+                  isFocusable = id === this.focusedRowId;
+                } else if (this.selectedId) {
+                  isFocusable = id === this.selectedId;
+                } else {
+                  isFocusable = index === 0;
+                }
 
                 return html`
                   <tr
