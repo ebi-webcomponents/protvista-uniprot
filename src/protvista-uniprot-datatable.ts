@@ -154,6 +154,34 @@ export class ProtvistaUniprotDatatable<
 
     if (changed.has('data') || changed.has('filters')) {
       this.filteredData = computeFilteredData(this.data, this.filters);
+
+      if (this.selectedId) {
+        const idStillExists = this.filteredData.some(
+          (r) => getRowId(r, this.rowIdKey) === this.selectedId
+        );
+        if (!idStillExists) {
+          this.selectedId = undefined;
+        }
+      }
+    }
+  }
+
+  protected override updated(changed: PropertyValues) {
+    if (
+      (changed.has('filters') || changed.has('data')) &&
+      !this.selectedId &&
+      this.filteredData.length
+    ) {
+      void this.updateComplete.then(() => {
+        const firstFocusable =
+          this.renderRoot.querySelector<HTMLTableRowElement>(
+            'tbody tr[tabindex="0"]'
+          ) ??
+          this.renderRoot.querySelector<HTMLTableRowElement>(
+            'tbody tr[data-id]'
+          );
+        firstFocusable?.focus();
+      });
     }
   }
 
@@ -177,15 +205,15 @@ export class ProtvistaUniprotDatatable<
   private getActiveIndex(rows: ReadonlyArray<T>): number {
     if (!rows.length) return -1;
 
-    const activeEl = this.shadowRoot?.activeElement as HTMLElement | null;
+    const activeEl = (this.shadowRoot?.activeElement ||
+      document.activeElement) as HTMLElement | null;
     const focusedTr = activeEl?.closest?.(
       'tr[data-id]'
     ) as HTMLTableRowElement | null;
 
     if (focusedTr?.dataset.id) {
-      const focusedId = focusedTr.dataset.id;
       const idx = rows.findIndex(
-        (r) => getRowId(r, this.rowIdKey) === focusedId
+        (r) => getRowId(r, this.rowIdKey) === focusedTr.dataset.id
       );
       if (idx !== -1) return idx;
     }
@@ -276,13 +304,6 @@ export class ProtvistaUniprotDatatable<
     else nextFilters[key] = value;
 
     this.filters = nextFilters;
-
-    if (this.selectedId) {
-      const exists = this.filteredData.some(
-        (r) => getRowId(r, this.rowIdKey) === this.selectedId
-      );
-      if (!exists) this.selectedId = undefined;
-    }
   };
 
   private onFilterClick = (e: Event) => {
@@ -355,17 +376,19 @@ export class ProtvistaUniprotDatatable<
             ${repeat(
               this.filteredData,
               (row, index) => getRowId(row, this.rowIdKey) || String(index),
-              (row) => {
+              (row, index) => {
                 const id = getRowId(row, this.rowIdKey);
-                const isActive = id === this.selectedId;
+                const isSelected = id === this.selectedId;
+                const isFocusable =
+                  isSelected || (!this.selectedId && index === 0);
 
                 return html`
                   <tr
                     data-id=${id || ''}
-                    class=${isActive ? 'active' : ''}
+                    class=${isSelected ? 'active' : ''}
                     role="option"
-                    aria-selected=${isActive ? 'true' : 'false'}
-                    tabindex=${isActive ? '0' : '-1'}
+                    aria-selected=${isSelected ? 'true' : 'false'}
+                    tabindex=${isFocusable ? '0' : '-1'}
                   >
                     ${this.columns.map(
                       (col) => html`<td>${this.renderCell(col, row)}</td>`
