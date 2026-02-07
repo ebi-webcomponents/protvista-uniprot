@@ -7,6 +7,8 @@ import NightingaleStructure, {
 import type { ColumnConfig } from './protvista-uniprot-datatable';
 import './protvista-uniprot-datatable';
 import { fetchAll, loadComponent } from './utils';
+import downloadIcon from './icons/download.svg';
+import externalLinkIcon from './icons/external-link.svg';
 
 import loaderIcon from './icons/spinner.svg';
 import loaderStyles from './styles/loader-styles';
@@ -121,7 +123,7 @@ type ProcessedStructureData = {
   resolution?: string;
   chain?: string;
   positions?: string;
-  downloadLink?: string;
+  downloadUrl?: string;
   sourceDBLink?: string;
   protvistaFeatureId: string;
   amAnnotationsUrl?: string;
@@ -177,7 +179,7 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
             method,
             resolution:
               !resolution || resolution === '-' ? undefined : resolution,
-            downloadLink: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
+            downloadUrl: `https://www.ebi.ac.uk/pdbe/entry-files/download/pdb${id.toLowerCase()}.ent`,
             chain,
             positions,
             protvistaFeatureId: id,
@@ -214,7 +216,7 @@ const processAFData = (
         method: 'Predicted',
         positions: `${d.sequenceStart}-${d.sequenceEnd}`,
         protvistaFeatureId: d.modelEntityId,
-        downloadLink: d.pdbUrl,
+        downloadUrl: d.pdbUrl,
         amAnnotationsUrl: d.amAnnotationsUrl,
         isoform: isoformElement,
       };
@@ -260,7 +262,7 @@ const process3DBeaconsData = (
       method: sourceMethods.get(summary.provider),
       positions: `${summary.uniprot_start || 1}-${summary.uniprot_end || data.entry?.sequence.length}`,
       protvistaFeatureId: summary.model_identifier,
-      downloadLink: summary.model_url,
+      downloadUrl: summary.model_url,
       sourceDBLink:
         summary.provider === 'isoform.io'
           ? 'https://www.isoform.io/home'
@@ -327,6 +329,19 @@ const AMMetaInfo = html`
   </p>
 `;
 
+const sourceDownloadLink = (downloadUrl: string) =>
+  html`<a
+    href="${downloadUrl}"
+    aria-label="Download source file"
+    title="Download source file"
+    style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"
+  >
+    Source
+    <span style="display: inline-flex; width: 0.9em; height: 0.9em;">
+      ${svg`${unsafeHTML(downloadIcon)}`}
+    </span>
+  </a>`;
+
 const foldseekLink = (accession: string, sourceDB: string) =>
   html`<a
     href="${foldseekUrl}?accession=${accession}&source=${sourceDB}"
@@ -334,8 +349,13 @@ const foldseekLink = (accession: string, sourceDB: string) =>
     rel="noopener noreferrer"
     aria-label="Open Foldseek in a new tab"
     title="Open Foldseek in a new tab"
-    >Foldseek⤴</a
-  >`;
+    style="text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"
+  >
+    Foldseek
+    <span style="display: inline-flex; width: 0.8em; height: 0.8em;">
+      ${svg`${unsafeHTML(externalLinkIcon)}`}
+    </span>
+  </a>`;
 
 const styleId = 'protvista-styles';
 
@@ -420,7 +440,7 @@ class ProtvistaUniprotStructure extends LitElement {
       },
       {
         label: '',
-        key: 'downloadLink',
+        key: 'downloadUrl',
         render: (row) => this.renderDownloadCell(row),
       }
     );
@@ -448,12 +468,10 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   private renderDownloadCell(row: ProcessedStructureData) {
-    const { downloadLink, source, id } = row;
+    const { downloadUrl, source, id } = row;
 
     return html`
-      ${downloadLink
-        ? html` <a href="${downloadLink}" class="download-link">Source ⤓</a> `
-        : nothing}
+      ${downloadUrl ? html`${sourceDownloadLink(downloadUrl)}` : nothing}
       ${(source === 'PDB' || source === 'AlphaFold') && this.accession
         ? html` ·
           ${foldseekLink(
@@ -558,11 +576,11 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   private onRowSelected(row: ProcessedStructureData) {
-    const { id, source, downloadLink, amAnnotationsUrl } = row;
+    const { id, source, downloadUrl, amAnnotationsUrl } = row;
     this.selectedRowId = id;
 
     if (this.checksum || (source && providersFrom3DBeacons.includes(source))) {
-      this.modelUrl = downloadLink ?? '';
+      this.modelUrl = downloadUrl ?? '';
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
@@ -590,33 +608,41 @@ class ProtvistaUniprotStructure extends LitElement {
       .protvista-uniprot-structure {
         line-height: normal;
       }
+
       .theme-selection {
         padding-bottom: 1rem;
       }
+
       .protvista-uniprot-structure__structure {
         display: flex;
       }
+
       .protvista-uniprot-structure__meta {
         flex: 1;
         padding: 1rem;
       }
+
       .protvista-uniprot-structure__structure nightingale-structure {
         z-index: 40000;
         width: 100%;
         flex: 4;
       }
+
       .protvista-uniprot-structure__meta .small {
         font-size: 0.75rem;
       }
+
       .protvista-uniprot-structure__meta .no-bullet {
         list-style: none;
         padding: 0;
         margin: 0;
       }
+
       .protvista-uniprot-structure__meta .no-bullet li {
         padding: 0;
         margin: 0.5rem 0;
       }
+
       .protvista-uniprot-structure__meta .af-legend::before {
         content: '';
         margin: 0;
@@ -624,6 +650,7 @@ class ProtvistaUniprotStructure extends LitElement {
         width: 20px;
         height: 16px;
       }
+
       .am-disabled * {
         cursor: not-allowed;
         color: #808080;
