@@ -1,7 +1,24 @@
-import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
+import {
+  LitElement,
+  html,
+  css,
+  nothing,
+  type TemplateResult,
+  type PropertyValues,
+} from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+
+import {
+  computeFilteredData,
+  computeUniqueValuesByKey,
+  findRowFromEvent,
+  getRowId,
+  resolvePath,
+  safeDisplayValue,
+  type Filters,
+} from './utils/protvista-uniprot-datatable';
 
 export interface ColumnConfig<T extends Record<string, unknown>> {
   label: string;
@@ -16,45 +33,39 @@ export interface ColumnConfig<T extends Record<string, unknown>> {
 export class ProtvistaUniprotDatatable<
   T extends Record<string, unknown>,
 > extends LitElement {
-  // Table data (array of row objects).
   @property({ attribute: false })
   data: ReadonlyArray<T> = [];
 
-  // Column configuration
   @property({ attribute: false })
   columns: ReadonlyArray<ColumnConfig<T>> = [];
 
-  // Row id to mark as active (e.g. selected row)
   @property({ type: String, attribute: 'selected-id' })
   selectedId?: string;
 
-  // Field name used to compute row IDs (defaults to "id")
   @property({ type: String, attribute: 'row-id-key' })
   rowIdKey: keyof T | string = 'id';
 
-  // Current filters per column key
   @state()
-  private filters: Record<string, string> = {};
+  private filters: Filters = {};
 
-  // Derived data: filtered rows
   @state()
   private filteredData: ReadonlyArray<T> = [];
 
-  // Derived data: unique values per filterable key
   @state()
   private uniqueValuesByKey: Record<string, string[]> = {};
 
-  static styles = css`
+  static override styles = css`
     :host {
       display: block;
       width: 100%;
       font-family: inherit;
     }
     .scroll-container {
-      max-height: var(--protvista-datatable-max-height, 420px);
+      max-height: var(--protvista-datatable-max-height, 400px);
       overflow-y: auto;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      border: 1px solid #eee;
     }
     table {
       width: 100%;
@@ -65,114 +76,73 @@ export class ProtvistaUniprotDatatable<
       position: sticky;
       top: 0;
       z-index: 1;
+      background: #f9f9f9;
+      text-transform: uppercase;
     }
     th {
       text-align: left;
-      padding: 0.5rem;
-      border-bottom: 2px solid #ddd;
-      background: #f9f9f9;
+      padding: 0.75rem 0.5rem;
       white-space: nowrap;
       vertical-align: top;
-      text-transform: uppercase;
+      font-weight: 600;
     }
     td {
       padding: 0.5rem;
       border-bottom: 1px solid #eee;
       vertical-align: middle;
     }
-    tr {
+    tbody tr {
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: background-color 0.15s ease-in-out;
+      outline: none;
     }
-    tr:hover {
+    tbody tr:hover {
       background-color: #f0f8ff;
     }
-    tr.active {
-      background-color: #e6f3ff;
-      border-left: 4px solid #0053d6;
+    tbody tr:focus-visible {
+      background-color: #f0f8ff;
+      outline: 2px solid #0053d6;
+      outline-offset: -2px;
     }
-    select {
-      display: block;
-      margin-top: 0.25rem;
-      padding: 0.2rem;
-      font-size: 0.8rem;
-      max-width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background-color: white;
+    tbody tr.active {
+      background-color: #e6f3ff;
+      box-shadow: inset 4px 0 0 #0053d6;
     }
     .header-content {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.5rem;
+    }
+    select {
+      display: block;
+      padding: 0.25rem;
+      font-size: 0.85rem;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: white;
     }
     .no-results {
       text-align: center;
-      padding: 2rem;
-      color: #666;
+      padding: 3rem;
+      color: #777;
+      font-style: italic;
     }
   `;
 
-  protected override willUpdate(changed: Map<PropertyKey, unknown>) {
-    if (changed.has('data') || changed.has('filters')) {
-      this.filteredData = this.computeFilteredData();
-    }
-
+  protected override willUpdate(changed: PropertyValues) {
     if (changed.has('data') || changed.has('columns')) {
-      this.uniqueValuesByKey = this.computeUniqueValuesByKey();
+      this.uniqueValuesByKey = computeUniqueValuesByKey(
+        this.data,
+        this.columns.map((c) => ({
+          key: String(c.key),
+          filterable: c.filterable,
+        }))
+      );
     }
-  }
-
-  private computeFilteredData(): ReadonlyArray<T> {
-    const filters = this.filters;
-    const entries = Object.entries(filters);
-
-    if (entries.length === 0) return this.data;
-
-    return this.data.filter((row) =>
-      entries.every(([key, filterVal]) => {
-        if (!filterVal) return true;
-        const rowVal = this.getCellStringValue(row, key);
-        return rowVal === filterVal;
-      })
-    );
-  }
-
-  private computeUniqueValuesByKey(): Record<string, string[]> {
-    // Generate filter dropdown options
-    const result: Record<string, string[]> = {};
-    for (const col of this.columns) {
-      if (!col.filterable) continue;
-      const key = String(col.key);
-      result[key] = this.getUniqueValues(key);
+    if (changed.has('data') || changed.has('filters')) {
+      this.filteredData = computeFilteredData(this.data, this.filters);
     }
-    return result;
-  }
-
-  private getUniqueValues(key: string): string[] {
-    const values = new Set<string>();
-
-    for (const item of this.data) {
-      const raw = this.getCellRawValue(item, key);
-      const s = raw == null ? '' : String(raw);
-      if (s) values.add(s);
-    }
-
-    return Array.from(values).sort((a, b) => a.localeCompare(b));
-  }
-
-  private getRowId(row: T): string {
-    const raw = this.getCellRawValue(row, String(this.rowIdKey));
-    return raw == null ? '' : String(raw);
-  }
-
-  private getCellRawValue(row: T, key: string): unknown {
-    return (row as Record<string, unknown>)[key];
-  }
-
-  private getCellStringValue(row: T, key: string): string {
-    const raw = this.getCellRawValue(row, key);
-    return raw == null ? '' : String(raw);
   }
 
   private dispatchRowClick(row: T) {
@@ -185,33 +155,34 @@ export class ProtvistaUniprotDatatable<
     );
   }
 
-  private onRowClick = (e: Event) => {
-    const tr = e.currentTarget as HTMLTableRowElement | null;
-    const idx = tr?.dataset['index'];
-    if (idx == null) return;
+  private onTBodyClick = (e: Event) => {
+    const found = findRowFromEvent(e, this.filteredData, this.rowIdKey);
+    if (found?.row) this.dispatchRowClick(found.row);
+  };
 
-    const row = this.filteredData[Number(idx)];
-    if (!row) return;
+  private onTBodyKeyDown = (e: KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
 
-    this.dispatchRowClick(row);
+    const found = findRowFromEvent(e, this.filteredData, this.rowIdKey);
+    if (!found?.row) return;
+
+    e.preventDefault();
+    this.dispatchRowClick(found.row);
   };
 
   private onFilterChange = (e: Event) => {
+    e.stopPropagation();
     const select = e.currentTarget as HTMLSelectElement;
     const key = select.dataset['key'];
     if (!key) return;
 
     const value = select.value;
+    const nextFilters = { ...this.filters };
 
-    // Remove empty filters to keep the object minimal
-    const next = { ...this.filters };
-    if (!value) {
-      delete next[key];
-    } else {
-      next[key] = value;
-    }
+    if (!value) delete nextFilters[key];
+    else nextFilters[key] = value;
 
-    this.filters = next;
+    this.filters = nextFilters;
   };
 
   private onFilterClick = (e: Event) => {
@@ -220,78 +191,84 @@ export class ProtvistaUniprotDatatable<
 
   private renderCell(col: ColumnConfig<T>, row: T) {
     if (col.render) return col.render(row) ?? nothing;
-    const raw = this.getCellRawValue(row, String(col.key));
-    return raw == null ? nothing : raw;
+    const val = resolvePath(row, String(col.key));
+    return safeDisplayValue(val);
+  }
+
+  private renderFilterDropdown(col: ColumnConfig<T>) {
+    if (!col.filterable) return nothing;
+
+    const key = String(col.key);
+    const options = this.uniqueValuesByKey[key] ?? [];
+
+    return html`
+      <select
+        aria-label=${ifDefined(
+          col.label ? `Filter by ${col.label}` : undefined
+        )}
+        data-key=${key}
+        .value=${this.filters[key] ?? ''}
+        @change=${this.onFilterChange}
+        @click=${this.onFilterClick}
+      >
+        <option value="">All</option>
+        ${options.map((val) => html`<option value=${val}>${val}</option>`)}
+      </select>
+    `;
+  }
+
+  private renderNoResults() {
+    return html`
+      <tr>
+        <td colspan=${this.columns.length} class="no-results">
+          No matching results found
+        </td>
+      </tr>
+    `;
   }
 
   override render() {
-    const filteredData = this.filteredData;
-    const columns = this.columns;
-
     return html`
       <div class="scroll-container">
         <table>
           <thead>
             <tr>
-              ${columns.map(
+              ${this.columns.map(
                 (col) => html`
                   <th scope="col">
                     <div class="header-content">
                       <span>${col.label}</span>
-                      ${col.filterable
-                        ? html`
-                            <select
-                              aria-label=${ifDefined(
-                                col.label ? `Filter ${col.label}` : undefined
-                              )}
-                              data-key=${String(col.key)}
-                              .value=${this.filters[String(col.key)] ?? ''}
-                              @change=${this.onFilterChange}
-                              @click=${this.onFilterClick}
-                            >
-                              <option value="">All</option>
-                              ${(
-                                this.uniqueValuesByKey[String(col.key)] ?? []
-                              ).map(
-                                (val) =>
-                                  html`<option value=${val}>${val}</option>`
-                              )}
-                            </select>
-                          `
-                        : nothing}
+                      ${this.renderFilterDropdown(col)}
                     </div>
                   </th>
                 `
               )}
             </tr>
           </thead>
-          <tbody>
+
+          <tbody @click=${this.onTBodyClick} @keydown=${this.onTBodyKeyDown}>
             ${repeat(
-              filteredData,
-              (row) => this.getRowId(row),
-              (row, index) => html`
-                <tr
-                  data-index=${index}
-                  class=${this.getRowId(row) === (this.selectedId ?? '')
-                    ? 'active'
-                    : ''}
-                  @click=${this.onRowClick}
-                >
-                  ${columns.map(
-                    (col) => html`<td>${this.renderCell(col, row)}</td>`
-                  )}
-                </tr>
-              `
-            )}
-            ${filteredData.length === 0
-              ? html`
-                  <tr>
-                    <td colspan=${columns.length} class="no-results">
-                      No matching results found
-                    </td>
+              this.filteredData,
+              (row, index) => getRowId(row, this.rowIdKey) || String(index),
+              (row) => {
+                const id = getRowId(row, this.rowIdKey);
+                const isActive = id === this.selectedId;
+
+                return html`
+                  <tr
+                    data-id=${id || ''}
+                    class=${isActive ? 'active' : ''}
+                    tabindex=${isActive ? '0' : '-1'}
+                    aria-selected=${isActive ? 'true' : 'false'}
+                  >
+                    ${this.columns.map(
+                      (col) => html`<td>${this.renderCell(col, row)}</td>`
+                    )}
                   </tr>
-                `
-              : nothing}
+                `;
+              }
+            )}
+            ${this.filteredData.length === 0 ? this.renderNoResults() : nothing}
           </tbody>
         </table>
       </div>
