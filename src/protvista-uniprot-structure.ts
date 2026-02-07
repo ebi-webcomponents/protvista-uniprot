@@ -1,14 +1,14 @@
-import { LitElement, html, svg, TemplateResult, css, nothing } from 'lit';
+import { LitElement, html, svg, type TemplateResult, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import NightingaleStructure, {
-  AlphaFoldPayload,
+  type AlphaFoldPayload,
 } from '@nightingale-elements/nightingale-structure';
-import ProtvistaDatatable from 'protvista-datatable';
+import type { ColumnConfig } from './protvista-uniprot-datatable';
+import './protvista-uniprot-datatable';
 import { fetchAll, loadComponent } from './utils';
 
 import loaderIcon from './icons/spinner.svg';
-import downloadIcon from './icons/download.svg';
 import loaderStyles from './styles/loader-styles';
 
 const PDBLinks = [
@@ -17,9 +17,9 @@ const PDBLinks = [
   { name: 'PDBj', link: 'https://pdbj.org/mine/summary/' },
   { name: 'PDBsum', link: 'https://www.ebi.ac.uk/pdbsum/' },
 ];
-const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
-const foldseekLink = `https://search.foldseek.com/search`;
-const uniprotKBLink = 'https://www.uniprot.org/uniprotkb/';
+const alphaFoldUrl = 'https://alphafold.ebi.ac.uk/entry/';
+const foldseekUrl = `https://search.foldseek.com/search`;
+const uniprotKBUrl = 'https://www.uniprot.org/uniprotkb/';
 
 // Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
 const providersFrom3DBeacons = [
@@ -132,10 +132,10 @@ type IsoformIdSequence = [
   {
     isoformId: string;
     sequence: string;
-  }
+  },
 ];
 
-const getIsoformNum = (s) => {
+const getIsoformNum = (s: string) => {
   const match = s.match(/-(\d+)-F1$/);
   return match ? Number(match[1]) : 0;
 };
@@ -150,23 +150,27 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
             return;
           }
 
-          const propertyMap = properties.reduce((acc, item) => {
-            acc[item.key] = item.value;
-            return acc;
-          }, {} as Record<string, string>);
+          const propertyMap = properties.reduce(
+            (acc, item) => {
+              acc[item.key] = item.value;
+              return acc;
+            },
+            {} as Record<string, string>
+          );
 
           const method = propertyMap['Method'];
           const resolution = propertyMap['Resolution'];
           const chains = propertyMap['Chains'];
 
-          let chain;
-          let positions;
+          let chain: string | undefined;
+          let positions: string | undefined;
           if (chains) {
             const tokens = chains.split('=');
             if (tokens.length === 2) {
               [chain, positions] = tokens;
             }
           }
+
           const output: ProcessedStructureData = {
             id,
             source: 'PDB',
@@ -180,19 +184,14 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
           };
           return output;
         })
-        .filter(
-          (
-            transformedItem: ProcessedStructureData | undefined
-          ): transformedItem is ProcessedStructureData =>
-            transformedItem !== undefined
-        )
+        .filter((x): x is ProcessedStructureData => x !== undefined)
     : [];
 
 const processAFData = (
   data: AlphaFoldPayload,
   accession?: string,
   isoforms?: IsoformIdSequence,
-  canonicalSequence?: string,
+  canonicalSequence?: string
 ): ProcessedStructureData[] =>
   data
     .map((d) => {
@@ -202,13 +201,13 @@ const processAFData = (
 
       const isoformElement = isoformMatch
         ? html`<a
-            href="${uniprotKBLink}${accession}/entry#${isoformMatch.isoformId}"
-            >${isoformMatch.isoformId}
-            ${isoformMatch.sequence === canonicalSequence
-              ? '(Canonical)'
-              : ''}</a
-          >`
+            href="${uniprotKBUrl}${accession}/entry#${isoformMatch.isoformId}"
+          >
+            ${isoformMatch.isoformId}
+            ${isoformMatch.sequence === canonicalSequence ? '(Canonical)' : ''}
+          </a>`
         : null;
+
       return {
         id: d.modelEntityId,
         source: 'AlphaFold',
@@ -220,9 +219,7 @@ const processAFData = (
         isoform: isoformElement,
       };
     })
-    .sort((a, b) => {
-      return getIsoformNum(a.id) - getIsoformNum(b.id);
-    });
+    .sort((a, b) => getIsoformNum(a.id) - getIsoformNum(b.id));
 
 const process3DBeaconsData = (
   data: BeaconsData,
@@ -261,9 +258,7 @@ const process3DBeaconsData = (
       id: summary.model_identifier,
       source: summary.provider,
       method: sourceMethods.get(summary.provider),
-      positions: `${summary.uniprot_start || 1}-${
-        summary.uniprot_end || data.entry?.sequence.length
-      }`,
+      positions: `${summary.uniprot_start || 1}-${summary.uniprot_end || data.entry?.sequence.length}`,
       protvistaFeatureId: summary.model_identifier,
       downloadLink: summary.model_url,
       sourceDBLink:
@@ -306,7 +301,8 @@ const AFMetaInfo = html`
   </p>
 `;
 
-const AMMetaInfo = html`<strong>Model Pathogenicity:</strong>
+const AMMetaInfo = html`
+  <strong>Model Pathogenicity:</strong>
   <ul class="no-bullet">
     <li>
       <span class="af-legend" style="background-color: rgb(154, 19, 26)"></span>
@@ -328,14 +324,18 @@ const AMMetaInfo = html`<strong>Model Pathogenicity:</strong>
     The displayed colour for each residue is the average AlphaMissense
     pathogenicity score across all possible amino acid substitutions at that
     position.
-  </p>`;
+  </p>
+`;
 
-const foldseekURL = (accession, sourceDB) => {
-  return html`<a
-    href="${foldseekLink}?accession=${accession}&source=${sourceDB}"
-    >Foldseek</a
+const foldseekLink = (accession: string, sourceDB: string) =>
+  html`<a
+    href="${foldseekUrl}?accession=${accession}&source=${sourceDB}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Open Foldseek in a new tab"
+    title="Open Foldseek in a new tab"
+    >Foldseek⤴</a
   >`;
-};
 
 const styleId = 'protvista-styles';
 
@@ -355,15 +355,19 @@ class ProtvistaUniprotStructure extends LitElement {
   @state()
   private modelUrl = '';
 
+  private columns: ColumnConfig<ProcessedStructureData>[] = [];
+  private selectedRowId?: string;
+
   constructor() {
     super();
     loadComponent('nightingale-structure', NightingaleStructure);
-    loadComponent('protvista-datatable', ProtvistaDatatable);
+
     this.loading = true;
-    this.onTableRowClick = this.onTableRowClick.bind(this);
     this.addStyles();
     this.colorTheme = 'alphafold';
     this.alphamissenseAvailable = false;
+
+    this.columns = this.getColumns();
   }
 
   static get properties() {
@@ -380,10 +384,89 @@ class ProtvistaUniprotStructure extends LitElement {
     };
   }
 
+  private getColumns(): ColumnConfig<ProcessedStructureData>[] {
+    const cols: ColumnConfig<ProcessedStructureData>[] = [
+      {
+        label: 'Source',
+        key: 'source',
+        filterable: true,
+        render: (row) => html`<strong>${row.source}</strong>`,
+      },
+      { label: 'Identifier', key: 'id' },
+    ];
+
+    if (this.isoforms) {
+      cols.push({
+        label: 'Isoform',
+        key: 'isoform',
+        render: (row) => row.isoform ?? nothing,
+      });
+    }
+
+    cols.push(
+      { label: 'Method', key: 'method', filterable: true },
+      {
+        label: 'Resolution',
+        key: 'resolution',
+        render: (row) =>
+          row.resolution ? row.resolution.replace('A', 'Å') : '',
+      },
+      { label: 'Chain', key: 'chain' },
+      { label: 'Positions', key: 'positions' },
+      {
+        label: 'Links',
+        key: 'sourceDBLink',
+        render: (row) => this.renderLinksCell(row),
+      },
+      {
+        label: '',
+        key: 'downloadLink',
+        render: (row) => this.renderDownloadCell(row),
+      }
+    );
+
+    return cols;
+  }
+
+  private renderLinksCell(row: ProcessedStructureData) {
+    const { source, id, sourceDBLink } = row;
+
+    return html`
+      ${source === 'PDB'
+        ? html`
+            ${PDBLinks.map(
+              (pdbLink) =>
+                html`<a href="${pdbLink.link}${id}">${pdbLink.name}</a>`
+            ).reduce((prev, curr) => html`${prev} · ${curr}`)}
+          `
+        : nothing}
+      ${source === 'AlphaFold' && this.accession
+        ? html`<a href="${alphaFoldUrl}${this.accession}">AlphaFold</a>`
+        : nothing}
+      ${sourceDBLink ? html`<a href="${sourceDBLink}">${source}</a>` : nothing}
+    `;
+  }
+
+  private renderDownloadCell(row: ProcessedStructureData) {
+    const { downloadLink, source, id } = row;
+
+    return html`
+      ${downloadLink
+        ? html` <a href="${downloadLink}" class="download-link">Source ⤓</a> `
+        : nothing}
+      ${(source === 'PDB' || source === 'AlphaFold') && this.accession
+        ? html` ·
+          ${foldseekLink(
+            source === 'PDB' ? id : this.accession,
+            source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
+          )}`
+        : nothing}
+    `;
+  }
+
   async connectedCallback() {
     super.connectedCallback();
     if (!this.accession && !this.checksum) return;
-
     // We are showing PDBe models returned by UniProt's API as there is inconsistency between UniProt's recognised ones and 3d-beacons.
     const pdbUrl =
       this.accession && !this.checksum
@@ -404,13 +487,13 @@ class ProtvistaUniprotStructure extends LitElement {
     this.loading = false;
 
     const pdbData = processPDBData(rawData[pdbUrl] || []);
-    let afData = [];
+    let afData: ProcessedStructureData[] = [];
 
     if (this.isoforms && rawData[alphaFoldUrl]?.length) {
       // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
       const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
         ({ sequence: afSequence }) =>
-          this.isoforms?.some(({ sequence }) => afSequence === sequence) 
+          this.isoforms?.some(({ sequence }) => afSequence === sequence)
       );
 
       afData = processAFData(
@@ -420,7 +503,7 @@ class ProtvistaUniprotStructure extends LitElement {
         rawData[pdbUrl]?.sequence?.value
       );
 
-      this.alphamissenseAvailable = !!afData?.[0].amAnnotationsUrl;
+      this.alphamissenseAvailable = !!afData?.[0]?.amAnnotationsUrl;
     } else {
       // Check if AF sequence matches UniProt sequence
       const alphaFoldSequenceMatch = rawData[alphaFoldUrl]?.filter(
@@ -442,38 +525,23 @@ class ProtvistaUniprotStructure extends LitElement {
       this.checksum
     );
 
-    // TODO: return if no data at all
-    // if (!payload) return;
-
     const data = [...pdbData, ...afData, ...beaconsData];
-    if (!data || !data.length) return;
+    if (!data.length) return;
 
     this.data = data;
+    this.columns = this.getColumns();
+
+    // Select first row by default
+    this.selectedRowId = data[0].id;
+    this.onRowSelected(data[0]);
   }
 
   disconnectedCallback() {
     this.removeStyles();
   }
 
-  updated() {
-    const protvistaDatatableElt = this.querySelector(
-      'protvista-datatable'
-    ) as ProtvistaDatatable;
-    if (!protvistaDatatableElt?.selectedid && this.data?.[0]) {
-      // Select the first element in the table
-      this.onTableRowClick({
-        id: this.data[0].id,
-        source: this.data[0].source,
-        downloadLink: this.data[0].downloadLink,
-      });
-      protvistaDatatableElt.selectedid = this.data[0].id;
-    }
-  }
-
   addStyles() {
-    // We are not using static get styles()
-    // as we are not using the shadowDOM
-    // because of Mol*
+    // We are not using static get styles() as we are not using the shadowDOM because of Mol*
     if (!document.getElementById(styleId)) {
       const styleTag = document.createElement('style');
       styleTag.id = styleId;
@@ -486,26 +554,15 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   removeStyles() {
-    const styleTag = document.getElementById(styleId);
-    if (styleTag) {
-      styleTag.remove();
-    }
+    document.getElementById(styleId)?.remove();
   }
 
-  onTableRowClick({
-    id,
-    source,
-    downloadLink,
-    amAnnotationsUrl,
-  }: {
-    id: string;
-    source?: string;
-    downloadLink?: string;
-    amAnnotationsUrl?: string;
-  }) {
-    if (this.checksum || providersFrom3DBeacons.includes(source)) {
-      this.modelUrl = downloadLink;
-      // Reset the rest
+  private onRowSelected(row: ProcessedStructureData) {
+    const { id, source, downloadLink, amAnnotationsUrl } = row;
+    this.selectedRowId = id;
+
+    if (this.checksum || (source && providersFrom3DBeacons.includes(source))) {
+      this.modelUrl = downloadLink ?? '';
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
@@ -514,7 +571,7 @@ class ProtvistaUniprotStructure extends LitElement {
       }
     } else {
       this.structureId = id;
-      this.modelUrl = undefined;
+      this.modelUrl = '';
       if (this.structureId.startsWith('AF-')) {
         this.metaInfo = AFMetaInfo;
         this.alphamissenseAvailable = !!amAnnotationsUrl;
@@ -523,6 +580,10 @@ class ProtvistaUniprotStructure extends LitElement {
       }
     }
   }
+
+  private onDatatableRowClick = (e: CustomEvent<ProcessedStructureData>) => {
+    this.onRowSelected(e.detail);
+  };
 
   get cssStyle() {
     return css`
@@ -563,9 +624,6 @@ class ProtvistaUniprotStructure extends LitElement {
         width: 20px;
         height: 16px;
       }
-      .download-link svg {
-        width: 1rem;
-      }
       .am-disabled * {
         cursor: not-allowed;
         color: #808080;
@@ -580,13 +638,10 @@ class ProtvistaUniprotStructure extends LitElement {
     return this;
   }
 
-  toggleColorTheme(e) {
-    this.colorTheme = e.target.value;
-    if (e.target.value === 'alphafold') {
-      this.metaInfo = AFMetaInfo;
-    } else {
-      this.metaInfo = AMMetaInfo;
-    }
+  toggleColorTheme(e: Event) {
+    const input = e.currentTarget as HTMLInputElement;
+    this.colorTheme = input.value;
+    this.metaInfo = input.value === 'alphafold' ? AFMetaInfo : AMMetaInfo;
   }
 
   render() {
@@ -594,168 +649,84 @@ class ProtvistaUniprotStructure extends LitElement {
       <div class="protvista-uniprot-structure">
         <div class="protvista-uniprot-structure__structure">
           ${this.metaInfo
-            ? html` <div class="protvista-uniprot-structure__meta">
-                <div class="theme-selection">
-                  Select color scale
-                  <div>
-                    <input
-                      type="radio"
-                      id="alphafold"
-                      name="colorScheme"
-                      value="alphafold"
-                      @click=${(e) => this.toggleColorTheme(e)}
-                      checked
-                    />
-                    <label for="alphafold">Confidence</label>
-                  </div>
-                  <div
-                    class=${this.alphamissenseAvailable ? '' : 'am-disabled'}
-                  >
-                    <input
-                      type="radio"
-                      id="alphamissense"
-                      name="colorScheme"
-                      value="alphamissense"
-                      @click=${(e) => this.toggleColorTheme(e)}
-                      disabled=${this.alphamissenseAvailable ? nothing : 'true'}
-                    />
-                    <label
-                      for="alphamissense"
-                      title=${this.alphamissenseAvailable
-                        ? ''
-                        : 'Color by pathogenicity is disabled as there are no AlphaMissense predictions available for this model'}
-                      >Pathogenicity
-                      ${this.alphamissenseAvailable
-                        ? ''
-                        : ' (unavailable)'}</label
+            ? html`
+                <div class="protvista-uniprot-structure__meta">
+                  <div class="theme-selection">
+                    Select color scale
+                    <div>
+                      <input
+                        type="radio"
+                        id="alphafold"
+                        name="colorScheme"
+                        value="alphafold"
+                        @click=${this.toggleColorTheme}
+                        checked
+                      />
+                      <label for="alphafold">Confidence</label>
+                    </div>
+                    <div
+                      class=${this.alphamissenseAvailable ? '' : 'am-disabled'}
                     >
+                      <input
+                        type="radio"
+                        id="alphamissense"
+                        name="colorScheme"
+                        value="alphamissense"
+                        @click=${this.toggleColorTheme}
+                        ?disabled=${!this.alphamissenseAvailable}
+                      />
+                      <label
+                        for="alphamissense"
+                        title=${this.alphamissenseAvailable
+                          ? ''
+                          : 'Color by pathogenicity is disabled as there are no AlphaMissense predictions available for this model'}
+                      >
+                        Pathogenicity
+                        ${this.alphamissenseAvailable ? '' : ' (unavailable)'}
+                      </label>
+                    </div>
                   </div>
+                  ${this.metaInfo}
                 </div>
-                ${this.metaInfo}
-              </div>`
-            : html``}
+              `
+            : nothing}
           ${this.structureId
             ? html`<nightingale-structure
                 structure-id=${this.structureId}
                 protein-accession=${this.accession}
                 color-theme=${this.colorTheme}
               ></nightingale-structure>`
-            : html``}
+            : nothing}
           ${this.modelUrl
             ? html`<nightingale-structure
                 model-url=${this.modelUrl}
               ></nightingale-structure>`
-            : html``}
+            : nothing}
         </div>
+
         <div class="protvista-uniprot-structure__table">
           ${this.data && this.data.length
-            ? html`<protvista-datatable noScrollToRow noDeselect filter-scroll>
-                <table>
-                  <thead>
-                    <tr>
-                      <th data-filter="source">Source</th>
-                      <th>Identifier</th>
-                      ${this.isoforms ? html`<th>Isoform</th>` : ''}
-                      <th data-filter="method">Method</th>
-                      <th>Resolution</th>
-                      <th>Chain</th>
-                      <th>Positions</th>
-                      <th>Links</th>
-                      <th><!--Download--></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${this.data?.map(
-                      ({
-                        source,
-                        id,
-                        method,
-                        resolution,
-                        chain,
-                        positions,
-                        downloadLink,
-                        sourceDBLink,
-                        isoform,
-                        amAnnotationsUrl,
-                      }) => html`<tr
-                        data-id="${id}"
-                        @click="${() =>
-                          this.onTableRowClick({
-                            id,
-                            source,
-                            downloadLink,
-                            amAnnotationsUrl,
-                          })}"
-                      >
-                        <td data-filter="source" data-filter-value="${source}">
-                          <strong>${source}</strong>
-                        </td>
-                        <td>${id}</td>
-                        ${this.isoforms ? html`<td>${isoform}</td>` : ''}
-                        <td data-filter="method" data-filter-value="${method}">
-                          ${method}
-                        </td>
-                        <td>
-                          ${resolution ? resolution.replace('A', 'Å') : ''}
-                        </td>
-                        <td>${chain || ''}</td>
-                        <td>${positions || ''}</td>
-                        <td>
-                          ${source === 'PDB'
-                            ? html`
-                                ${PDBLinks.map((pdbLink) => {
-                                  return html`
-                                    <a href="${pdbLink.link}${id}"
-                                      >${pdbLink.name}</a
-                                    >
-                                  `;
-                                }).reduce(
-                                  (prev, curr) => html` ${prev} · ${curr} `
-                                )}
-                              `
-                            : ``}
-                          ${source === 'AlphaFold'
-                            ? html`<a href="${alphaFoldLink}${this.accession}"
-                                >AlphaFold</a
-                              >`
-                            : ``}
-                          ${sourceDBLink
-                            ? html`<a href="${sourceDBLink}">${source}</a>`
-                            : ``}
-                        </td>
-                        <td>
-                          ${downloadLink
-                            ? html`<a
-                                href="${downloadLink}"
-                                class="download-link"
-                                >${svg`${unsafeHTML(downloadIcon)}`}</a
-                              > `
-                            : ''}
-                          ${source === 'PDB' || source === 'AlphaFold'
-                            ? html`·
-                              ${foldseekURL(
-                                source === 'PDB' ? id : this.accession,
-                                source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
-                              )}`
-                            : ``}
-                        </td>
-                      </tr>`
-                    )}
-                  </tbody>
-                </table>
-              </protvista-datatable>`
-            : html``}
+            ? html`
+                <protvista-uniprot-datatable
+                  .data=${this.data}
+                  .columns=${this.columns}
+                  .selectedId=${this.selectedRowId}
+                  row-id-key="id"
+                  @row-click=${this.onDatatableRowClick}
+                ></protvista-uniprot-datatable>
+              `
+            : nothing}
           ${this.loading
             ? html`<div class="protvista-loader">
                 ${svg`${unsafeHTML(loaderIcon)}`}
               </div>`
-            : html``}
+            : nothing}
           ${!this.data && !this.loading
             ? html`<div class="protvista-no-results">
                 No structure information available
                 ${this.accession ? `for ${this.accession}` : ''}
               </div>`
-            : html``}
+            : nothing}
         </div>
       </div>
     `;
