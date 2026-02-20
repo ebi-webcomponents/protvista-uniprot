@@ -714,9 +714,9 @@ class ProtvistaUniprotStructure extends LitElement {
                                 )}
                               `
                             : ``}
-                          ${source === 'AlphaFold DB' && this.accession
+                          ${source === 'AlphaFold DB' && this.accession && !sourceDBLink
                             ? html`<a href="${alphaFoldLink}${this.accession}"
-                                >AlphaFold</a
+                                >AlphaFold DB</a
                               >`
                             : ``}
                           ${sourceDBLink
