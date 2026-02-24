@@ -133,8 +133,24 @@ If you have questions or need help:
 
 We host monthly office hours to answer questions, discuss contributions, and help new contributors get started.
 
-- **When:** [Which] Tuesday of each month, 11am-12pm GMT/BST
-- **Where:** [Link to video call]
+- **When:**
+
+| Date       | Time GMT/BST  |
+| ---------- | ------------- |
+| 2026-02-27 | 15.30 - 16.30 |
+| 2026-03-27 | 10.30 - 11.30 |
+| 2026-04-24 | 15.30 - 16.30 |
+| 2026-05-29 | 10.30 - 11.30 |
+| 2026-06-26 | 15.30 - 16.30 |
+| 2026-07-31 | 10.30 - 11.30 |
+| 2026-08-28 | 15.30 - 16.30 |
+| 2026-09-25 | 10.30 - 11.30 |
+| 2026-10-30 | 15.30 - 16.30 |
+| 2026-11-27 | 10.30 - 11.30 |
+| 2026-12-18 | 15.30 - 16.30 |
+| 2027-01-29 | 10.30 - 11.30 |
+
+- **Where:** [Zoom link](https://embl-org.zoom.us/j/95322862166?pwd=czx0CdN5eEsm6WltXVIQ7YdybaFkhM.1)
 
 **What to expect:**
 
@@ -145,8 +161,7 @@ We host monthly office hours to answer questions, discuss contributions, and hel
 
 **How to join:**
 
-- No registration required, just drop in.
-- Check our [calendar/issues/discussions] for the next session.
+- No registration required, just join the call.
 - Can't make it? Post questions in advance and we'll address them.
 
 Everyone is welcome, whether you're a first-time contributor or a regular!
