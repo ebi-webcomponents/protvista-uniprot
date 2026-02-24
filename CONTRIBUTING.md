@@ -4,15 +4,11 @@ Thank you for your interest in contributing to ProtVista-UniProt! This document 
 
 ProtVista is maintained as open-source research software and is part of an ongoing sustainability effort supported through the Research Software Maintenance Fund (RSMF).
 
----
-
 ## Code of Conduct
 
 We are committed to providing a welcoming and inclusive environment. Please be respectful and constructive in all interactions.
 
 All repository interactions and project events are expected to follow our Code of Conduct.
-
----
 
 ## Getting Started
 
@@ -48,8 +44,6 @@ All repository interactions and project events are expected to follow our Code o
    yarn test
    ```
 
----
-
 ## Making Changes
 
 ### Branch Naming
@@ -74,8 +68,6 @@ All repository interactions and project events are expected to follow our Code o
 - Be descriptive but concise.
 - Reference issues when applicable (e.g., "Fix #123").
 
----
-
 ## Submitting a Pull Request
 
 1. Push your branch to your fork.
@@ -95,8 +87,6 @@ Before submitting, ensure:
 - No console errors or warnings
 - Screenshots included for visual changes
 
----
-
 ## Testing
 
 ### Running Tests
@@ -114,16 +104,12 @@ yarn test:coverage # Generate coverage report
 - Test edge cases and error conditions.
 - Aim to maintain or improve code coverage.
 
----
-
 ## Code Style
 
 - ESLint and Prettier are used for formatting (automated in CI).
 - Follow TypeScript best practices.
 - Write clear, self-documenting code.
 - Add JSDoc comments for public APIs where appropriate.
-
----
 
 ## Reporting Bugs
 
@@ -137,8 +123,6 @@ When reporting bugs, please include:
 
 Use the GitHub issue tracker and apply the appropriate labels.
 
----
-
 ## Requesting Features
 
 For feature requests:
@@ -148,8 +132,6 @@ For feature requests:
 - Explain why this would be valuable.
 - Be open to discussion about implementation.
 
----
-
 ## Questions?
 
 If you have questions or need help:
@@ -158,8 +140,6 @@ If you have questions or need help:
 - Open a new issue with the `question` label.
 - Reach out to the maintainers.
 - Attend our monthly office hours (details below).
-
----
 
 ## Office Hours
 
@@ -198,8 +178,6 @@ If you cannot attend, post questions in advance via Issues or Discussions.
 
 Everyone is welcome, whether you're a first-time contributor or a regular collaborator.
 
----
-
 ## Licensing
 
 ProtVista software is licensed under the MIT License.
@@ -208,12 +186,8 @@ Documentation and other written materials are licensed under Creative Commons At
 
 By contributing, you agree that your contributions will be licensed under the same licence as the relevant part of the project.
 
----
-
 ## Citation
 
 If you use ProtVista in research outputs, please cite the project using the latest release DOI (see the repository README for citation instructions).
-
----
 
 Thank you for contributing to ProtVista-UniProt! 🎉
