@@ -10,7 +10,7 @@ Have questions about using or contributing to ProtVista?
 
 We host regular virtual office hours to help with setup, integration, and contributions.
 
-👉 See dates and join details here: [Office Hours](./CONTRIBUTING.md#office-hours)
+See dates and join details here: [Office Hours](./CONTRIBUTING.md#office-hours)
 
 Everyone is welcome — no registration required.
 
