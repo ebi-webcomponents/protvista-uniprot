@@ -1,7 +1,5 @@
 # protvista-uniprot
 
----
-
 A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/nightingale) components to display protein sequence information.
 
 ![Image of protvista-uniprot](protvista.png)
