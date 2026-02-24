@@ -4,7 +4,7 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ![Image of protvista-uniprot](protvista.png)
 
-## 📣 Monthly Office Hours
+## 📣 Monthly office hours
 
 Have questions about using or contributing to ProtVista?
 
@@ -120,3 +120,11 @@ yarn build
 yarn publish
 git push
 ```
+
+## Licensing
+
+ProtVista source code is licensed under the MIT License (see `LICENSE`).
+
+Documentation and other written materials in this repository are licensed
+under the Creative Commons Attribution 4.0 International (CC BY 4.0),
+unless otherwise stated (see `LICENSE-docs`).
