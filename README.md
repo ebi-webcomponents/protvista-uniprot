@@ -4,7 +4,7 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ![Image of protvista-uniprot](protvista.png)
 
-📣 **Monthly Office Hours**
+## 📣 Monthly Office Hours
 
 Have questions about using or contributing to ProtVista?
 
