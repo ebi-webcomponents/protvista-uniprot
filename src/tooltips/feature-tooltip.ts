@@ -21,27 +21,27 @@ const taxIdToPeptideAtlasBuildData = {
 
 // https://docs.google.com/spreadsheets/d/1V51z3G3MhC8S-pCNlivAUG4WoFKwR1EhAEYYsgUyw2U/edit?gid=0#gid=0
 const unimodIdMapping = {
-  'Glu-&gt;pyro-Glu': 27,
-  'Ammonia-loss': 385,
-  NQTGG: 2084,
-  Formyl: 122,
-  Carbamidomethyl: 4,
-  Ubiquitination: 121,
-  TMT6plex: 737,
-  Phospho: 21,
-  iTRAQ8plex: 730,
-  Deamidated: 7,
-  'Pyro-QQTGG': 2083,
-  QQTGG: 2082,
-  GlyGly: 121,
-  Oxidation: 35,
-  'Gln-&gt;pyro-Glu': 28,
-  Dehydrated: 23,
-  DVFQQQTGG: 2085,
-  Acetyl: 1,
-  iTRAQ4plex: 214,
-  TMTpro: 2016,
-  'Label: 13C(6)15N(4)': 267,
+  'glu-&gt;pyro-glu': 27,
+  'ammonia-loss': 385,
+  nqtgg: 2084,
+  formyl: 122,
+  carbamidomethyl: 4,
+  ubiquitination: 121,
+  tmt6plex: 737,
+  phospho: 21,
+  itraq8plex: 730,
+  deamidated: 7,
+  'pyro-qqtgg': 2083,
+  qqtgg: 2082,
+  glygly: 121,
+  oxidation: 35,
+  'gln-&gt;pyro-glu': 28,
+  dehydrated: 23,
+  dvfqqqtgg: 2085,
+  acetyl: 1,
+  itraq4plex: 214,
+  tmtpro: 2016,
+  'label: 13c(6)15n(4)': 267,
 };
 
 const formatSource = (source) => {
@@ -135,7 +135,7 @@ const formatPTMPeptidoform = (peptide, ptms) => {
 
 const formatProformaWithLink = (proforma = '') => {
   return proforma.replace(/\[([^\]]+)\]/g, (_, modification) => {
-    const id = unimodIdMapping[modification];
+    const id = unimodIdMapping[modification.toLowerCase()];
     if (!id) {
       console.error('Unimod ID not found for modification:', modification);
       return `[${modification}]`;
