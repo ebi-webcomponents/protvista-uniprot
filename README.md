@@ -4,71 +4,110 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ![Image of protvista-uniprot](protvista.png)
 
+---
+
+📣 **Monthly Office Hours**
+
+Have questions about using or contributing to ProtVista?
+
+We host regular virtual office hours to help with setup, integration, and contributions.
+
+👉 See dates and join details here:  
+ [Office Hours](./CONTRIBUTING.md#office-hours)
+
+Everyone is welcome — no registration required.
+
+---
+
+## Contributing
+
+We welcome contributions!  
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, pull request guidelines, and office hours.
+
+---
+
 ## Compatibility
 
 - [protvista-uniprot v3](https://github.com/ebi-webcomponents/protvista-uniprot) is compatible with [nightingale v5](https://github.com/ebi-webcomponents/nightingale)
 - [protvista-uniprot v2](https://github.com/ebi-webcomponents/protvista-uniprot/tree/v2) is compatible with [nightingale v3](https://github.com/ebi-webcomponents/nightingale/tree/v3)
 
+---
+
 ## Usage
 
 ### Use within an HTML file
 
-Create an [es-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) import within a static HTML file:
+Create an [ES module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) import within a static HTML file:
 
 ```html
 <script type="module" src="./protvista-uniprot.mjs"></script>
 ```
 
-and then the component can be displayed with:
+Then display the component:
 
 ```html
 <protvista-uniprot accession="P05067"></protvista-uniprot>
 ```
 
+---
+
 ### Importing as a module
 
-```
+```js
 import ProtvistaUniprot from 'protvista-uniprot';
-...
+
 window.customElements.define('protvista-uniprot', ProtvistaUniprot);
 ```
 
 You can then use it like this:
 
-```
-<protvista-uniprot accession="P05067" />
+```html
+<protvista-uniprot accession="P05067"></protvista-uniprot>
 ```
 
-### API
+---
 
-- accession: String
-- config?: Array [see below](#configuration)
-- nostructure?: Boolean(false)
+## API
+
+- `accession`: `string`
+- `config?`: `Array` (see [Configuration](#configuration))
+- `nostructure?`: `boolean` (default: `false`)
+
+---
 
 ## Development
 
-Run `yarn install` to install dependencies and `yarn start` to start the local server.
+Run:
+
+```bash
+yarn install
+yarn start
+```
+
+to install dependencies and start the local development server.
+
+---
 
 ## Configuration
 
 You can pass your own configuration to the component using the `config` attribute/property.
 
-```
+```json
 {
   "categories": [
     {
-      "name": string,
-      "label": string,
-      "trackType": nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation,
-      "adapter": feature-adapter|structure-adapter|proteomics-adapter|variation-adapter,
-      "url": string,
+      "name": "string",
+      "label": "string",
+      "trackType": "nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation",
+      "adapter": "feature-adapter|structure-adapter|proteomics-adapter|variation-adapter",
+      "url": "string",
       "tracks": [
         {
-          "name": string,
-          "label": string,
-          "filter": string,
+          "name": "string",
+          "label": "string",
+          "filter": "string",
           "trackType": "nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation",
-          "tooltip": string
+          "tooltip": "string"
         }
       ]
     }
@@ -76,20 +115,31 @@ You can pass your own configuration to the component using the `config` attribut
 }
 ```
 
+---
+
 ## Events
 
-Custom `protvista-event` are emitted:
+A custom `protvista-event` is emitted:
 
-- when at least one of the track returns data
+- When at least one of the tracks returns data
 
-```
+Example event detail:
+
+```js
 detail: {
-    hasData: true
+  hasData: true;
 }
 ```
 
+---
+
 ## Publishing
 
-```
-npm login; rm -rf node_modules dist; yarn; yarn build; yarn publish; git push
+```bash
+npm login
+rm -rf node_modules dist
+yarn
+yarn build
+yarn publish
+git push
 ```

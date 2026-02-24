@@ -172,7 +172,7 @@ We host monthly virtual office hours to:
 
 Note that office hours are not recorded.
 
-### Schedule (GMT/BST)
+### Provisional Schedule (GMT/BST)
 
 | Date       | Time          |
 | ---------- | ------------- |
