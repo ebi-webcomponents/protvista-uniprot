@@ -8,11 +8,9 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 Have questions about using or contributing to ProtVista?
 
-We host regular virtual office hours to help with setup, integration, and contributions.
+We host regular virtual office hours to help with setup, integration, and contributions. Everyone is welcome — no registration required.
 
-See dates and join details here: [Office Hours](./CONTRIBUTING.md#office-hours)
-
-Everyone is welcome — no registration required.
+See dates and joining details here: [Office Hours](./CONTRIBUTING.md#office-hours)
 
 ## Contributing
 
