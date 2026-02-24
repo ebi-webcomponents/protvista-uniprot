@@ -19,6 +19,7 @@ const taxIdToPeptideAtlasBuildData = {
   '508771': { build: '601', organism : 'T Gondii'},
 };
 
+// https://docs.google.com/spreadsheets/d/1V51z3G3MhC8S-pCNlivAUG4WoFKwR1EhAEYYsgUyw2U/edit?gid=0#gid=0
 const unimodIdMapping = {
   'Glu-&gt;pyro-Glu': 27,
   'Ammonia-loss': 385,
@@ -39,6 +40,8 @@ const unimodIdMapping = {
   DVFQQQTGG: 2085,
   Acetyl: 1,
   iTRAQ4plex: 214,
+  TMTpro: 2016,
+  'Label: 13C(6)15N(4)': 267,
 };
 
 const formatSource = (source) => {
