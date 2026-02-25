@@ -4,7 +4,7 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ![Image of protvista-uniprot](protvista.png)
 
-## 📣 Monthly office hours
+## 📣 Monthly Office Hours
 
 Have questions about using or contributing to ProtVista?
 
@@ -128,3 +128,7 @@ ProtVista source code is licensed under the MIT License (see `LICENSE`).
 Documentation and other written materials in this repository are licensed
 under the Creative Commons Attribution 4.0 International (CC BY 4.0),
 unless otherwise stated (see `LICENSE-docs`).
+
+## Funding
+
+This work was supported by the Research Software Maintenance Fund, managed by the Software Sustainability Institute and funded by UKRI grant reference AH/Z000114/1.
