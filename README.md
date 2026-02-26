@@ -12,12 +12,13 @@ We host regular virtual office hours to help with setup, integration, and contri
 
 See dates and joining details here: [Office Hours](./CONTRIBUTING.md#office-hours)
 
-## Contributing
+## Contributing & Security
 
 We welcome contributions!
 
 - Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, pull request guidelines, and office hours.
 - Community standards: [Code of Conduct](./CODE_OF_CONDUCT.md)
+- Security issues: please report privately via [SECURITY.md](./SECURITY.md)
 
 ## Compatibility
 
