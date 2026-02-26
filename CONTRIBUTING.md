@@ -8,7 +8,7 @@ ProtVista is maintained as open-source research software and is part of an ongoi
 
 We are committed to providing a welcoming and inclusive environment. Please be respectful and constructive in all interactions.
 
-All repository interactions and project events are expected to follow our Code of Conduct.
+All repository interactions and project events are expected to follow our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## Getting Started
 

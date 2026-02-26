@@ -14,8 +14,10 @@ See dates and joining details here: [Office Hours](./CONTRIBUTING.md#office-hour
 
 ## Contributing
 
-We welcome contributions!  
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, pull request guidelines, and office hours.
+We welcome contributions!
+
+- Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, pull request guidelines, and office hours.
+- Community standards: [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 ## Compatibility
 
