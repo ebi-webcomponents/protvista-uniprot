@@ -212,7 +212,7 @@ const processAFData = (
 
       return {
         id: d.modelEntityId,
-        source: 'AlphaFold',
+        source: 'AlphaFold DB',
         method: 'Predicted',
         positions: `${d.sequenceStart}-${d.sequenceEnd}`,
         protvistaFeatureId: d.modelEntityId,
@@ -260,7 +260,10 @@ const process3DBeaconsData = (
       id: summary.model_identifier,
       source: summary.provider,
       method: sourceMethods.get(summary.provider),
-      positions: `${summary.uniprot_start || 1}-${summary.uniprot_end || data.entry?.sequence.length}`,
+      positions:
+        summary.uniprot_start && summary.uniprot_end
+          ? `${summary.uniprot_start}-${summary.uniprot_end}`
+          : undefined,
       protvistaFeatureId: summary.model_identifier,
       downloadUrl: summary.model_url,
       sourceDBLink:

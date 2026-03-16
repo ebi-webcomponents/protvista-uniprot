@@ -4,6 +4,22 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ![Image of protvista-uniprot](protvista.png)
 
+## 📣 Monthly Office Hours
+
+Have questions about using or contributing to ProtVista?
+
+We host regular virtual office hours to help with setup, integration, and contributions. Everyone is welcome — no registration required.
+
+See dates and joining details here: [Office Hours](./CONTRIBUTING.md#office-hours)
+
+## Contributing & Security
+
+We welcome contributions!
+
+- Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, pull request guidelines, and office hours.
+- Community standards: [Code of Conduct](./CODE_OF_CONDUCT.md)
+- Security issues: please report privately via [SECURITY.md](./SECURITY.md)
+
 ## Compatibility
 
 - [protvista-uniprot v3](https://github.com/ebi-webcomponents/protvista-uniprot) is compatible with [nightingale v5](https://github.com/ebi-webcomponents/nightingale)
@@ -13,13 +29,13 @@ A Web Component which uses [Nightingale](https://github.com/ebi-webcomponents/ni
 
 ### Use within an HTML file
 
-Create an [es-module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) import within a static HTML file:
+Create an [ES module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) import within a static HTML file:
 
 ```html
 <script type="module" src="./protvista-uniprot.mjs"></script>
 ```
 
-and then the component can be displayed with:
+Then display the component:
 
 ```html
 <protvista-uniprot accession="P05067"></protvista-uniprot>
@@ -27,48 +43,55 @@ and then the component can be displayed with:
 
 ### Importing as a module
 
-```
+```js
 import ProtvistaUniprot from 'protvista-uniprot';
-...
+
 window.customElements.define('protvista-uniprot', ProtvistaUniprot);
 ```
 
 You can then use it like this:
 
-```
-<protvista-uniprot accession="P05067" />
+```html
+<protvista-uniprot accession="P05067"></protvista-uniprot>
 ```
 
-### API
+## API
 
-- accession: String
-- config?: Array [see below](#configuration)
-- nostructure?: Boolean(false)
+- `accession`: `string`
+- `config?`: `Array` (see [Configuration](#configuration))
+- `nostructure?`: `boolean` (default: `false`)
 
 ## Development
 
-Run `yarn install` to install dependencies and `yarn start` to start the local server.
+Run:
+
+```bash
+yarn install
+yarn start
+```
+
+to install dependencies and start the local development server.
 
 ## Configuration
 
 You can pass your own configuration to the component using the `config` attribute/property.
 
-```
+```json
 {
   "categories": [
     {
-      "name": string,
-      "label": string,
-      "trackType": nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation,
-      "adapter": feature-adapter|structure-adapter|proteomics-adapter|variation-adapter,
-      "url": string,
+      "name": "string",
+      "label": "string",
+      "trackType": "nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation",
+      "adapter": "feature-adapter|structure-adapter|proteomics-adapter|variation-adapter",
+      "url": "string",
       "tracks": [
         {
-          "name": string,
-          "label": string,
-          "filter": string,
+          "name": "string",
+          "label": "string",
+          "filter": "string",
           "trackType": "nightingale-track-canvas|nightingale-linegraph-track|nightingale-variation",
-          "tooltip": string
+          "tooltip": "string"
         }
       ]
     }
@@ -78,18 +101,37 @@ You can pass your own configuration to the component using the `config` attribut
 
 ## Events
 
-Custom `protvista-event` are emitted:
+A custom `protvista-event` is emitted:
 
-- when at least one of the track returns data
+- When at least one of the tracks returns data
 
-```
+Example event detail:
+
+```js
 detail: {
-    hasData: true
+  hasData: true;
 }
 ```
 
 ## Publishing
 
+```bash
+npm login
+rm -rf node_modules dist
+yarn
+yarn build
+yarn publish
+git push
 ```
-npm login; rm -rf node_modules dist; yarn; yarn build; yarn publish; git push
-```
+
+## Licensing
+
+ProtVista source code is licensed under the MIT License (see `LICENSE`).
+
+Documentation and other written materials in this repository are licensed
+under the Creative Commons Attribution 4.0 International (CC BY 4.0),
+unless otherwise stated (see `LICENSE-docs`).
+
+## Funding
+
+This work was supported by the Research Software Maintenance Fund, managed by the Software Sustainability Institute and funded by UKRI grant reference AH/Z000114/1.
