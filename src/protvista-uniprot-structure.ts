@@ -21,8 +21,9 @@ const alphaFoldLink = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekLink = `https://search.foldseek.com/search`;
 const uniprotKBLink = 'https://www.uniprot.org/uniprotkb/';
 
-// Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
+// Excluded source from 3d-beacons is PDBe as we fetch them separately from UniProt
 const providersFrom3DBeacons = [
+  'AlphaFold DB',
   'SWISS-MODEL',
   'ModelArchive',
   'PED',
@@ -126,13 +127,14 @@ type ProcessedStructureData = {
   protvistaFeatureId: string;
   amAnnotationsUrl?: string;
   isoform?: TemplateResult;
+  afPrediction?: boolean; // Flag to differentiate the structure source as AlphaFold prediction API vs 3DBeacons AlphaFold 
 };
 
 type IsoformIdSequence = [
   {
     isoformId: string;
     sequence: string;
-  }
+  },
 ];
 
 const getIsoformNum = (s) => {
@@ -150,10 +152,13 @@ const processPDBData = (data: UniProtKBData): ProcessedStructureData[] =>
             return;
           }
 
-          const propertyMap = properties.reduce((acc, item) => {
-            acc[item.key] = item.value;
-            return acc;
-          }, {} as Record<string, string>);
+          const propertyMap = properties.reduce(
+            (acc, item) => {
+              acc[item.key] = item.value;
+              return acc;
+            },
+            {} as Record<string, string>
+          );
 
           const method = propertyMap['Method'];
           const resolution = propertyMap['Resolution'];
@@ -218,6 +223,7 @@ const processAFData = (
         downloadLink: d.pdbUrl,
         amAnnotationsUrl: d.amAnnotationsUrl,
         isoform: isoformElement,
+        afPrediction: true,
       };
     })
     .sort((a, b) => {
@@ -261,9 +267,10 @@ const process3DBeaconsData = (
       id: summary.model_identifier,
       source: summary.provider,
       method: sourceMethods.get(summary.provider),
-      positions: summary.uniprot_start && summary.uniprot_end ? `${summary.uniprot_start}-${
-        summary.uniprot_end 
-      }` : undefined,
+      positions:
+        summary.uniprot_start && summary.uniprot_end
+          ? `${summary.uniprot_start}-${summary.uniprot_end}`
+          : undefined,
       protvistaFeatureId: summary.model_identifier,
       downloadLink: summary.model_url,
       sourceDBLink:
@@ -410,7 +417,7 @@ class ProtvistaUniprotStructure extends LitElement {
       // Include isoforms that are provided in the UniProt isoforms mapping and ignore the rest from AF payload that are out of sync with UniProt
       const alphaFoldSequenceMatches = rawData[alphaFoldUrl]?.filter(
         ({ sequence: afSequence }) =>
-          this.isoforms?.some(({ sequence }) => afSequence === sequence) 
+          this.isoforms?.some(({ sequence }) => afSequence === sequence)
       );
 
       afData = processAFData(
@@ -445,7 +452,22 @@ class ProtvistaUniprotStructure extends LitElement {
     // TODO: return if no data at all
     // if (!payload) return;
 
-    const data = [...pdbData, ...afData, ...beaconsData];
+    const beaconsAFData = beaconsData.filter(
+      ({ source }) => source === 'AlphaFold DB'
+    );
+    const beaconsNonAFData = beaconsData.filter(
+      ({ source }) => source !== 'AlphaFold DB'
+    );
+
+    const uniqueAFData = [
+      ...new Map(
+        // The order of the spread is important as we want to prioritise AF data from AF predictions API over 3DBeacons
+        [...beaconsAFData, ...afData].map((obj) => [obj.id, obj])
+      ).values(),
+    ];
+
+    const data = [...pdbData, ...uniqueAFData, ...beaconsNonAFData];
+
     if (!data || !data.length) return;
 
     this.data = data;
@@ -465,6 +487,8 @@ class ProtvistaUniprotStructure extends LitElement {
         id: this.data[0].id,
         source: this.data[0].source,
         downloadLink: this.data[0].downloadLink,
+        amAnnotationsUrl: this.data[0].amAnnotationsUrl,
+        afPrediction: this.data[0].afPrediction,
       });
       protvistaDatatableElt.selectedid = this.data[0].id;
     }
@@ -497,13 +521,15 @@ class ProtvistaUniprotStructure extends LitElement {
     source,
     downloadLink,
     amAnnotationsUrl,
+    afPrediction
   }: {
     id: string;
     source?: string;
     downloadLink?: string;
     amAnnotationsUrl?: string;
+    afPrediction?: boolean;
   }) {
-    if (this.checksum || providersFrom3DBeacons.includes(source)) {
+    if (this.checksum || (providersFrom3DBeacons.includes(source) && !afPrediction)) {
       this.modelUrl = downloadLink;
       // Reset the rest
       this.structureId = undefined;
@@ -677,69 +703,80 @@ class ProtvistaUniprotStructure extends LitElement {
                         sourceDBLink,
                         isoform,
                         amAnnotationsUrl,
-                      }) => html`<tr
-                        data-id="${id}"
-                        @click="${() =>
-                          this.onTableRowClick({
-                            id,
-                            source,
-                            downloadLink,
-                            amAnnotationsUrl,
-                          })}"
-                      >
-                        <td data-filter="source" data-filter-value="${source}">
-                          <strong>${source}</strong>
-                        </td>
-                        <td>${id}</td>
-                        ${this.isoforms ? html`<td>${isoform}</td>` : ''}
-                        <td data-filter="method" data-filter-value="${method}">
-                          ${method}
-                        </td>
-                        <td>
-                          ${resolution ? resolution.replace('A', 'Å') : ''}
-                        </td>
-                        <td>${chain || ''}</td>
-                        <td>${positions || ''}</td>
-                        <td>
-                          ${source === 'PDB'
-                            ? html`
-                                ${PDBLinks.map((pdbLink) => {
-                                  return html`
-                                    <a href="${pdbLink.link}${id}"
-                                      >${pdbLink.name}</a
-                                    >
-                                  `;
-                                }).reduce(
-                                  (prev, curr) => html` ${prev} · ${curr} `
-                                )}
-                              `
-                            : ``}
-                          ${source === 'AlphaFold DB' && this.accession && !sourceDBLink
-                            ? html`<a href="${alphaFoldLink}${this.accession}"
-                                >AlphaFold DB</a
-                              >`
-                            : ``}
-                          ${sourceDBLink
-                            ? html`<a href="${sourceDBLink}">${source}</a>`
-                            : ``}
-                        </td>
-                        <td>
-                          ${downloadLink
-                            ? html`<a
-                                href="${downloadLink}"
-                                class="download-link"
-                                >${svg`${unsafeHTML(downloadIcon)}`}</a
-                              > `
-                            : ''}
-                          ${source === 'PDB' || source === 'AlphaFold DB'
-                            ? html`·
-                              ${foldseekURL(
-                                source === 'PDB' ? id : this.accession,
-                                source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
-                              )}`
-                            : ``}
-                        </td>
-                      </tr>`
+                        afPrediction,
+                      }) =>
+                        html`<tr
+                          data-id="${id}"
+                          @click="${() =>
+                            this.onTableRowClick({
+                              id,
+                              source,
+                              downloadLink,
+                              amAnnotationsUrl,
+                              afPrediction,
+                            })}"
+                        >
+                          <td
+                            data-filter="source"
+                            data-filter-value="${source}"
+                          >
+                            <strong>${source}</strong>
+                          </td>
+                          <td>${id}</td>
+                          ${this.isoforms ? html`<td>${isoform}</td>` : ''}
+                          <td
+                            data-filter="method"
+                            data-filter-value="${method}"
+                          >
+                            ${method}
+                          </td>
+                          <td>
+                            ${resolution ? resolution.replace('A', 'Å') : ''}
+                          </td>
+                          <td>${chain || ''}</td>
+                          <td>${positions || ''}</td>
+                          <td>
+                            ${source === 'PDB'
+                              ? html`
+                                  ${PDBLinks.map((pdbLink) => {
+                                    return html`
+                                      <a href="${pdbLink.link}${id}"
+                                        >${pdbLink.name}</a
+                                      >
+                                    `;
+                                  }).reduce(
+                                    (prev, curr) => html` ${prev} · ${curr} `
+                                  )}
+                                `
+                              : ``}
+                            ${source === 'AlphaFold DB' &&
+                            this.accession &&
+                            !sourceDBLink
+                              ? html`<a href="${alphaFoldLink}${this.accession}"
+                                  >AlphaFold DB</a
+                                >`
+                              : ``}
+                            ${sourceDBLink
+                              ? html`<a href="${sourceDBLink}">${source}</a>`
+                              : ``}
+                          </td>
+                          <td>
+                            ${downloadLink
+                              ? html`<a
+                                  href="${downloadLink}"
+                                  class="download-link"
+                                  >${svg`${unsafeHTML(downloadIcon)}`}</a
+                                > `
+                              : ''}
+                            ${source === 'PDB' || source === 'AlphaFold DB'
+                              ? html`·
+                                ${foldseekURL(
+                                  source === 'PDB' ? id : this.accession,
+                                  source === 'PDB' ? 'PDB' : 'AlphaFold DB'
+                                )}`
+                              : ``}
+                          </td>
+                        </tr>`
                     )}
                   </tbody>
                 </table>
