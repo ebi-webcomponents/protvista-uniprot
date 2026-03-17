@@ -451,14 +451,11 @@ export class ProtvistaUniprotDatatable<
                 const id = getRowId(row, this.rowIdKey);
                 const isSelected = id === this.selectedId;
 
-                let isFocusable = false;
-                if (this.focusedRowId) {
-                  isFocusable = id === this.focusedRowId;
-                } else if (this.selectedId) {
-                  isFocusable = id === this.selectedId;
-                } else {
-                  isFocusable = index === 0;
-                }
+                const isFocusable = this.focusedRowId
+                  ? id === this.focusedRowId
+                  : this.selectedId
+                    ? id === this.selectedId
+                    : index === 0;
 
                 return html`
                   <tr
