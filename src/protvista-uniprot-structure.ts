@@ -772,7 +772,7 @@ class ProtvistaUniprotStructure extends LitElement {
                               ? html`·
                                 ${foldseekURL(
                                   source === 'PDB' ? id : this.accession,
-                                  source === 'PDB' ? 'PDB' : 'AlphaFold DB'
+                                  source === 'PDB' ? 'PDB' : 'AlphaFoldDB'
                                 )}`
                               : ``}
                           </td>
