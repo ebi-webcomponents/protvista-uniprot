@@ -187,14 +187,13 @@ No stores yet.
 0 test cases
 - **Adversarial tests**: 0 files, ~0
 0 test cases
-- **Gemini breadth tests**: 0 files, ~0
-0 test cases
+- **Gemini breadth tests**: 2 files, ~14 test cases
 - **Qwen adversarial tests**: 0 files, ~0
 0 test cases
-No tests yet.
 
 ## Recent Changes
 
+- fa59dee docs: update CONTEXT.md
 - 863aef7 v4.7.2
 - c05a5bb Fix foldseek source
 - 371bfcb v4.7.1
@@ -204,7 +203,6 @@ No tests yet.
 - 1e3b0ad Add CODE_OF_CONDUCT.md and create links.
 - 3806190 Update all packages.
 - 80fa2bf Add funding statement.
-- 28974df Add LICENSE-docs.
 
 ## Known Issues and TODOs
 
