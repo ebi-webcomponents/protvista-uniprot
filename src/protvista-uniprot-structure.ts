@@ -466,7 +466,7 @@ class ProtvistaUniprotStructure extends LitElement {
             ).reduce((prev, curr) => html`${prev} · ${curr}`)}
           `
         : nothing}
-      ${source === 'AlphaFold' && this.accession
+      ${source === 'AlphaFold DB' && this.accession
         ? html`<a href="${alphaFoldUrl}${this.accession}">AlphaFold</a>`
         : nothing}
       ${sourceDBLink ? html`<a href="${sourceDBLink}">${source}</a>` : nothing}
@@ -478,7 +478,7 @@ class ProtvistaUniprotStructure extends LitElement {
 
     return html`
       ${downloadUrl ? html`${sourceDownloadLink(downloadUrl)}` : nothing}
-      ${(source === 'PDB' || source === 'AlphaFold') && this.accession
+      ${(source === 'PDB' || source === 'AlphaFold DB') && this.accession
         ? html` ·
           ${foldseekLink(
             source === 'PDB' ? id : this.accession,
