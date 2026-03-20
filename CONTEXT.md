@@ -183,16 +183,15 @@ No stores yet.
 
 ## Test Coverage Map
 
-- **Merged tests**: 0 files, ~0
-0 test cases
+- **Merged tests**: 10 files, ~229 test cases
 - **Adversarial tests**: 0 files, ~0
 0 test cases
-- **Gemini breadth tests**: 2 files, ~14 test cases
-- **Qwen adversarial tests**: 0 files, ~0
-0 test cases
+- **Gemini breadth tests**: 6 files, ~34 test cases
+- **Qwen adversarial tests**: 7 files, ~224 test cases
 
 ## Recent Changes
 
+- 89cb700 docs: update CONTEXT.md
 - fa59dee docs: update CONTEXT.md
 - 863aef7 v4.7.2
 - c05a5bb Fix foldseek source
@@ -202,7 +201,6 @@ No stores yet.
 - f595223 Add SECURITY.md and link within readme.
 - 1e3b0ad Add CODE_OF_CONDUCT.md and create links.
 - 3806190 Update all packages.
-- 80fa2bf Add funding statement.
 
 ## Known Issues and TODOs
 
@@ -218,5 +216,5 @@ No stores yet.
 
 | Feature | Tests | Plan | Implementation | Review |
 |---------|-------|------|----------------|--------|
-| testing-status-and-vitetest | — | — | — | — |
+| testing-status-and-vitetest | ✓ | — | — | — |
 
