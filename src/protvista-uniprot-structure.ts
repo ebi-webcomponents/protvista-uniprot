@@ -23,8 +23,9 @@ const alphaFoldUrl = 'https://alphafold.ebi.ac.uk/entry/';
 const foldseekUrl = `https://search.foldseek.com/search`;
 const uniprotKBUrl = 'https://www.uniprot.org/uniprotkb/';
 
-// Excluded sources from 3d-beacons are PDBe and AlphaFold models as we fetch them separately from their respective API's
+// Excluded source from 3d-beacons is PDBe as we fetch them separately from UniProt
 const providersFrom3DBeacons = [
+  'AlphaFold DB',
   'SWISS-MODEL',
   'ModelArchive',
   'PED',
@@ -128,6 +129,7 @@ type ProcessedStructureData = {
   protvistaFeatureId: string;
   amAnnotationsUrl?: string;
   isoform?: TemplateResult;
+  afPrediction?: boolean; // Flag to differentiate the structure source as AlphaFold prediction API vs 3DBeacons AlphaFold
 };
 
 type IsoformIdSequence = [
@@ -219,6 +221,7 @@ const processAFData = (
         downloadUrl: d.pdbUrl,
         amAnnotationsUrl: d.amAnnotationsUrl,
         isoform: isoformElement,
+        afPrediction: true,
       };
     })
     .sort((a, b) => getIsoformNum(a.id) - getIsoformNum(b.id));
@@ -546,8 +549,26 @@ class ProtvistaUniprotStructure extends LitElement {
       this.checksum
     );
 
-    const data = [...pdbData, ...afData, ...beaconsData];
-    if (!data.length) return;
+    // TODO: return if no data at all
+    // if (!payload) return;
+
+    const beaconsAFData = beaconsData.filter(
+      ({ source }) => source === 'AlphaFold DB'
+    );
+    const beaconsNonAFData = beaconsData.filter(
+      ({ source }) => source !== 'AlphaFold DB'
+    );
+
+    const uniqueAFData = [
+      ...new Map(
+        // The order of the spread is important as we want to prioritise AF data from AF predictions API over 3DBeacons
+        [...beaconsAFData, ...afData].map((obj) => [obj.id, obj])
+      ).values(),
+    ];
+
+    const data = [...pdbData, ...uniqueAFData, ...beaconsNonAFData];
+
+    if (!data || !data.length) return;
 
     this.data = data;
     this.columns = this.getColumns();
@@ -579,11 +600,15 @@ class ProtvistaUniprotStructure extends LitElement {
   }
 
   private onRowSelected(row: ProcessedStructureData) {
-    const { id, source, downloadUrl, amAnnotationsUrl } = row;
+    const { id, source, downloadUrl, amAnnotationsUrl, afPrediction } = row;
     this.selectedRowId = id;
 
-    if (this.checksum || (source && providersFrom3DBeacons.includes(source))) {
-      this.modelUrl = downloadUrl ?? '';
+    if (
+      this.checksum ||
+      (providersFrom3DBeacons.includes(source) && !afPrediction)
+    ) {
+      this.modelUrl = downloadUrl;
+      // Reset the rest
       this.structureId = undefined;
       this.metaInfo = undefined;
       this.colorTheme = 'alphafold';
