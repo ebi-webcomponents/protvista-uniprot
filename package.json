@@ -44,7 +44,6 @@
     "core-js": "3.48.0",
     "lit": "3.3.2",
     "lodash-es": "4.17.23",
-    "protvista-datatable": "3.8.22",
     "timing-functions": "2.0.1",
     "url-join": "5.0.0"
   },
