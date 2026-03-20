@@ -1,0 +1,30 @@
+{
+  "techStack": {
+    "framework": "lit",
+    "language": "typescript",
+    "styling": "css",
+    "testRunner": "jest",
+    "e2eRunner": "playwright",
+    "packageManager": "yarn"
+  },
+  "commands": {
+    "test": "yarn test",
+    "lint": "npm run lint",
+    "typeCheck": "npx tsc --noEmit",
+    "dev": "yarn start"
+  },
+  "agents": {
+    "implementer": "claude",
+    "reviewers": ["gemini", "qwen"],
+    "documenter": "gemini"
+  },
+  "complexity": {
+    "maxScreens": 4,
+    "maxNewComponents": 5,
+    "maxNewApiEndpoints": 3,
+    "maxModifiedFiles": 10,
+    "maxNewCodeLines": 500,
+    "maxTests": 50
+  },
+  "conventions": ""
+}

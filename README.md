@@ -124,6 +124,47 @@ yarn publish
 git push
 ```
 
+## Testing Status
+
+Tests are run with [Vitest](https://vitest.dev/).
+
+### Commands
+
+```bash
+# Run all tests once (CI-friendly, non-zero exit on failure)
+yarn test:unit
+
+# Run with coverage report
+yarn test:coverage
+
+# Watch mode (re-runs on file change)
+yarn test:watch
+
+# Interactive UI
+yarn test:ui
+```
+
+### Coverage baseline (captured 2026-03-20)
+
+| Metric | Coverage |
+|--------|----------|
+| Statements | 7.14% |
+| Branches | 64.70% |
+| Functions | 48.07% |
+| Lines | 7.14% |
+
+After running `yarn test:coverage`, view the full local report at `coverage/index.html` (local dev only — not committed).
+
+### Common commands
+
+```bash
+# Run a single test file
+vitest run src/path/to/file.spec.ts
+
+# Update snapshots (inspect diffs first — do not run blindly)
+yarn test:unit -- --update-snapshots
+```
+
 ## Licensing
 
 ProtVista source code is licensed under the MIT License (see `LICENSE`).
