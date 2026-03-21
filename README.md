@@ -146,12 +146,12 @@ yarn test:ui
 
 ### Coverage baseline (captured 2026-03-20)
 
-| Metric | Coverage |
-|--------|----------|
-| Statements | 7.14% |
-| Branches | 64.70% |
-| Functions | 48.07% |
-| Lines | 7.14% |
+| Metric     | Coverage |
+| ---------- | -------- |
+| Statements | 7.14%    |
+| Branches   | 64.70%   |
+| Functions  | 48.07%   |
+| Lines      | 7.14%    |
 
 After running `yarn test:coverage`, view the full local report at `coverage/index.html` (local dev only — not committed).
 
