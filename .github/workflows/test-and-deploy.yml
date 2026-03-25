@@ -34,7 +34,7 @@ jobs:
       - name: Unit tests
         run: yarn test:unit
 
-deploy-pages:
+  deploy-pages:
     name: Deploy to GitHub Pages
     needs: test
     runs-on: ubuntu-latest
