@@ -25,6 +25,19 @@ We welcome contributions!
 - [protvista-uniprot v3](https://github.com/ebi-webcomponents/protvista-uniprot) is compatible with [nightingale v5](https://github.com/ebi-webcomponents/nightingale)
 - [protvista-uniprot v2](https://github.com/ebi-webcomponents/protvista-uniprot/tree/v2) is compatible with [nightingale v3](https://github.com/ebi-webcomponents/nightingale/tree/v3)
 
+## Browser Support
+
+This component requires a modern browser with support for [ES2021](https://caniuse.com/?search=ES2021) and [Web Components (Custom Elements v1)](https://caniuse.com/custom-elementsv1).
+
+| Browser | Minimum version |
+|---------|----------------|
+| Chrome  | 92+            |
+| Edge    | 92+            |
+| Firefox | 90+            |
+| Safari  | 15+            |
+
+Older browsers are not supported.
+
 ## Usage
 
 ### Use within an HTML file

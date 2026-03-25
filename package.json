@@ -76,6 +76,12 @@
     "vite-plugin-html": "3.2.2",
     "vite-plugin-svgo": "2.0.0"
   },
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 90",
+    "safari >= 15"
+  ],
   "jest": {
     "testRegex": "(/__tests__/.*|(\\.|/))spec\\.ts$",
     "testPathIgnorePatterns": [
