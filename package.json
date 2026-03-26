@@ -9,6 +9,7 @@
   "scripts": {
     "build:es": "tsc --emitDeclarationOnly",
     "build": "vite build",
+    "build:demo": "vite build --config vite.demo.config.mjs",
     "start": "vite",
     "test:lint": "eslint src --ext .ts ",
     "test:types": "tsc",
