@@ -17,6 +17,7 @@ export default defineConfig({
     }),
     svg(),
   ],
+  base: './',
   build: {
     target: 'ES2021',
     outDir: 'demo',
